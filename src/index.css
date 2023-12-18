@@ -1,3 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-emerald-1c343c {
+    background-color: #1c343c;
+}
+
+.bg-beige-fbebdb {
+    background-color: #fbebdb;
+}
+
+.text-beige-fbebdb {
+    color: #fbebdb;
+}
+
+.text-orange-eca96c {
+    color: #eca96c;
+}
+
+.logo-yello-two {
+    color: #e3d3ab;
+}
+
+.logo-brown {
+    color: #938269;
+}
