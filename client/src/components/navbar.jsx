@@ -3,21 +3,19 @@ import logoAvatar from '../assets/logo-rs-em.jpg';
 import { Link } from 'react-router-dom';
 const NavBar = () => {
     return (
-        <nav className="bg-emerald-1c343c shadow-md">
+        <nav className="sticky top-0 z-50 bg-primary-dark shadow-md">
             <div className="mx-4 lg:mx-8 grid grid-cols-12 py-2">
                 {/* Logo */}
                 <Link
                     to="/"
                     className="col-span-3 flex flex-wrap items-center justify-center">
                     <img src={logoAvatar} alt="Logo" className="h-14" />
-                    <div className="hidden sm:block">
-                        <span className="text-yellow-100 font-mulish font-bold">
-                            Realty
-                        </span>
+                    {/* <div className="hidden sm:block ps-1 text-lg">
+                        <span className="text-yellow-100 font-mulish">Realty</span>
                         <span className="text-yellow-100 font-mulish font-bold">
                             Savvy
                         </span>
-                    </div>
+                    </div> */}
                 </Link>
                 {/* Search Bar */}
                 <div className="col-span-5 flex items-center justify-end">

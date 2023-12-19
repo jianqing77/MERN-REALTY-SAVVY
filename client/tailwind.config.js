@@ -13,6 +13,14 @@ export default {
                 bold: '700',
                 extrabold: '800',
             },
+            colors: {
+                primary: {
+                    dark: '#1c343c',
+                    100: '#fefae0',
+                    200: '#dda15e',
+                    300: '#bc6c25',
+                },
+            },
         },
     },
     plugins: [],
