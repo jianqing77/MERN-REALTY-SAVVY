@@ -1,10 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import WelcomePic from '../assets/auth-2.jpg';
 import GoogleAvatar from '../assets/google.svg.png';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signInThunk } from '../services/auth-thunk';
 
 export default function SignIn() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const navigate = useNavigate(); // to navigate to profile
+    const dispatch = useDispatch(); // to dispatch thunks
+
+    // track the form data change
+    const emailChangeHandler = (event) => {
+        setEmail(event.target.value);
+    };
+    const passwordChangeHandler = (event) => {
+        setPassword(event.target.value);
+    };
+    // button click handler
+    const signInClickHandler = async (event) => {
+        event.preventDefault();
+        try {
+            await dispatch(signInThunk({ email, password }));
+            navigate('/');
+        } catch (err) {
+            alert(err);
+        }
+    };
+
     return (
         <section
             className="relative flex items-center justify-center"
@@ -15,12 +41,14 @@ export default function SignIn() {
                 backgroundPosition: 'center',
             }}>
             <div className="absolute inset-0 bg-white bg-opacity-30"></div>
-            <div className="relative w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 bg-primary-dark dark:border-gray-700">
+            <div className="relative w-full rounded-lg shadow md:mt-0 max-w-md bg-primary-dark dark:border-gray-700">
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 className="flex justify-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Welcome to RealtySavvy!
                     </h1>
-                    <form className="space-y-4 md:space-y-6" action="#">
+                    <form
+                        className="space-y-4 md:space-y-6"
+                        onSubmit={signInClickHandler}>
                         <div>
                             <label
                                 htmlFor="email"
@@ -33,6 +61,8 @@ export default function SignIn() {
                                 id="email"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-200 focus:border-primary-200 block w-full p-2.5 outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                                 placeholder="name@email.com"
+                                value={email}
+                                onChange={emailChangeHandler}
                                 required
                             />
                         </div>
@@ -47,7 +77,9 @@ export default function SignIn() {
                                 name="password"
                                 id="password"
                                 placeholder="••••••••"
+                                value={password}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-200 focus:border-primary-200 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none"
+                                onChange={passwordChangeHandler}
                                 required
                             />
                         </div>

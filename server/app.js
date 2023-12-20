@@ -1,9 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import session from 'express-session';
+
 import userRouter from './routes/user-route.js';
 import authRouter from './routes/auth-route.js';
-
-import dotenv from 'dotenv';
 import ErrorHandler from './utils/ErrorHandler.js';
 
 // config .env
@@ -12,7 +14,28 @@ dotenv.config();
 const app = express();
 app.use(express.json()); // postman test purpose
 
-// database
+// =================================================================
+// ==================== Session & Cors =============================
+// =================================================================
+// session configuration
+app.use(
+    session({
+        secret: 'any string',
+        resave: false,
+        saveUninitialized: true,
+    })
+);
+app.use(
+    cors({
+        origin: 'http://localhost:5173',
+        credentials: true,
+    })
+);
+
+// =================================================================
+// ========================= Database ==============================
+// =================================================================
+
 const DB_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 // const DB_CONNECTION_STRING = 'mongodb://127.0.0.1:27017/realty-savvy';
 mongoose
@@ -24,6 +47,9 @@ mongoose
         console.log('Database connection error:', err);
     });
 
+// =================================================================
+// ======================= Routes ==================================
+// =================================================================
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 
@@ -48,7 +74,7 @@ app.use((err, req, res, next) => {
 });
 
 // connect to port
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 app.listen(port, () => {
     console.log('listening on port: ' + port);
