@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import WelcomePic from '../assets/auth-2.jpg';
 import GoogleAvatar from '../assets/google.svg.png';
-
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signUpThunk } from '../services/auth-thunk';
@@ -11,6 +10,7 @@ export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordMismatchError, setPasswordMismatchError] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -24,17 +24,23 @@ export default function SignUp() {
     };
     const passwordChangeHandler = (event) => {
         setPassword(event.target.value);
+        setPasswordMismatchError(false);
     };
     const confirmPasswordChangeHandler = (event) => {
         setConfirmPassword(event.target.value);
+        setPasswordMismatchError(false);
     };
 
     // sign up click handler
     const signUpClickHandler = async (event) => {
         event.preventDefault();
-        // if (password !== confirmPassword) {
-
-        // }
+        // check if the password and confirm password are the same
+        if (password !== confirmPassword) {
+            setPasswordMismatchError(true);
+            return;
+        } else {
+            setPasswordMismatchError(false);
+        }
         try {
             await dispatch(signUpThunk({ username, email, password }));
             navigate('/signin');
@@ -54,6 +60,7 @@ export default function SignUp() {
             }}>
             <div className="absolute inset-0 bg-white bg-opacity-30"></div>
             <div className="relative w-full rounded-lg shadow md:mt-0 max-w-md bg-primary-dark dark:border-gray-700">
+                {/* <ToastContainer position="top-center" autoClose={5000} /> */}
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 className="flex justify-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Create Your Account
@@ -124,6 +131,11 @@ export default function SignUp() {
                                 onChange={confirmPasswordChangeHandler}
                                 required
                             />
+                            {passwordMismatchError && (
+                                <p className="mt-2 text-sm text-red-600">
+                                    Passwords do not match.
+                                </p>
+                            )}
                         </div>
                         <button
                             type="submit"
