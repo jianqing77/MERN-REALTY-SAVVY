@@ -18,13 +18,12 @@ app.use(express.json()); // postman test purpose
 // ==================== Session & Cors =============================
 // =================================================================
 // session configuration
-app.use(
-    session({
-        secret: 'any string',
-        resave: false,
-        saveUninitialized: true,
-    })
-);
+const sessionConfig = {
+    secret: 'secret key',
+    resave: false,
+    saveUninitialized: true,
+};
+app.use(session(sessionConfig));
 app.use(
     cors({
         origin: 'http://localhost:5173',

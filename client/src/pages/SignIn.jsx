@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import WelcomePic from '../assets/auth-2.jpg';
-import GoogleAvatar from '../assets/google.svg.png';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInThunk } from '../services/auth-thunk';
+import GoogleAuth from '../components/googleAuth';
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isGoogleAuth, setIsGoogleAuth] = useState(false); // New state variable to track Google Auth usage
 
     const navigate = useNavigate(); // to navigate to profile
     const dispatch = useDispatch(); // to dispatch thunks
@@ -29,6 +30,11 @@ export default function SignIn() {
         } catch (err) {
             alert(err);
         }
+    };
+
+    const onGoogleAuth = () => {
+        console.log('onGoogleAuth is called');
+        setIsGoogleAuth(true);
     };
 
     return (
@@ -63,7 +69,7 @@ export default function SignIn() {
                                 placeholder="name@email.com"
                                 value={email}
                                 onChange={emailChangeHandler}
-                                required
+                                required={!isGoogleAuth}
                             />
                         </div>
                         <div>
@@ -80,7 +86,7 @@ export default function SignIn() {
                                 value={password}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-200 focus:border-primary-200 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none"
                                 onChange={passwordChangeHandler}
-                                required
+                                required={!isGoogleAuth}
                             />
                         </div>
                         <button
@@ -93,19 +99,7 @@ export default function SignIn() {
                             <span className="mx-4 text-white">or</span>
                             <div className="flex-grow h-px bg-gray-400"></div>
                         </div>
-                        <button
-                            type="submit"
-                            className="w-full text-white  bg-gray-800 hover:bg-gray-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                            <span className="flex items-center justify-center">
-                                <img
-                                    src={GoogleAvatar}
-                                    alt="google image"
-                                    className="w-7 h-7 mx-3"
-                                />
-                                Sign In with Google
-                            </span>
-                        </button>
-
+                        <GoogleAuth onGoogleAuth={onGoogleAuth} />
                         <div className="flex justify-center">
                             <p className="text-sm font-light text-white">
                                 Not have an account yet?

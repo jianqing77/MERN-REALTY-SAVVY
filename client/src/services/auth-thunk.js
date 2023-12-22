@@ -12,3 +12,8 @@ export const signInThunk = createAsyncThunk('/user/signin', async (credentials) 
     // console.log('User from API:', user); // Log to check the API response
     return signInPayload; // pass in to the reducer as action.payload
 });
+
+export const authGoogleThunk = createAsyncThunk('/user/google', async (userData) => {
+    const googlAuthPayload = await AuthService.authGoogle(userData);
+    return googlAuthPayload; // pass in to the reducer as action.payload
+});

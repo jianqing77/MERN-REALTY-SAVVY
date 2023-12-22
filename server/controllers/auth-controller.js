@@ -3,6 +3,7 @@ import catchAsync from '../utils/cachAsync.js';
 import UserModel from '../models/user-model.js';
 import * as UserDao from '../dao/user-dao.js';
 import ErrorHandler from '../utils/ErrorHandler.js';
+import { generateRandomPassword, googleUsernameConversion } from '../utils/util.js';
 
 export const signUp = catchAsync(async (req, res) => {
     // console.log(req.body)
@@ -39,3 +40,27 @@ export const signout = catchAsync(async (req, res) => {
 });
 
 export const update = catchAsync(async (req, res) => {});
+
+export const google = catchAsync(async (req, res) => {
+    const userData = req.body;
+    const foundUser = await UserDao.findUserByEmail(userData.email);
+    // if user exits
+    if (foundUser) {
+        const token = await jwt.sign({ id: foundUser._id }, process.env.JWT_SECRET);
+        const { password: pass, ...rest } = foundUser._doc;
+        res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
+    } else {
+        const generatedPassword = generateRandomPassword();
+        const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+        const newUser = new UserModel({
+            username: googleUsernameConversion(userData.username),
+            email: userData.email,
+            password: hashedPassword,
+            avatar: userData.avatar,
+        });
+        await newUser.save();
+        const token = await jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+        const { password: pass, ...rest } = newUser._doc;
+        res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
+    }
+});

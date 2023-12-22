@@ -7,6 +7,7 @@ export const findAllUsers = () => UserModel.find();
 export const findUserById = (uid) => UserModel.findById(uid);
 
 export const findUserByUsername = (username) => UserModel.findOne({ username });
+export const findUserByEmail = (email) => UserModel.findOne({ email });
 
 export const findUserByCredentials = async (email, password) => {
     const user = await UserModel.findOne({ email });

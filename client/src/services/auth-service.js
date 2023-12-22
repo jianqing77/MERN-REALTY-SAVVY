@@ -7,6 +7,7 @@ const AUTH_URL = `${SERVER_API_URL}/auth`;
 // configure axios to support cookies for passing credentials
 const api = axios.create({ withCredentials: true });
 
+// pass in the info we want to send to the server
 export const signup = async ({ username, email, password }) => {
     const response = await api.post(`${AUTH_URL}/signup`, { username, email, password });
     const createdUser = response.data;
@@ -40,3 +41,12 @@ export const signout = async () => {
 //     const response = await api.post(`${AUTH_URL}/signout`);
 //     return response.data;
 // };
+
+export const authGoogle = async (userData) => {
+    const response = await api.post(`${AUTH_URL}/authgoogle`, userData);
+    const user = response.data;
+    return {
+        user: user,
+        message: 'Success!',
+    };
+};
