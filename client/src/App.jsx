@@ -9,9 +9,9 @@ import NavBar from './components/navbar';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './reducers/auth-reducer';
+import PrivateRoute from './components/PrivateRoute';
 
 const store = configureStore({
-    // configure the store
     reducer: {
         auth: authReducer, // pass in reducer to be used in the component
     },
@@ -25,9 +25,11 @@ function App() {
                 <Routes>
                     <Route index path="/" element={<Home />}></Route>
                     <Route path="/about" element={<About />}></Route>
-                    <Route path="/profile" element={<Profile />}></Route>
                     <Route path="/signin" element={<SignIn />}></Route>
                     <Route path="/signup" element={<SignUp />}></Route>
+                    <Route element={<PrivateRoute />}>
+                        <Route path="/profile" element={<Profile />}></Route>
+                    </Route>
                 </Routes>
             </BrowserRouter>
         </Provider>

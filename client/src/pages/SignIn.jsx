@@ -33,7 +33,6 @@ export default function SignIn() {
     };
 
     const onGoogleAuth = () => {
-        console.log('onGoogleAuth is called');
         setIsGoogleAuth(true);
     };
 

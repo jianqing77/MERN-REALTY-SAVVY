@@ -25,12 +25,8 @@ const GoogleAuth = ({ onGoogleAuth }) => {
                 avatar: user.photoURL,
                 token: token,
             };
-            try {
-                await dispatch(authGoogleThunk(userData));
-                navigate('/');
-            } catch (err) {
-                alert(err);
-            }
+            await dispatch(authGoogleThunk(userData));
+            navigate('/profile');
         } catch (err) {
             console.log('Error when using google: ' + err.message);
         }

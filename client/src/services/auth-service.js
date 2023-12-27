@@ -24,11 +24,20 @@ export const signIn = async ({ email, password }) => {
         password,
     });
     const userSignedIn = response.data;
-    // console.log('user data from auth service:' + user);
     const message = 'User successfully signed in';
     return {
         user: userSignedIn,
         message: message,
+    };
+};
+
+export const authGoogle = async (userData) => {
+    // console.log('authGoogle is called in service: ' + JSON.stringify(userData));
+    const response = await api.post(`${AUTH_URL}/authgoogle`, userData);
+    const user = response.data;
+    return {
+        user: user,
+        message: 'Success!',
     };
 };
 
@@ -41,12 +50,3 @@ export const signout = async () => {
 //     const response = await api.post(`${AUTH_URL}/signout`);
 //     return response.data;
 // };
-
-export const authGoogle = async (userData) => {
-    const response = await api.post(`${AUTH_URL}/authgoogle`, userData);
-    const user = response.data;
-    return {
-        user: user,
-        message: 'Success!',
-    };
-};

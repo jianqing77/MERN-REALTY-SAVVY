@@ -34,21 +34,15 @@ export const profile = catchAsync(async (req, res) => {
     res.json(currentUser);
 });
 
-export const signout = catchAsync(async (req, res) => {
-    req.session.destroy();
-    res.sendStatus(200);
-});
-
-export const update = catchAsync(async (req, res) => {});
-
 export const google = catchAsync(async (req, res) => {
     const userData = req.body;
-    const foundUser = await UserDao.findUserByEmail(userData.email);
+    const foundedUser = await UserDao.findUserByEmail(userData.email);
+    let userToReturn;
+    let token;
     // if user exits
-    if (foundUser) {
-        const token = await jwt.sign({ id: foundUser._id }, process.env.JWT_SECRET);
-        const { password: pass, ...rest } = foundUser._doc;
-        res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
+    if (foundedUser) {
+        req.session['currentUser'] = foundedUser;
+        res.status(200).json(foundedUser);
     } else {
         const generatedPassword = generateRandomPassword();
         const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
@@ -59,8 +53,14 @@ export const google = catchAsync(async (req, res) => {
             avatar: userData.avatar,
         });
         await newUser.save();
-        const token = await jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-        const { password: pass, ...rest } = newUser._doc;
-        res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
+        req.session['currentUser'] = newUser;
+        res.status(200).json(newUser);
     }
 });
+
+export const signout = catchAsync(async (req, res) => {
+    req.session.destroy();
+    res.sendStatus(200);
+});
+
+export const update = catchAsync(async (req, res) => {});
