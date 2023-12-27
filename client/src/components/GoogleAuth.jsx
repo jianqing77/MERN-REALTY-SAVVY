@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import GoogleAvatar from '../assets/google.svg.png';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from '@firebase/auth';
-import FirebaseApp from '../firebase';
+import FirebaseApp from '../config/firebase';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { authGoogleThunk } from '../services/auth-thunk';

@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import formsPlugin from '@tailwindcss/forms';
+
 export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
@@ -15,13 +17,18 @@ export default {
             },
             colors: {
                 primary: {
-                    dark: '#1c343c',
                     100: '#fefae0',
                     200: '#dda15e',
                     300: '#bc6c25',
                 },
+                dark: {
+                    100: '#1c343c',
+                    200: '#254e5c',
+                },
             },
         },
     },
-    plugins: [],
+    plugins: [
+        formsPlugin, // Reference the imported plugin here
+    ],
 };

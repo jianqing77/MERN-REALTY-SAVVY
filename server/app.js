@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import session from 'express-session';
-
+import MongoStore from 'connect-mongo';
 import userRouter from './routes/user-route.js';
 import authRouter from './routes/auth-route.js';
 import ErrorHandler from './utils/ErrorHandler.js';
@@ -19,11 +19,19 @@ app.use(express.json()); // postman test purpose
 // =================================================================
 // session configuration
 const sessionConfig = {
-    secret: 'secret key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_CONNECTION_STRING }),
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+        httpOnly: true,
+        // secure: process.env.NODE_ENV === 'production', // set to true if website uses HTTPS
+        sameSite: 'lax', // protection against CSRF
+    },
 };
 app.use(session(sessionConfig));
+
 app.use(
     cors({
         origin: 'http://localhost:5173',

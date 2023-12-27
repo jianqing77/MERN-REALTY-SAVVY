@@ -59,7 +59,7 @@ export default function SignUp() {
                 backgroundPosition: 'center',
             }}>
             <div className="absolute inset-0 bg-white bg-opacity-30"></div>
-            <div className="relative w-full rounded-lg shadow md:mt-0 max-w-md bg-primary-dark dark:border-gray-700">
+            <div className="relative w-full rounded-lg shadow md:mt-0 max-w-md bg-dark-100 dark:border-gray-700">
                 {/* <ToastContainer position="top-center" autoClose={5000} /> */}
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 className="flex justify-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -139,7 +139,7 @@ export default function SignUp() {
                         </div>
                         <button
                             type="submit"
-                            className="w-full text-white bg-primary-200 hover:bg-yellow-500 hover:text-primary-dark focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            className="w-full text-white bg-primary-200 hover:bg-yellow-500 hover:text-dark-100 focus:ring-4 focus:outline-none focus:ring-primary-200 focus:border-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                             Sign Up
                         </button>
                         <div className="flex justify-center">

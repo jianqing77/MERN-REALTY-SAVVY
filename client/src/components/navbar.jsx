@@ -8,7 +8,7 @@ const NavBar = () => {
     const currentUser = useSelector((state) => state.auth.currentUser);
 
     return (
-        <nav className="sticky top-0 z-50 bg-primary-dark shadow-md">
+        <nav className="sticky top-0 z-50 bg-dark-100 shadow-md">
             <div className="mx-4 lg:mx-8 grid grid-cols-12 py-2">
                 {/* Logo */}
                 <Link
