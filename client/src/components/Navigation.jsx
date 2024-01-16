@@ -18,13 +18,13 @@ const NavBar = () => {
                 </Link>
                 {/* Search Bar */}
                 <div className="col-span-5 flex items-center justify-end">
-                    <form className="bg-slate-100 rounded-lg p-2 w-1/2">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            className="bg-transparent outline-none"
-                        />
-                    </form>
+                    <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        placeholder="Search..."
+                        className="block rounded-md border-gray-400 bg-slate-100 p-2 w-1/2 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-200 focus:border-primary-200 "
+                    />
                 </div>
                 {/* Navbar Items */}
                 <div className="col-span-4 flex justify-center items-center">
