@@ -4,7 +4,7 @@ import { store, persistor } from './config/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import Home from './pages/Home';
 import About from './pages/About';
-import Profile from './pages/Profile';
+import Profile from './pages/profile/index.jsx';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import NavBar from './components/Navigation.jsx';
@@ -12,6 +12,10 @@ import Footer from './components/Footer.jsx';
 import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import Example from './pages/test';
+import General from './pages/profile/General.jsx';
+import Security from './pages/profile/Security.jsx';
+import Favorites from './pages/profile/Favorites.jsx';
+import Notifications from './pages/profile/Notifications.jsx';
 
 function App() {
     return (
@@ -28,7 +32,9 @@ function App() {
                                 <Route path="/signup" element={<SignUp />}></Route>
                                 <Route path="/test" element={<Example />}></Route>
                                 <Route element={<PrivateRoute />}>
-                                    <Route path="/profile" element={<Profile />}></Route>
+                                    <Route
+                                        path="/profile/*"
+                                        element={<Profile />}></Route>
                                 </Route>
                             </Routes>
                         </div>

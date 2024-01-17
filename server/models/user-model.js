@@ -23,6 +23,22 @@ const UserSchema = new Schema(
                 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
         },
         isAdmin: { type: Boolean, default: false },
+        firstName: {
+            type: String,
+            required: false,
+            unique: false,
+        },
+        lastName: {
+            type: String,
+            required: false,
+            unique: false,
+        },
+        phoneNumber: {
+            type: String,
+            default: '000-000-0000',
+            required: false,
+            unique: true,
+        },
         role: {
             type: String,
             default: 'user',

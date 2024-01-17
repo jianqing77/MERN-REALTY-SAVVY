@@ -62,5 +62,3 @@ export const signout = catchAsync(async (req, res) => {
     req.session.destroy();
     res.sendStatus(200);
 });
-
-export const update = catchAsync(async (req, res) => {});
