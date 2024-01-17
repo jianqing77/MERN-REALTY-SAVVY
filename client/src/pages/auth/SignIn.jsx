@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import WelcomePic from '../assets/auth-2.jpg';
+import WelcomePic from '../../assets/auth-2.jpg';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { signInThunk } from '../services/auth-thunk';
-import GoogleAuth from '../components/googleAuth';
+import { signInThunk } from '../../services/auth-thunk';
+import GoogleAuth from '../../components/googleAuth';
 
 export default function SignIn() {
     const [email, setEmail] = useState('');

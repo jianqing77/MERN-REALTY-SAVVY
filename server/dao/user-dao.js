@@ -1,12 +1,12 @@
 import UserModel from '../models/user-model.js';
 import bcryptjs from 'bcryptjs';
-import catchAsync from '../utils/cachAsync.js';
+import catchAsync from '../utils/catchAsync.js';
 
 export const findAllUsers = () => UserModel.find();
 
 export const findUserById = (uid) => UserModel.findById(uid);
 
-export const findUserByUsername = (username) => UserModel.findOne({ username });
+export const findUserByUsername = (userName) => UserModel.findOne({ userName });
 export const findUserByEmail = (email) => UserModel.findOne({ email });
 
 export const findUserByCredentials = async (email, password) => {
@@ -25,8 +25,11 @@ export const createUser = async (user) => {
     return await UserModel.create(user);
 };
 
-export const updateUser = async (uid, user) => {
-    return await UserModel.updateOne({ _id: uid }, user);
+export const updateUser = async (uid, updatedUserData) => {
+    const updatedUser = await UserModel.findByIdAndUpdate({ _id: uid }, updatedUserData, {
+        new: true,
+    });
+    return updatedUser;
 };
 
 export const deleteUser = (uid) => UserModel.deleteOne({ _id: uid });

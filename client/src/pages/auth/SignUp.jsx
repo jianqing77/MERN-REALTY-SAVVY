@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import WelcomePic from '../assets/auth-2.jpg';
+import WelcomePic from '../../assets/auth-2.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { signUpThunk } from '../services/auth-thunk';
-import GoogleAuth from '../components/googleAuth';
+import { signUpThunk } from '../../services/auth-thunk';
+import GoogleAuth from '../../components/googleAuth';
 
 export default function SignUp() {
-    const [username, setUsername] = useState('');
+    const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,8 +16,8 @@ export default function SignUp() {
     const dispatch = useDispatch();
 
     // track the form data change
-    const usernameChangeHandler = (event) => {
-        setUsername(event.target.value);
+    const userNameChangeHandler = (event) => {
+        setUserName(event.target.value);
     };
     const emailChangeHandler = (event) => {
         setEmail(event.target.value);
@@ -42,7 +42,7 @@ export default function SignUp() {
             setPasswordMismatchError(false);
         }
         try {
-            await dispatch(signUpThunk({ username, email, password }));
+            await dispatch(signUpThunk({ userName, email, password }));
             navigate('/signin');
         } catch (err) {
             alert(err);
@@ -70,17 +70,17 @@ export default function SignUp() {
                         onSubmit={signUpClickHandler}>
                         <div>
                             <label
-                                htmlFor="username"
+                                htmlFor="userName"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Username
                             </label>
                             <input
                                 type="text"
-                                name="username"
-                                id="username"
+                                name="userName"
+                                id="userName"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-200 focus:border-primary-200 block w-full p-2.5 outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="username"
-                                onChange={usernameChangeHandler}
+                                placeholder="user name"
+                                onChange={userNameChangeHandler}
                                 required
                             />
                         </div>

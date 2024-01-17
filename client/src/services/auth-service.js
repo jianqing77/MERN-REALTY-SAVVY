@@ -8,8 +8,8 @@ const AUTH_URL = `${SERVER_API_URL}/auth`;
 const api = axios.create({ withCredentials: true });
 
 // pass in the info we want to send to the server
-export const signup = async ({ username, email, password }) => {
-    const response = await api.post(`${AUTH_URL}/signup`, { username, email, password });
+export const signup = async ({ userName, email, password }) => {
+    const response = await api.post(`${AUTH_URL}/signup`, { userName, email, password });
     const createdUser = response.data;
     const message = 'User successfully created';
     return {

@@ -3,7 +3,7 @@ export const generateRandomPassword = () => {
     return generatedPassword;
 };
 
-export const googleUsernameConversion = (googleUsername) => {
+export const googleUserNameConversion = (googleUsername) => {
     const convertedUsername =
         googleUsername.split(' ').join('').toLowerCase() +
         Math.random().toString(36).slice(-4);

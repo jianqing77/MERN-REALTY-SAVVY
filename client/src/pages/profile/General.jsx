@@ -5,14 +5,14 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 
 export default function GeneralSettings() {
     const currentUser = useSelector((state) => state.auth.currentUser);
-    const [username, setUsername] = useState(currentUser.username);
+    const [userName, setUserName] = useState(currentUser.userName);
     const [firstName, setFirstName] = useState(currentUser.firstName);
     const [lastName, setLastName] = useState(currentUser.firstName);
     const [phoneNumber, setPhoneNumber] = useState(currentUser.phoneNumber);
 
     const userNameChangeHandler = (event) => {
         const newUserName = event.target.value;
-        setUsername(newUserName);
+        setUserName(newUserName);
     };
 
     const firstNameChangeHandler = (event) => {
@@ -125,7 +125,7 @@ export default function GeneralSettings() {
                     {/* username */}
                     <div className="col-span-full">
                         <label
-                            htmlFor="username"
+                            htmlFor="userName"
                             className="block text-sm font-medium leading-6 ">
                             Username
                         </label>
@@ -133,11 +133,11 @@ export default function GeneralSettings() {
                             <div className="flex rounded-md bg-white/5 ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-primary-200 focus:border-primary-200">
                                 <input
                                     type="text"
-                                    name="username"
-                                    id="username"
-                                    autoComplete="username"
+                                    name="userName"
+                                    id="userName"
+                                    autoComplete="userName"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
-                                    defaultValue={currentUser.username}
+                                    defaultValue={currentUser.userName}
                                 />
                             </div>
                         </div>

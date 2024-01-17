@@ -7,13 +7,13 @@ import MongoStore from 'connect-mongo';
 import userRouter from './routes/user-route.js';
 import authRouter from './routes/auth-route.js';
 import ErrorHandler from './utils/ErrorHandler.js';
-
+import cookieParser from 'cookie-parser';
 // config .env
 dotenv.config();
 
 const app = express();
 app.use(express.json()); // postman test purpose
-
+app.use(cookieParser()); // get the information from the cookie
 // =================================================================
 // ==================== Session & Cors =============================
 // =================================================================
@@ -57,8 +57,8 @@ mongoose
 // =================================================================
 // ======================= Routes ==================================
 // =================================================================
-app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 // =================================================================
 // ======================= Middlewares =============================

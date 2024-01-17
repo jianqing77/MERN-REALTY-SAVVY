@@ -20,7 +20,7 @@ const GoogleAuth = ({ onGoogleAuth }) => {
             const token = credential.accessToken; // The signed-in user info.
             const user = result.user;
             const userData = {
-                username: user.displayName,
+                userName: user.displayName,
                 email: user.email,
                 avatar: user.photoURL,
                 token: token,
