@@ -3,7 +3,9 @@ import express from 'express';
 
 const router = express.Router();
 
-router.post('/profile', UserController.profile);
-router.post('/update/:id', UserController.updateUser);
+router.get('/profile', UserController.profile);
+router.put('/update-general/:id', UserController.updateUserGeneral);
+router.put('/update-password/:id', UserController.updateUserPassword);
+router.delete('/delete/:id', UserController.deleteUser);
 
 export default router;

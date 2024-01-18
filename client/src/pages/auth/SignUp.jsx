@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import WelcomePic from '../../assets/auth-2.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { signUpThunk } from '../../services/auth-thunk';
-import GoogleAuth from '../../components/googleAuth';
+import { signUpThunk } from '../../services/auth/auth-thunk';
 
 export default function SignUp() {
     const [userName, setUserName] = useState('');

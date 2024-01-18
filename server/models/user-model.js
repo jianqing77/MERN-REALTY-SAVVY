@@ -27,17 +27,42 @@ const UserSchema = new Schema(
             type: String,
             required: false,
             unique: false,
+            default: 'N/A',
         },
         lastName: {
             type: String,
             required: false,
             unique: false,
+            default: 'N/A',
         },
         phoneNumber: {
             type: String,
             default: '000-000-0000',
             required: false,
             unique: true,
+        },
+        city: {
+            type: String,
+            required: false,
+            unique: false,
+            default: 'N/A',
+        },
+        region: {
+            type: String,
+            required: false,
+            unique: false,
+            default: 'N/A',
+        },
+        streetAddress: {
+            type: String,
+            required: false,
+            unique: false,
+            default: 'N/A',
+        },
+        postalCode: {
+            type: Number,
+            required: false,
+            unique: false,
         },
         role: {
             type: String,

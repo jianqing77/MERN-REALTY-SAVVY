@@ -5,7 +5,7 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from '@firebase/auth';
 import FirebaseApp from '../config/firebase';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { authGoogleThunk } from '../services/auth-thunk';
+import { authGoogleThunk } from '../services/auth/auth-thunk';
 
 const GoogleAuth = ({ onGoogleAuth }) => {
     const dispatch = useDispatch();

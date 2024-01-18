@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signUpThunk, signInThunk, authGoogleThunk } from '../services/auth-thunk.js';
+import {
+    signUpThunk,
+    signInThunk,
+    authGoogleThunk,
+} from '../services/auth/auth-thunk.js';
+import { updateUserGeneralThunk } from '../services/user/user-thunk.js';
 
 const authSlice = createSlice({
     name: 'auth',
@@ -9,7 +14,11 @@ const authSlice = createSlice({
         error: null,
         message: null,
     },
-    reducers: {},
+    reducers: {
+        updateUserInAuth: (state, action) => {
+            state.currentUser = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         // signUpThunk
         builder.addCase(signUpThunk.pending, (state) => {
@@ -53,6 +62,22 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = action.error.message;
         });
+        // Update User
+        builder.addCase(updateUserGeneralThunk.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(updateUserGeneralThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.currentUser = action.payload.user;
+            state.message = action.payload.message;
+            console.log(action.payload);
+        });
+        builder.addCase(updateUserGeneralThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
     },
 });
+export const { updateUserInAuth } = authSlice.actions;
+
 export default authSlice.reducer;

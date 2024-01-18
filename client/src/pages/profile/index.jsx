@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Routes, Route, NavLink } from 'react-router-dom';
-import General from './General.jsx';
+import { Routes, Route, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import General from './general.jsx';
 import Security from './Security.jsx';
 import Favorites from './Favorites.jsx';
 import Notifications from './Notifications.jsx';
@@ -26,7 +25,13 @@ const navigation = [
 ];
 
 export default function Profile() {
-    const currentUser = useSelector((state) => state.auth.currentUser);
+    const navigate = useNavigate();
+    const location = useLocation();
+    useEffect(() => {
+        if (location.pathname === '/profile') {
+            navigate('/profile/general', { replace: true });
+        }
+    }, [navigate, location.pathname]);
 
     return (
         <div className="grid grid-cols-12 px-10">

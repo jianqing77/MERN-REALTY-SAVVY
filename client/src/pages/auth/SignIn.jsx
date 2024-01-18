@@ -3,7 +3,7 @@ import WelcomePic from '../../assets/auth-2.jpg';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { signInThunk } from '../../services/auth-thunk';
+import { signInThunk } from '../../services/auth/auth-thunk';
 import GoogleAuth from '../../components/googleAuth';
 
 export default function SignIn() {
