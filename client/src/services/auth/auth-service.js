@@ -42,15 +42,14 @@ export const authGoogle = async (userData) => {
     };
 };
 
-// export const deleteUser = async (userId) => {
-//     const response = await api.delete(`${AUTH_URL}/delete/${userId}`);
-//     const message = response.data;
-//     return {
-//         message: message,
-//     };
-// };
-
 export const signout = async () => {
-    const response = await api.post(`${AUTH_URL}/signout`);
-    return response.data;
+    try {
+        const response = await axios.get(`${AUTH_URL}/signout`, {
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error during sign out:', error);
+        throw error;
+    }
 };

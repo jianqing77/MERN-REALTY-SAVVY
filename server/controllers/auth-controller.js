@@ -67,21 +67,16 @@ export const google = catchAsync(async (req, res) => {
 });
 
 export const signout = catchAsync(async (req, res) => {
-    req.session.destroy();
-    res.sendStatus(200);
+    // Destroy server-side session
+    req.session.destroy((err) => {
+        if (err) {
+            // handle error case...
+            res.status(500).send('Error logging out');
+        } else {
+            // Clear the session ID cookie from the client-side
+            res.clearCookie('connect.sid'); // Replace 'connect.sid' with your cookie name if different
+            // Send a response indicating logout was successful
+            res.status(200).send('Logged out');
+        }
+    });
 });
-
-// export const deleteUser = catchAsync(async (req, res, next) => {
-//     const currentUser = req.session['currentUser'];
-//     if (!currentUser) {
-//         throw new ErrorHandler('User not found', 400);
-//     }
-//     if (currentUser._id !== req.params.id) {
-//         throw new ErrorHandler(
-//             'Access denied. You can only delete your own account!',
-//             400
-//         );
-//     }
-//     await UserDao.deleteUser(currentUser._id);
-//     res.status(200).json('User has been deleted!');
-// });

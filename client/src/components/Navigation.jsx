@@ -1,11 +1,25 @@
 import React from 'react';
 import logoAvatar from '../assets/logo-rs-em.jpg';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signOutThunk } from '../services/auth/auth-thunk';
 
 const NavBar = () => {
     // console.log(useSelector((state) => state.auth.currentUser));
     const currentUser = useSelector((state) => state.auth.currentUser);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate(); // useHistory hook to programmatically navigate
+
+    const signOutClickHandler = () => {
+        dispatch(signOutThunk())
+            .then(() => {
+                navigate('/');
+            })
+            .catch((error) => {
+                console.error('Logout failed:', error);
+            });
+    };
 
     return (
         <nav className="sticky top-0 z-50 bg-dark-100 shadow-md">
@@ -50,11 +64,11 @@ const NavBar = () => {
                                         className="rounded-full w-8 h-8 object-cover ms-2"
                                     />
                                 </Link>
-                                <Link
-                                    to="/logout"
+                                <button
+                                    onClick={signOutClickHandler}
                                     className="ms-5 hidden sm:inline hover:underline text-yellow-100">
                                     Sign Out
-                                </Link>
+                                </button>
                             </li>
                         ) : (
                             <li>

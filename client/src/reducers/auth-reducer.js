@@ -3,6 +3,7 @@ import {
     signUpThunk,
     signInThunk,
     authGoogleThunk,
+    signOutThunk,
 } from '../services/auth/auth-thunk.js';
 import { updateUserGeneralThunk, deleteUserThunk } from '../services/user/user-thunk.js';
 
@@ -89,6 +90,20 @@ const authSlice = createSlice({
             // console.log(action.payload);
         });
         builder.addCase(deleteUserThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        // Sign out user
+        builder.addCase(signOutThunk.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(signOutThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.currentUser = null;
+            state.message = action.payload;
+        });
+        builder.addCase(signOutThunk.rejected, (state, action) => {
+            console.log(state);
             state.loading = false;
             state.error = action.error.message;
         });

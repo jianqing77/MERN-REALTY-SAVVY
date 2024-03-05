@@ -26,7 +26,7 @@ export const authGoogleThunk = createAsyncThunk(
     }
 );
 
-// export const deleteUserThunk = createAsyncThunk('/auth/delete', async ({ userId }) => {
-//     const deleteUserPayload = await AuthService.deleteUser(userId);
-//     return deleteUserPayload; // pass in to the reducer as action.payload
-// });
+export const signOutThunk = createAsyncThunk('/auth/signout', async () => {
+    const signOutPayload = await AuthService.signout();
+    return signOutPayload; // pass in to the reducer as action.payload
+});
