@@ -76,7 +76,7 @@ export default function GeneralSettings() {
     return (
         <div>
             {/* public information */}
-            <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 md:grid-cols-3 lg:px-8">
+            <div className="grid max-w-9xl grid-cols-1 gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 md:grid-cols-3 lg:px-8">
                 <header>
                     <h2 className="text-base font-semibold leading-7">Profile</h2>
                     <p className="mt-1 text-sm leading-6 text-gray-400">
@@ -173,7 +173,7 @@ export default function GeneralSettings() {
                 </form>
             </div>
             {/* personal information */}
-            <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 pt-10 pb-16 sm:px-6 md:grid-cols-3 lg:px-8">
+            <div className="grid max-w-9xl grid-cols-1 gap-x-8 gap-y-10 px-4 pt-10 pb-16 sm:px-6 md:grid-cols-3 lg:px-8">
                 <header>
                     <h2 className="text-base font-semibold leading-7 ">
                         Personal Information

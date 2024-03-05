@@ -24,6 +24,7 @@ export const signIn = async ({ email, password }) => {
         password,
     });
     const userSignedIn = response.data;
+    console.log('in auth service: userSignedIn: ' + userSignedIn);
     const message = 'User successfully signed in';
     return {
         user: userSignedIn,
@@ -41,12 +42,15 @@ export const authGoogle = async (userData) => {
     };
 };
 
+// export const deleteUser = async (userId) => {
+//     const response = await api.delete(`${AUTH_URL}/delete/${userId}`);
+//     const message = response.data;
+//     return {
+//         message: message,
+//     };
+// };
+
 export const signout = async () => {
     const response = await api.post(`${AUTH_URL}/signout`);
     return response.data;
 };
-
-// export const profile = async () => {
-//     const response = await api.post(`${AUTH_URL}/signout`);
-//     return response.data;
-// };

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
+    deleteUserThunk,
     updateUserGeneralThunk,
     updateUserPasswordThunk,
 } from '../services/user/user-thunk.js';
@@ -38,6 +39,19 @@ const userSlice = createSlice({
             console.log(action.payload);
         });
         builder.addCase(updateUserPasswordThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        // Delete User
+        builder.addCase(deleteUserThunk.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(deleteUserThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action.payload.message;
+            console.log(action.payload);
+        });
+        builder.addCase(deleteUserThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
         });

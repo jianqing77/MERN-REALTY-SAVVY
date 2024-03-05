@@ -7,5 +7,6 @@ router.post('/signup', AuthController.signUp);
 router.post('/signin', AuthController.signIn);
 router.post('/signout', AuthController.signout);
 router.post('/authgoogle', AuthController.google);
+// router.delete('/delete/:id', AuthController.deleteUser);
 
 export default router;

@@ -1,5 +1,6 @@
 import ErrorHandler from '../utils/ErrorHandler.js';
 import catchAsync from '../utils/catchAsync.js';
+import bcryptjs from 'bcryptjs';
 
 import * as UserDao from '../dao/user-dao.js';
 
@@ -41,55 +42,28 @@ export const updateUserGeneral = catchAsync(async (req, res) => {
     res.status(200).json(rest);
 });
 
-const comparePassword = async (plainPassword, hashedPassword) => {
-    return bcrypt.compare(plainPassword, hashedPassword);
-};
-
 export const updateUserPassword = catchAsync(async (req, res) => {
-    const currentUser = req.session['currentUser'];
-    if (!currentUser) {
-        throw new ErrorHandler('User not found', 400);
-    }
-    if (currentUser._id !== req.params.id) {
-        throw new ErrorHandler(
-            'Access denied. You can only update your own account!',
-            400
-        );
-    }
-    const { oldPassword, newPassword, confirmedPassword } = req.body;
-    // Server-side validations
-    if (newPassword !== confirmedPassword) {
-        throw new ErrorHandler('New passwords do not match', 400);
-    }
+    const { newPassword } = req.body;
+    const hashedNewPassword = await bcryptjs.hash(newPassword, 10);
 
-    // Verify the old password
-    const isMatch = await comparePassword(oldPassword, currentUser.password);
-    if (!isMatch) {
-        throw new ErrorHandler('Your old password is incorrect', 401);
-    }
-
-    // Hash the new password before saving it to the database
-    const salt = await bcrypt.genSalt(10);
-    const hashedNewPassword = await bcrypt.hash(newPassword, salt);
-
-    // Save the new hashed password to the database
-    const updatedUserPassword = await UserDao.updateUser(req.params.id, {
+    const updateResult = await UserDao.updateUser(req.params.id, {
         password: hashedNewPassword,
     });
 
     if (!updateResult) {
-        throw new ErrorHandler('User not found or not updated', 404);
+        return next(new ErrorHandler('User not found or not updated', 404));
     }
 
-    // Assuming updateUser returns a user object with a toObject method (like Mongoose)
-    // Exclude sensitive data before sending the response
-    const userResponse = updateResult.toObject ? updateResult.toObject() : updateResult;
-    delete userResponse.password;
+    // Invalidate the current session and require a re-login
+    req.session.destroy((err) => {
+        if (err) {
+            return next(new ErrorHandler('Failed to destroy the session', 500));
+        }
 
-    // Send back a success response
-    res.status(200).json({
-        message: 'Password updated successfully',
-        user: userResponse,
+        res.status(200).json({
+            message:
+                'Password updated successfully. Please log in with your new password.',
+        });
     });
 });
 

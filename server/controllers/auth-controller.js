@@ -13,17 +13,34 @@ export const signUp = catchAsync(async (req, res) => {
     const { userName, email, password } = req.body;
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new UserModel({ userName, email, password: hashedPassword });
-    await UserDao.createUser(newUser);
+    try {
+        await UserDao.createUser(newUser);
+    } catch (error) {
+        console.error('Error creating user:', error);
+        throw new ErrorHandler('Error creating user', 500);
+    }
     req.session['currentUser'] = newUser;
     res.status(201).json(newUser);
 });
 
-export const signIn = catchAsync(async (req, res) => {
+export const signIn = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
-    const foundedUser = await UserDao.findUserByCredentials(email, password);
-    req.session['currentUser'] = foundedUser;
-    // console.log('User found successfully: ' + foundedUser);
-    res.status(200).json(foundedUser);
+    const result = await UserDao.findUserByCredentials(email, password);
+
+    if (result && !result.error) {
+        // If result is a user object, set the user in the session and respond
+        req.session['currentUser'] = result;
+        res.status(200).json(result);
+    } else if (result.error === 'UserNotFound') {
+        // If user is not found, send a specific message
+        res.status(404).json({ message: 'User not found. Please register.' });
+    } else if (result.error === 'PasswordIncorrect') {
+        // If password is incorrect, send a specific message
+        res.status(401).json({ message: 'Incorrect password. Please try again.' });
+    } else {
+        // Handle any other potential issues in a generic way
+        res.status(500).json({ message: 'An error occurred while signing in.' });
+    }
 });
 
 export const google = catchAsync(async (req, res) => {
@@ -53,3 +70,18 @@ export const signout = catchAsync(async (req, res) => {
     req.session.destroy();
     res.sendStatus(200);
 });
+
+// export const deleteUser = catchAsync(async (req, res, next) => {
+//     const currentUser = req.session['currentUser'];
+//     if (!currentUser) {
+//         throw new ErrorHandler('User not found', 400);
+//     }
+//     if (currentUser._id !== req.params.id) {
+//         throw new ErrorHandler(
+//             'Access denied. You can only delete your own account!',
+//             400
+//         );
+//     }
+//     await UserDao.deleteUser(currentUser._id);
+//     res.status(200).json('User has been deleted!');
+// });

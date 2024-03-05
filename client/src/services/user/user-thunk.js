@@ -28,3 +28,8 @@ export const updateUserPasswordThunk = createAsyncThunk(
         return updateUserPasswordPayload; // pass in to the reducer as action.payload
     }
 );
+
+export const deleteUserThunk = createAsyncThunk('/user/delete', async ({ userId }) => {
+    const deleteUserPayload = await UserService.deleteUser(userId);
+    return deleteUserPayload; // pass in to the reducer as action.payload
+});

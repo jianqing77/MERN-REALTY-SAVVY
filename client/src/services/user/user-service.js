@@ -19,6 +19,11 @@ export const updateUserGeneral = async (userId, userUpdateData) => {
 };
 
 export const updateUserPassword = async (userId, credentials) => {
+    console.log(
+        'client side service update user password is called',
+        userId,
+        credentials
+    );
     try {
         const response = await api.put(
             `${USER_URL}/update-password/${userId}`,
@@ -34,4 +39,12 @@ export const updateUserPassword = async (userId, credentials) => {
         console.error('Error updating password:', error);
         throw error;
     }
+};
+
+export const deleteUser = async (userId) => {
+    const response = await api.delete(`${USER_URL}/delete/${userId}`);
+    const message = response.data;
+    return {
+        message: message,
+    };
 };

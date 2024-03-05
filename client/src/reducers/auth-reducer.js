@@ -4,7 +4,7 @@ import {
     signInThunk,
     authGoogleThunk,
 } from '../services/auth/auth-thunk.js';
-import { updateUserGeneralThunk } from '../services/user/user-thunk.js';
+import { updateUserGeneralThunk, deleteUserThunk } from '../services/user/user-thunk.js';
 
 const authSlice = createSlice({
     name: 'auth',
@@ -17,6 +17,9 @@ const authSlice = createSlice({
     reducers: {
         updateUserInAuth: (state, action) => {
             state.currentUser = action.payload;
+        },
+        deleteUserInAuth: (state) => {
+            state.currentUser = null;
         },
     },
     extraReducers: (builder) => {
@@ -70,14 +73,28 @@ const authSlice = createSlice({
             state.loading = false;
             state.currentUser = action.payload.user;
             state.message = action.payload.message;
-            console.log(action.payload);
+            // console.log(action.payload);
         });
         builder.addCase(updateUserGeneralThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
         });
+        builder.addCase(deleteUserThunk.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(deleteUserThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.currentUser = null;
+            state.message = action.payload.message;
+            // console.log(action.payload);
+        });
+        builder.addCase(deleteUserThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
     },
 });
-export const { updateUserInAuth } = authSlice.actions;
+
+export const { updateUserInAuth, deleteUserInAuth } = authSlice.actions;
 
 export default authSlice.reducer;

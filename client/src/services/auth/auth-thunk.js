@@ -13,7 +13,20 @@ export const signInThunk = createAsyncThunk('/auth/signin', async (credentials) 
     return signInPayload; // pass in to the reducer as action.payload
 });
 
-export const authGoogleThunk = createAsyncThunk('/auth/google', async (userData) => {
-    const googlAuthPayload = await AuthService.authGoogle(userData);
-    return googlAuthPayload; // pass in to the reducer as action.payload
-});
+export const authGoogleThunk = createAsyncThunk(
+    '/auth/google',
+    async (userData, { rejectWithValue }) => {
+        try {
+            const googlAuthPayload = await AuthService.authGoogle(userData);
+            return googlAuthPayload;
+        } catch (error) {
+            console.error('Error in authGoogleThunk:', error);
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+// export const deleteUserThunk = createAsyncThunk('/auth/delete', async ({ userId }) => {
+//     const deleteUserPayload = await AuthService.deleteUser(userId);
+//     return deleteUserPayload; // pass in to the reducer as action.payload
+// });

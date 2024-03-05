@@ -50,6 +50,11 @@ const NavBar = () => {
                                         className="rounded-full w-8 h-8 object-cover ms-2"
                                     />
                                 </Link>
+                                <Link
+                                    to="/logout"
+                                    className="ms-5 hidden sm:inline hover:underline text-yellow-100">
+                                    Sign Out
+                                </Link>
                             </li>
                         ) : (
                             <li>

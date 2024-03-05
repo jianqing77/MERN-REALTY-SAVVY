@@ -11,14 +11,14 @@ export const findUserByEmail = (email) => UserModel.findOne({ email });
 
 export const findUserByCredentials = async (email, password) => {
     const user = await UserModel.findOne({ email });
-    // console.log('user founded with email' + user);
-    // compare the hashed password!!
-    // const compareResult = await bcryptjs.compare(password, user.password);
-    // console.log(compareResult);
-    if (user && (await bcryptjs.compare(password, user.password))) {
-        return user;
+    if (!user) {
+        return { error: 'UserNotFound' }; // Indicate that the user was not found
     }
-    return null; // If user is not found or password does not match, return null
+    const isPasswordCorrect = await bcryptjs.compare(password, user.password);
+    if (!isPasswordCorrect) {
+        return { error: 'PasswordIncorrect' }; // Indicate that the password is incorrect
+    }
+    return user; // Return the user object if credentials are correct
 };
 
 export const createUser = async (user) => {
@@ -32,4 +32,4 @@ export const updateUser = async (uid, updatedUserData) => {
     return updatedUser;
 };
 
-export const deleteUser = (uid) => UserModel.deleteOne({ _id: uid });
+export const deleteUser = (uid) => UserModel.findByIdAndDelete({ _id: uid });

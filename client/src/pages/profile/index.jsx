@@ -64,7 +64,7 @@ export default function Profile() {
                     </nav>
                 </div>
             </div>
-            <div className="col-span-12 sm:col-span-10">
+            <div className="col-span-12 sm:col-span-10 ms-8">
                 {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8"> */}
                 <Routes>
                     <Route index path="general" element={<General />} />
