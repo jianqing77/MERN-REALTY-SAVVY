@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import catchAsync from '../utils/catchAsync.js';
 import UserModel from '../models/user-model.js';
-import * as UserDao from '../dao/user-dao.js';
+import UserDao from '../dao/user-dao.js';
 import ErrorHandler from '../utils/ErrorHandler.js';
 import { generateRandomPassword, googleUserNameConversion } from '../utils/util.js';
 

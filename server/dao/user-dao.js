@@ -1,35 +1,74 @@
 import UserModel from '../models/user-model.js';
-import bcryptjs from 'bcryptjs';
-import catchAsync from '../utils/catchAsync.js';
+import bcrypt from 'bcryptjs';
+import ErrorHandler from '../utils/ErrorHandler.js'; // Make sure to use the correct path
 
-export const findAllUsers = () => UserModel.find();
+const UserDAO = {
+    findAllUsers: async () => {
+        return UserModel.find();
+    },
 
-export const findUserById = (uid) => UserModel.findById(uid);
+    findUserById: async (uid) => {
+        const user = await UserModel.findById(uid);
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        return user;
+    },
 
-export const findUserByUsername = (userName) => UserModel.findOne({ userName });
-export const findUserByEmail = (email) => UserModel.findOne({ email });
+    findUserByUsername: async (userName) => {
+        return UserModel.findOne({ userName });
+    },
 
-export const findUserByCredentials = async (email, password) => {
-    const user = await UserModel.findOne({ email });
-    if (!user) {
-        return { error: 'UserNotFound' }; // Indicate that the user was not found
-    }
-    const isPasswordCorrect = await bcryptjs.compare(password, user.password);
-    if (!isPasswordCorrect) {
-        return { error: 'PasswordIncorrect' }; // Indicate that the password is incorrect
-    }
-    return user; // Return the user object if credentials are correct
+    findUserByEmail: async (email) => {
+        return UserModel.findOne({ email });
+    },
+
+    findUserByCredentials: async (email, password) => {
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            throw new ErrorHandler('Password is incorrect', 401);
+        }
+        return user;
+    },
+
+    createUser: async (userData) => {
+        try {
+            const hashedPassword = await bcrypt.hash(userData.password, 8);
+            const user = new UserModel({
+                ...userData,
+                password: hashedPassword,
+            });
+            return await user.save();
+        } catch (error) {
+            if (error.code === 11000) {
+                throw new ErrorHandler('User already exists', 409);
+            } else {
+                throw new ErrorHandler('Error creating user', 500);
+            }
+        }
+    },
+
+    updateUser: async (uid, updatedUserData) => {
+        const updatedUser = await UserModel.findByIdAndUpdate(uid, updatedUserData, {
+            new: true,
+        });
+        if (!updatedUser) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        return updatedUser;
+    },
+
+    deleteUser: async (uid) => {
+        const deletedUser = await UserModel.findByIdAndDelete(uid);
+        if (!deletedUser) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        return deletedUser;
+    },
 };
 
-export const createUser = async (user) => {
-    return await UserModel.create(user);
-};
-
-export const updateUser = async (uid, updatedUserData) => {
-    const updatedUser = await UserModel.findByIdAndUpdate({ _id: uid }, updatedUserData, {
-        new: true,
-    });
-    return updatedUser;
-};
-
-export const deleteUser = (uid) => UserModel.findByIdAndDelete({ _id: uid });
+export default UserDAO;

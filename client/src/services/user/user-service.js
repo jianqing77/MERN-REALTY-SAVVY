@@ -6,10 +6,7 @@ const USER_URL = `${SERVER_API_URL}/user`;
 const api = axios.create({ withCredentials: true });
 
 export const updateUserGeneral = async (userId, userUpdateData) => {
-    const response = await api.put(
-        `${USER_URL}/update-general/${userId}`,
-        userUpdateData
-    );
+    const response = await api.put(`${USER_URL}/${userId}/general`, userUpdateData);
     const updatedUser = response.data;
     const message = 'Successfully updated!';
     return {
@@ -25,10 +22,7 @@ export const updateUserPassword = async (userId, credentials) => {
         credentials
     );
     try {
-        const response = await api.put(
-            `${USER_URL}/update-password/${userId}`,
-            credentials
-        );
+        const response = await api.put(`${USER_URL}/${userId}/password`, credentials);
         const updatedUser = response.data.user;
         const message = response.data.message;
         return {
@@ -42,7 +36,7 @@ export const updateUserPassword = async (userId, credentials) => {
 };
 
 export const deleteUser = async (userId) => {
-    const response = await api.delete(`${USER_URL}/delete/${userId}`);
+    const response = await api.delete(`${USER_URL}/${userId}`);
     const message = response.data;
     return {
         message: message,

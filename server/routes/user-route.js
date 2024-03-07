@@ -4,13 +4,24 @@ import { authenticateAndUpdateRequest } from '../utils/util.js';
 
 const router = express.Router();
 
+// Retrieve the profile for the current user
 router.get('/profile', UserController.profile);
-router.put('/update-general/:id', UserController.updateUserGeneral);
+
+// Update general information for a specific user by ID
 router.put(
-    '/update-password/:id',
+    '/:id/general',
+    authenticateAndUpdateRequest,
+    UserController.updateUserGeneral
+);
+
+// Update password for a specific user by ID
+router.put(
+    '/:id/password',
     authenticateAndUpdateRequest,
     UserController.updateUserPassword
 );
-router.delete('/delete/:id', UserController.deleteUser);
+
+// Delete a specific user by ID
+router.delete('/:id', UserController.deleteUser);
 
 export default router;

@@ -1,8 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 import formsPlugin from '@tailwindcss/forms';
-
 export default {
-    content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+    content: [
+        './index.html',
+        './src/**/*.{js,ts,jsx,tsx}',
+        './node_modules/tailwind-datepicker-react/dist/**/*.js', // <--- Add this line
+    ],
     theme: {
         extend: {
             fontFamily: {
@@ -28,7 +31,5 @@ export default {
             },
         },
     },
-    plugins: [
-        formsPlugin, // Reference the imported plugin here
-    ],
+    plugins: [formsPlugin],
 };

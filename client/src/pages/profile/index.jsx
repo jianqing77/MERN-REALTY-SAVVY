@@ -11,6 +11,8 @@ import {
     HeartIcon,
     ListBulletIcon,
 } from '@heroicons/react/24/outline';
+import Listings from './Listing.jsx';
+import CreateNewListing from '../listing/createNewListing.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -64,14 +66,18 @@ export default function Profile() {
                     </nav>
                 </div>
             </div>
-            <div className="col-span-12 sm:col-span-10 ms-8">
+            <div className="col-span-12 sm:col-span-10 ms-8 mt-2">
                 {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8"> */}
                 <Routes>
                     <Route index path="general" element={<General />} />
                     <Route path="security" element={<Security />} />
                     <Route path="favorites" element={<Favorites />} />
                     <Route path="notifications" element={<Notifications />} />
-                    <Route path="*" element={<General />} /> {/* Fallback route */}
+                    {/* listings and new listing routes as siblings, not  nested route */}
+                    <Route path="listings" element={<Listings />} />
+                    <Route path="listings/new" element={<CreateNewListing />} />
+                    <Route path="*" element={<General />} />
+                    {/* Fallback route: matches any URL path that hasn't been matched by preceding routes */}
                 </Routes>
                 {/* </div> */}
             </div>
