@@ -41,7 +41,7 @@ export default function CreateNewListing() {
                                         type="text"
                                         name="title"
                                         id="title"
-                                        className="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                         placeholder="Realty Savvy Apartment"
                                     />
                                 </div>
@@ -59,7 +59,7 @@ export default function CreateNewListing() {
                                     id="description"
                                     name="description"
                                     rows={3}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                     placeholder="Write a few sentences to describe the new listing..."
                                 />
                             </div>
@@ -75,7 +75,7 @@ export default function CreateNewListing() {
                                 <select
                                     id="listing-type"
                                     name="listing-type"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
                                     <option>Lease</option>
                                     <option>Sell</option>
                                 </select>
@@ -92,7 +92,7 @@ export default function CreateNewListing() {
                                 <select
                                     id="building-type"
                                     name="building-type"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
                                     <option>Single-family Home</option>
                                     <option>Multi-family Home</option>
                                     <option>Condo</option>
@@ -115,7 +115,7 @@ export default function CreateNewListing() {
                                         type="number"
                                         name="year-built"
                                         id="year-built"
-                                        className="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -143,7 +143,7 @@ export default function CreateNewListing() {
                                         ref={datepickerRef}
                                         type="text"
                                         id="available-date"
-                                        className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-200 focus:border-primary-200 block w-full pl-10 p-2.5  "
+                                        className="pl-10 p-2.5 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                         placeholder="Select date"
                                     />
                                 </div>
@@ -162,7 +162,7 @@ export default function CreateNewListing() {
                                         type="number"
                                         name="price"
                                         id="price"
-                                        className="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -178,7 +178,7 @@ export default function CreateNewListing() {
                                 <select
                                     id="listing-status"
                                     name="listing-status"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
                                     <option>Active</option>
                                     <option>Pending</option>
                                     <option>Off Market</option>
@@ -193,7 +193,7 @@ export default function CreateNewListing() {
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Photos
                             </label>
-                            <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                            <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-700 px-6 py-10">
                                 <div className="text-center">
                                     <PhotoIcon
                                         className="mx-auto h-12 w-12 text-gray-300"
@@ -202,7 +202,7 @@ export default function CreateNewListing() {
                                     <div className="mt-4 flex text-sm leading-6 text-gray-600">
                                         <label
                                             htmlFor="file-upload"
-                                            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                            className="relative cursor-pointer rounded-md bg-white font-semibold text-primary-200 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                                             <span>Upload a file</span>
                                             <input
                                                 id="file-upload"
@@ -246,7 +246,7 @@ export default function CreateNewListing() {
                                     name="city"
                                     id="city"
                                     autoComplete="address-level2"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -263,7 +263,7 @@ export default function CreateNewListing() {
                                     name="region"
                                     id="region"
                                     autoComplete="address-level1"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -280,7 +280,7 @@ export default function CreateNewListing() {
                                     name="postal-code"
                                     id="postal-code"
                                     autoComplete="postal-code"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -297,7 +297,7 @@ export default function CreateNewListing() {
                                     name="street-address"
                                     id="street-address"
                                     autoComplete="street-address"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -327,7 +327,7 @@ export default function CreateNewListing() {
                                     type="Number"
                                     name="bedrooms"
                                     id="bedrooms"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -343,7 +343,7 @@ export default function CreateNewListing() {
                                     type="Number"
                                     name="bathrooms"
                                     id="bathrooms"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -359,7 +359,7 @@ export default function CreateNewListing() {
                                     type="Number"
                                     name="sqrt"
                                     id="sqrt"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -375,7 +375,7 @@ export default function CreateNewListing() {
                                     type="Number"
                                     name="sqrt"
                                     id="sqrt"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -391,7 +391,7 @@ export default function CreateNewListing() {
                                     type="text"
                                     name="parking"
                                     id="parking"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -407,164 +407,13 @@ export default function CreateNewListing() {
                                     type="text"
                                     name="heat-cooling"
                                     id="heat-cooling"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* Amenities */}
-                <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
-                    <div>
-                        <h2 className="text-base font-semibold leading-7 text-gray-900">
-                            Amenities
-                        </h2>
-                        <p className="mt-1 text-sm leading-6 text-gray-600">
-                            Use a permanent address where you can receive mail.
-                        </p>
-                    </div>
-
-                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="first-name"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                First name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="first-name"
-                                    id="first-name"
-                                    autoComplete="given-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="last-name"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Last name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="last-name"
-                                    id="last-name"
-                                    autoComplete="family-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-4">
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Email address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="country"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Country
-                            </label>
-                            <div className="mt-2">
-                                <select
-                                    id="country"
-                                    name="country"
-                                    autoComplete="country-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                    <option>United States</option>
-                                    <option>Canada</option>
-                                    <option>Mexico</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="col-span-full">
-                            <label
-                                htmlFor="street-address"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Street address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="street-address"
-                                    id="street-address"
-                                    autoComplete="street-address"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-2 sm:col-start-1">
-                            <label
-                                htmlFor="city"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                City
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="city"
-                                    id="city"
-                                    autoComplete="address-level2"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-2">
-                            <label
-                                htmlFor="region"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                State / Province
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="region"
-                                    id="region"
-                                    autoComplete="address-level1"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-2">
-                            <label
-                                htmlFor="postal-code"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                ZIP / Postal code
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="postal-code"
-                                    id="postal-code"
-                                    autoComplete="postal-code"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/* Contact Info */}
+                -{/* Contact Info */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                     <div>
                         <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -574,13 +423,13 @@ export default function CreateNewListing() {
                             Use a permanent address where you can receive mail.
                         </p>
                     </div>
-
                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                        {/* first name */}
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="first-name"
                                 className="block text-sm font-medium leading-6 text-gray-900">
-                                First name
+                                First Name
                             </label>
                             <div className="mt-2">
                                 <input
@@ -588,16 +437,16 @@ export default function CreateNewListing() {
                                     name="first-name"
                                     id="first-name"
                                     autoComplete="given-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
-
+                        {/* last name */}
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="last-name"
                                 className="block text-sm font-medium leading-6 text-gray-900">
-                                Last name
+                                Last Name
                             </label>
                             <div className="mt-2">
                                 <input
@@ -605,11 +454,55 @@ export default function CreateNewListing() {
                                     name="last-name"
                                     id="last-name"
                                     autoComplete="family-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
-
+                        {/* agency name */}
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="agency-name"
+                                className="block text-sm font-medium leading-6 ">
+                                Agency
+                            </label>
+                            <div className="relative mt-2 rounded-md shadow-sm">
+                                <input
+                                    type="text"
+                                    name="agency-name"
+                                    id="agency-name"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                />
+                            </div>
+                        </div>
+                        {/* phone number */}
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="phoneNumber"
+                                className="block text-sm font-medium leading-6 ">
+                                Phone Number
+                            </label>
+                            <div className="relative mt-2 rounded-md shadow-sm">
+                                <div className="absolute inset-y-0 left-0 flex items-center">
+                                    <label htmlFor="country" className="sr-only">
+                                        Country
+                                    </label>
+                                    <select
+                                        id="country"
+                                        name="country"
+                                        autoComplete="country"
+                                        className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-1 text-gray-900 focus:ring-2 focus:ring-inset focus:ring-primary-200 sm:text-sm">
+                                        <option>US</option>
+                                    </select>
+                                </div>
+                                <input
+                                    type="text"
+                                    name="phoneNumber"
+                                    id="phoneNumber"
+                                    className="block w-full rounded-md border-0 py-1.5 pl-16 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                />
+                            </div>
+                        </div>
+                        {/* email */}
                         <div className="sm:col-span-4">
                             <label
                                 htmlFor="email"
@@ -622,7 +515,7 @@ export default function CreateNewListing() {
                                     name="email"
                                     type="email"
                                     autoComplete="email"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>

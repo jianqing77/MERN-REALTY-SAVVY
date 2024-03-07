@@ -44,14 +44,9 @@ const ListingSchema = new Schema(
             parking: { type: String },
             heatingAndCooling: { type: String },
         },
-        amenities: {
-            kitchen: { type: String },
-            flooring: { type: String },
-            energyEfficiency: { type: String },
-            smartHomeFeatures: { type: String },
-        },
         contactInfo: {
-            agentName: { type: String, required: true },
+            fistName: { type: String, required: true },
+            lastName: { type: String, required: true },
             agency: { type: String, required: true },
             phoneNumber: { type: String, required: true },
             email: { type: String, required: true },
