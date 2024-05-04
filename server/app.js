@@ -7,6 +7,7 @@ import MongoStore from 'connect-mongo';
 import userRouter from './routes/user-route.js';
 import authRouter from './routes/auth-route.js';
 import listingRouter from './routes/listing-route.js';
+import apartmentRouter from './routes/apartment-route.js';
 import ErrorHandler from './utils/ErrorHandler.js';
 import cookieParser from 'cookie-parser';
 // config .env
@@ -61,6 +62,7 @@ mongoose
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/listing', listingRouter);
+app.use('/api/apartments', apartmentRouter); // New route for listings from the public API
 
 // =================================================================
 // ======================= Middlewares =============================

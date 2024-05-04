@@ -19,7 +19,7 @@ function App() {
                 <BrowserRouter>
                     <div className="flex flex-col min-h-screen">
                         <NavBar />
-                        <div className="flex-grow">
+                        <main className="flex-grow min-h-screen">
                             <Routes>
                                 <Route index path="/" element={<Home />}></Route>
                                 <Route path="/about" element={<About />}></Route>
@@ -31,7 +31,7 @@ function App() {
                                         element={<Profile />}></Route>
                                 </Route>
                             </Routes>
-                        </div>
+                        </main>
                         <Footer />
                     </div>
                 </BrowserRouter>

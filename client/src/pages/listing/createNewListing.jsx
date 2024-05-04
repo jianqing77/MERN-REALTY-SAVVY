@@ -4,11 +4,11 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import Datepicker from 'flowbite-datepicker/Datepicker';
 
 export default function CreateNewListing() {
-    const datepickerRef = useRef(null); // Create a ref that we can assign to the input element
+    const datePickerRef = useRef(null); // Create a ref that we can assign to the input element
 
     useEffect(() => {
-        if (datepickerRef.current) {
-            new Datepicker(datepickerRef.current, {
+        if (datePickerRef.current) {
+            new Datepicker(datePickerRef.current, {
                 autoHide: true,
             });
         }
@@ -140,7 +140,7 @@ export default function CreateNewListing() {
                                         </svg>
                                     </div>
                                     <input
-                                        ref={datepickerRef}
+                                        ref={datePickerRef}
                                         type="text"
                                         id="available-date"
                                         className="pl-10 p-2.5 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"

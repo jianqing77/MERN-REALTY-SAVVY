@@ -11,12 +11,8 @@ const ListingSchema = new Schema(
         },
         description: { type: String, required: true },
         listingDate: { type: Date, default: Date.now },
-        listingStatus: {
-            type: String,
-            enum: ['Active', 'Pending', 'Off Market'],
-            default: 'Active',
-        },
-        price: { type: Number, required: true },
+        price: { type: String, required: true },
+        reducedAmount: { type: Number },
         propertyType: {
             type: String,
             enum: [
@@ -29,7 +25,6 @@ const ListingSchema = new Schema(
             ],
             required: true,
         },
-        yearBuilt: { type: Number },
         location: {
             address: { type: String, required: true },
             city: { type: String, required: true },
@@ -37,22 +32,16 @@ const ListingSchema = new Schema(
             zipCode: { type: String, required: true },
         },
         features: {
-            bedrooms: { type: Number, required: true },
-            bathrooms: { type: Number, required: true },
-            squareFootage: { type: Number },
-            lotSize: { type: Number },
-            parking: { type: String },
-            heatingAndCooling: { type: String },
+            bedrooms: { type: String, required: true },
+            bathrooms: { type: String, required: true },
+            sqft: { type: String },
         },
         contactInfo: {
-            fistName: { type: String, required: true },
-            lastName: { type: String, required: true },
-            agency: { type: String, required: true },
-            phoneNumber: { type: String, required: true },
+            agentName: { type: String, required: true },
             email: { type: String, required: true },
         },
         media: {
-            imageUrl: [{ type: String }],
+            imageUrls: [{ type: String }],
         },
         metadata: {
             views: { type: Number, default: 0 },

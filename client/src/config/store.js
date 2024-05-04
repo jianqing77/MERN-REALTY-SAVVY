@@ -3,10 +3,13 @@ import { combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import authReducer from '../reducers/auth-reducer';
+import apartmentsReducer from '../reducers/apartmentAPI-reducer';
+import userReducer from '../reducers/user-reducer';
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    // add more reducers here
+    user: userReducer,
+    apartments: apartmentsReducer, // add the apartments reducer here
 });
 
 const persistConfig = {
