@@ -1,18 +1,6 @@
 // apartmentsThunk.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { findAllApartments, findRentals } from './apartment-api-service.js'; // Adjust the import path as needed
-
-export const fetchApartmentsThunk = createAsyncThunk(
-    'apartments/fetchAll',
-    async (_, { rejectWithValue }) => {
-        try {
-            const response = await findAllApartments();
-            return response;
-        } catch (error) {
-            return rejectWithValue(error);
-        }
-    }
-);
+import { findRentals, findSales } from './apartment-api-service.js'; // Adjust the import path as needed
 
 export const fetchRentalsThunk = createAsyncThunk(
     'apartments/fetchRentals',
@@ -35,7 +23,7 @@ export const fetchSalesThunk = createAsyncThunk(
     'apartments/fetchSales',
     async ({ location, resultsPerPage, page }, { rejectWithValue }) => {
         try {
-            const salesPayload = await findRentals({
+            const salesPayload = await findSales({
                 location,
                 resultsPerPage,
                 page,
