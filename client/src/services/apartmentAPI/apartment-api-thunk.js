@@ -30,3 +30,20 @@ export const fetchRentalsThunk = createAsyncThunk(
         }
     }
 );
+
+export const fetchSalesThunk = createAsyncThunk(
+    'apartments/fetchSales',
+    async ({ location, resultsPerPage, page }, { rejectWithValue }) => {
+        try {
+            const salesPayload = await findRentals({
+                location,
+                resultsPerPage,
+                page,
+            });
+            return salesPayload;
+        } catch (error) {
+            console.error('Error in thunk fetchSales:', error);
+            return rejectWithValue(error.message);
+        }
+    }
+);

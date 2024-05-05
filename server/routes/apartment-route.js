@@ -11,4 +11,10 @@ router.get(
     ApartmentController.getRentalListings
 );
 
+router.get(
+    '/sales',
+    ApartmentController.getLocationId,
+    ApartmentController.getSaleListings
+);
+
 export default router;

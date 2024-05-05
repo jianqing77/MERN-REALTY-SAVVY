@@ -40,12 +40,12 @@ export default function SignIn() {
         <section
             className="relative flex items-center justify-center"
             style={{
-                height: '100vh', // ensures that the section is always as tall as the viewport
+                height: '100vh', // ensures that this section is always as tall as the viewport
                 backgroundImage: `url(${WelcomePic})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
             }}>
-            <div className="absolute inset-0 bg-white bg-opacity-30"></div>
+            <div className="absolute inset-0 bg-dark-200 bg-opacity-30"></div>
             <div className="relative w-full rounded-lg shadow md:mt-0 max-w-md bg-dark-100 dark:border-gray-700">
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 className="flex justify-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

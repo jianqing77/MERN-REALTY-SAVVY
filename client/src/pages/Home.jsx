@@ -1,68 +1,90 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import WelcomePic from '../assets/auth-2.jpg';
+import { Link, useNavigate } from 'react-router-dom';
+
 import {
-    fetchApartmentsThunk,
     fetchRentalsThunk,
+    fetchSalesThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js';
-import { setPage } from '../reducers/apartmentAPI-reducer';
-import ListingCard from './listing/listingCard.jsx';
 
 const Home = () => {
+    const [category, setCategory] = useState('for-sale'); // Default category
+    const [location, setLocation] = useState('');
+    const { dataFetched } = useSelector((state) => state.apartments);
+
+    const navigate = useNavigate(); // to navigate to result page
     const dispatch = useDispatch();
-    const { listings, loading, error, currentPage, totalCount, limit } = useSelector(
-        (state) => state.apartments
-    );
+
+    const locationChangeHandler = (event) => {
+        setLocation(event.target.value);
+    };
+
+    const categoryChangeHandler = (event) => {
+        setCategory(event.target.value);
+    };
 
     useEffect(() => {
-        dispatch(
-            fetchRentalsThunk({ location: 'New York', resultsPerPage: 10, page: 1 })
-        );
-    }, [dispatch]);
-
-    const handlePrevPage = () => {
-        if (currentPage > 1) {
-            const newPage = currentPage - 1;
-            dispatch(setPage(newPage));
-            dispatch(fetchApartmentsThunk());
+        if (dataFetched) {
+            navigate('/results');
         }
+    }, [dataFetched, navigate]);
+
+    const searchHandler = async (event) => {
+        event.preventDefault();
+        const action = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
+        dispatch(action({ location: location, resultsPerPage: 10, page: 1 }));
     };
-
-    const handleNextPage = () => {
-        const maxPages = Math.ceil(totalCount / limit);
-        if (currentPage < maxPages) {
-            const newPage = currentPage + 1;
-            dispatch(setPage(newPage));
-            dispatch(fetchApartmentsThunk());
-        }
-    };
-
-    if (loading) {
-        return <div>Loading apartments...</div>;
-    }
-
-    if (error) {
-        return <div>An error occurred: {error}</div>;
-    }
 
     return (
-        <div>
-            <div className="px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-                {listings.map((listing) => (
-                    <ListingCard key={listing.id} listing={listing} />
-                ))}
-            </div>
-            <div className="pagination-controls">
-                <button onClick={handlePrevPage} disabled={currentPage <= 1}>
-                    Previous
-                </button>
-                <span>
-                    Page {currentPage} of {Math.ceil(totalCount / limit)}
-                </span>
-                <button
-                    onClick={handleNextPage}
-                    disabled={currentPage >= Math.ceil(totalCount / limit)}>
-                    Next
-                </button>
+        <div style={{ height: '100vh', position: 'relative' }}>
+            <div
+                style={{
+                    backgroundImage: `url(${WelcomePic})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                }}
+            />
+            <div className="absolute inset-0 bg-dark-200 bg-opacity-30 z-20"></div>
+            <div
+                className="min-h-screen flex justify-center items-center"
+                style={{ zIndex: 30, position: 'relative' }}>
+                <div className="container mx-auto bg-dark-100 rounded-lg p-14">
+                    <form onSubmit={searchHandler}>
+                        <h1 className="text-center font-bold text-yellow-100 text-4xl">
+                            Discover Your New Home
+                        </h1>
+                        <p className="mx-auto font-normal text-sm my-6 text-yellow-100 text-center">
+                            Enter the location you are interested in and select whether
+                            you are looking for properties to buy or rent.
+                        </p>
+                        <div className="sm:flex items-center bg-white rounded-lg overflow-hidden px-2 py-1 justify-between">
+                            <input
+                                className="text-base text-gray-400 flex-grow outline-none px-2"
+                                type="text"
+                                placeholder="Enter location (e.g., New York, Los Angeles)"
+                                value={location}
+                                onChange={locationChangeHandler}
+                            />
+                            <div className="flex items-center px-2 rounded-lg space-x-4 mx-auto">
+                                <select
+                                    className="text-base text-gray-800 outline-none border-3 border-dark-100 px-4 py-2 rounded-lg"
+                                    value={category}
+                                    onChange={categoryChangeHandler}>
+                                    <option value="for-sale">For Sale</option>
+                                    <option value="for-rent">For Rent</option>
+                                </select>
+                                <button className="bg-dark-200 text-white text-base rounded-lg px-4 py-2">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

@@ -11,6 +11,7 @@ import NavBar from './components/Navigation.jsx';
 import Footer from './components/Footer.jsx';
 import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
+import ResultPage from './pages/Result.jsx';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                         <main className="flex-grow min-h-screen">
                             <Routes>
                                 <Route index path="/" element={<Home />}></Route>
+                                <Route path="/results" element={<ResultPage />}></Route>
                                 <Route path="/about" element={<About />}></Route>
                                 <Route path="/signin" element={<SignIn />}></Route>
                                 <Route path="/signup" element={<SignUp />}></Route>

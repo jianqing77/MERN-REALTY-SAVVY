@@ -180,3 +180,33 @@ export const getRentalListings = async (req, res) => {
         res.status(500).send('Error fetching rental properties');
     }
 };
+
+export const getSaleListings = async (req, res) => {
+    const locationId = req.locationId; // Use the location ID set by getLocationId middleware
+    const resultsPerPage = req.query.resultsPerPage || 20;
+    const page = req.query.page || 1;
+
+    const options = {
+        method: 'GET',
+        url: 'https://realty-us.p.rapidapi.com/properties/search-buy',
+        params: {
+            location: locationId,
+            resultsPerPage: resultsPerPage,
+            page: page,
+        },
+        headers: {
+            'X-RapidAPI-Key': APARTMENT_API_KEY,
+            'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',
+        },
+    };
+
+    try {
+        const response = await axios.request(options);
+        const listings = response.data.data.results.map(mapApiDataToListingSchema);
+        console.log(response.data.data.results);
+        res.json(listings);
+    } catch (error) {
+        console.error('Error fetching sale properties:', error);
+        res.status(500).send('Error fetching sale properties');
+    }
+};

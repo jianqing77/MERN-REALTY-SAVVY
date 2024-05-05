@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
     fetchApartmentsThunk,
     fetchRentalsThunk,
+    fetchSalesThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js'; // Adjust the import path as needed
 
 const apartmentsSlice = createSlice({
@@ -11,9 +12,7 @@ const apartmentsSlice = createSlice({
         listings: [],
         loading: false,
         error: null,
-        currentPage: 1,
-        totalCount: 0,
-        limit: 20,
+        dataFetched: false, // Flag to indicate successful data fetching
     },
     reducers: {
         setPage(state, action) {
@@ -22,23 +21,15 @@ const apartmentsSlice = createSlice({
         setLimit(state, action) {
             state.limit = action.payload;
         },
+        resetFetchState(state) {
+            state.loading = false;
+            state.error = null;
+            state.dataFetched = false;
+            state.listings = [];
+        },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchApartmentsThunk.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(fetchApartmentsThunk.fulfilled, (state, action) => {
-                state.loading = false;
-                state.listings = action.payload.listings;
-                state.totalCount = action.payload.totalCount;
-            })
-            .addCase(fetchApartmentsThunk.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-                state.listings = [];
-            })
             // Handling of fetchRentalsThunk
             .addCase(fetchRentalsThunk.pending, (state) => {
                 state.loading = true;
@@ -47,8 +38,24 @@ const apartmentsSlice = createSlice({
             .addCase(fetchRentalsThunk.fulfilled, (state, action) => {
                 state.loading = false;
                 state.listings = action.payload;
+                state.dataFetched = true;
             })
             .addCase(fetchRentalsThunk.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.listings = [];
+            })
+            // Handling of fetchSalesThunk
+            .addCase(fetchSalesThunk.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchSalesThunk.fulfilled, (state, action) => {
+                state.loading = false;
+                state.listings = action.payload;
+                state.dataFetched = true;
+            })
+            .addCase(fetchSalesThunk.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.listings = [];
@@ -56,5 +63,5 @@ const apartmentsSlice = createSlice({
     },
 });
 
-export const { setPage, setLimit } = apartmentsSlice.actions;
+export const { setPage, setLimit, resetFetchState } = apartmentsSlice.actions;
 export default apartmentsSlice.reducer;

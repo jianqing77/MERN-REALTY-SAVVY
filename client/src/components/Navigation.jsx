@@ -31,27 +31,21 @@ const NavBar = () => {
                     <img src={logoAvatar} alt="Logo" className="h-14" />
                 </Link>
                 {/* Search Bar */}
-                <div className="col-span-5 flex items-center justify-end">
-                    <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        placeholder="Search..."
-                        className="block rounded-md border-gray-400 bg-slate-100 p-2 w-1/2 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-200 focus:border-primary-200 "
-                    />
-                </div>
+                <div className="col-span-5 flex items-center justify-end"></div>
                 {/* Navbar Items */}
                 <div className="col-span-4 flex justify-center items-center">
                     <ul className="flex gap-3 items-center">
                         <li>
-                            <Link to="/" className="hover:underline text-yellow-100">
+                            <Link
+                                to="/"
+                                className="hover:underline text-yellow-100 font-semibold">
                                 Home
                             </Link>
                         </li>
                         <li>
                             <Link
                                 to="/about"
-                                className="hidden sm:inline hover:underline text-yellow-100">
+                                className="hidden sm:inline hover:underline text-yellow-100 font-semibold">
                                 About
                             </Link>
                         </li>
@@ -66,7 +60,7 @@ const NavBar = () => {
                                 </Link>
                                 <button
                                     onClick={signOutClickHandler}
-                                    className="ms-5 hidden sm:inline hover:underline text-yellow-100">
+                                    className="ms-5 hidden sm:inline hover:underline text-yellow-100 font-semibold">
                                     Sign Out
                                 </button>
                             </li>
@@ -74,8 +68,8 @@ const NavBar = () => {
                             <li>
                                 <Link
                                     to="/signin"
-                                    className="hidden sm:inline hover:underline text-yellow-100">
-                                    Sign in
+                                    className="hidden sm:inline hover:underline text-yellow-100 font-semibold">
+                                    Sign Up / Sign In
                                 </Link>
                             </li>
                         )}
