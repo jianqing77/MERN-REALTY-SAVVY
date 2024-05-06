@@ -1,7 +1,6 @@
 // apartmentsSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import {
-    fetchApartmentsThunk,
     fetchRentalsThunk,
     fetchSalesThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js'; // Adjust the import path as needed
@@ -9,17 +8,18 @@ import {
 const apartmentsSlice = createSlice({
     name: 'apartments',
     initialState: {
+        searchLocation: null,
         listings: [],
         loading: false,
         error: null,
         dataFetched: false, // Flag to indicate successful data fetching
+        currentPage: 1,
+        totalRecords: 0,
+        resultsPerPage: 20,
     },
     reducers: {
-        setPage(state, action) {
+        setCurrentPage(state, action) {
             state.currentPage = action.payload;
-        },
-        setLimit(state, action) {
-            state.limit = action.payload;
         },
         resetFetchState(state) {
             state.loading = false;
@@ -52,8 +52,12 @@ const apartmentsSlice = createSlice({
             })
             .addCase(fetchSalesThunk.fulfilled, (state, action) => {
                 state.loading = false;
-                state.listings = action.payload;
                 state.dataFetched = true;
+                state.searchLocation = action.payload.searchLocation;
+                state.currentPage = action.payload.currentPage;
+                state.totalRecords = action.payload.totalRecords;
+                state.listings = action.payload.listings;
+                state.resultsPerPage = action.payload.resultsPerPage;
             })
             .addCase(fetchSalesThunk.rejected, (state, action) => {
                 state.loading = false;
@@ -63,5 +67,5 @@ const apartmentsSlice = createSlice({
     },
 });
 
-export const { setPage, setLimit, resetFetchState } = apartmentsSlice.actions;
+export const { setCurrentPage, setLimit, resetFetchState } = apartmentsSlice.actions;
 export default apartmentsSlice.reducer;

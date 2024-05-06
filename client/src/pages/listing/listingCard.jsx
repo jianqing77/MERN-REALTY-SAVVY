@@ -14,31 +14,30 @@ const ListingCard = ({ listing }) => {
     } = listing;
 
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
+        <div className="grid grid-cols-10 rounded overflow-hidden shadow-lg bg-white py-2 border-0">
             <div
-                className="w-1/2 h-32 bg-cover bg-center"
+                className="col-span-3 w-40 h-32 bg-cover bg-center rounded-xl ms-16"
                 style={{ backgroundImage: `url(${media.imageUrls[0]})` }}></div>
-            <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{title}</div>
-                <p className="text-gray-700 text-base">
-                    Price:
-                    <span className="font-semibold">${price.toLocaleString()}</span>
-                </p>
-                <p className="text-gray-600 text-sm">Status: {listingType}</p>
-                <p className="text-gray-600 text-sm">Property Type: {propertyType}</p>
-                <p className="text-gray-600 text-sm">
-                    {location.address}, {location.city}, {location.state}
-                    {location.zipCode}
-                </p>
-                <p className="text-gray-600 text-sm">
-                    Beds: {features.bedrooms} | Baths: {features.bathrooms} | Sqft:{' '}
-                    {features.squareFootage}
-                </p>
+            <div className="col-span-4">
+                <div className="pe-4">
+                    <div className="font-bold text-xl mb-2">{title}</div>
+                    <p className="text-gray-700 text-sm">
+                        Price:
+                        <span className="font-semibold"> ${price.toLocaleString()}</span>
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                        {location.address}, {location.city}, {location.state}{' '}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                        Beds: {features.bedrooms} | Baths: {features.bathrooms} | Sqft:{' '}
+                        {features.squareFootage}
+                    </p>
+                </div>
             </div>
-            <div className="px-6 py-4">
-                <p className="text-gray-800 text-sm font-semibold">Contact:</p>
-                <p className="text-gray-800 text-sm">{contactInfo.agentName}</p>
-                <p className="text-gray-800 text-sm">Email: {contactInfo.email}</p>
+            <div className="col-span-3">
+                <p className="text-gray-600 text-sm">Property Type: {propertyType}</p>
+                <p className="text-gray-600 text-sm">Status: {listingType}</p>
+                <p className="text-gray-600 text-sm">Zip Code: {location.zipCode}</p>
             </div>
         </div>
     );
@@ -52,7 +51,7 @@ ListingCard.propTypes = {
         listingType: PropTypes.string.isRequired,
         description: PropTypes.string,
         listingDate: PropTypes.string,
-        price: PropTypes.number.isRequired,
+        price: PropTypes.string.isRequired,
         propertyType: PropTypes.string.isRequired,
         location: PropTypes.shape({
             address: PropTypes.string.isRequired,
@@ -61,17 +60,17 @@ ListingCard.propTypes = {
             zipCode: PropTypes.string.isRequired,
         }).isRequired,
         features: PropTypes.shape({
-            bedrooms: PropTypes.number.isRequired,
-            bathrooms: PropTypes.number.isRequired,
-            squareFootage: PropTypes.number.isRequired,
-            lotSize: PropTypes.number,
+            bedrooms: PropTypes.string.isRequired,
+            bathrooms: PropTypes.string.isRequired,
+            squareFootage: PropTypes.string.isRequired,
+            lotSize: PropTypes.string,
         }).isRequired,
         contactInfo: PropTypes.shape({
             agentName: PropTypes.string,
             email: PropTypes.string,
         }),
         media: PropTypes.shape({
-            imageUrls: PropTypes.string.isRequired,
+            imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
         }).isRequired,
         metadata: PropTypes.object,
     }).isRequired,

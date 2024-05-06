@@ -173,7 +173,6 @@ export const getRentalListings = async (req, res) => {
     try {
         const response = await axios.request(options);
         const listings = response.data.data.results.map(mapApiDataToListingSchema);
-        console.log(response.data.data.results);
         res.json(listings);
     } catch (error) {
         console.error('Error fetching rental properties:', error);
@@ -183,16 +182,14 @@ export const getRentalListings = async (req, res) => {
 
 export const getSaleListings = async (req, res) => {
     const locationId = req.locationId; // Use the location ID set by getLocationId middleware
-    const resultsPerPage = req.query.resultsPerPage || 20;
-    const page = req.query.page || 1;
+    const currentPage = req.query.page || 1;
 
     const options = {
         method: 'GET',
         url: 'https://realty-us.p.rapidapi.com/properties/search-buy',
         params: {
             location: locationId,
-            resultsPerPage: resultsPerPage,
-            page: page,
+            page: currentPage,
         },
         headers: {
             'X-RapidAPI-Key': APARTMENT_API_KEY,
@@ -202,9 +199,20 @@ export const getSaleListings = async (req, res) => {
 
     try {
         const response = await axios.request(options);
+        const currentPage = response.data.meta.currentPage;
+        const totalRecords = response.data.meta.totalRecords;
+        const resultsPerPage = response.data.meta.limit;
         const listings = response.data.data.results.map(mapApiDataToListingSchema);
-        console.log(response.data.data.results);
-        res.json(listings);
+
+        const result = {
+            searchLocation: locationId,
+            totalRecords: totalRecords,
+            resultsPerPage: resultsPerPage,
+            currentPage: currentPage,
+            listings: listings,
+        };
+
+        res.json(result);
     } catch (error) {
         console.error('Error fetching sale properties:', error);
         res.status(500).send('Error fetching sale properties');

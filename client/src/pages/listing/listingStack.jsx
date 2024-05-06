@@ -47,6 +47,11 @@ const ListingStack = ({ listing }) => {
                     Sqft: {features.squareFootage}
                 </p>
             </div>
+            {/* <div className="px-6 py-4">
+                    <p className="text-gray-800 text-sm font-semibold">Contact:</p>
+                    <p className="text-gray-800 text-sm">{contactInfo.agentName}</p>
+                    <p className="text-gray-800 text-sm">Email: {contactInfo.email}</p>
+                </div> */}
         </li>
     );
 };

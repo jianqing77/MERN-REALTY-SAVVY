@@ -11,7 +11,7 @@ import {
 const Home = () => {
     const [category, setCategory] = useState('for-sale'); // Default category
     const [location, setLocation] = useState('');
-    const { dataFetched } = useSelector((state) => state.apartments);
+    const { loading, error, dataFetched } = useSelector((state) => state.apartments);
 
     const navigate = useNavigate(); // to navigate to result page
     const dispatch = useDispatch();
@@ -24,17 +24,25 @@ const Home = () => {
         setCategory(event.target.value);
     };
 
-    useEffect(() => {
-        if (dataFetched) {
-            navigate('/results');
-        }
-    }, [dataFetched, navigate]);
-
     const searchHandler = async (event) => {
         event.preventDefault();
         const action = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
-        dispatch(action({ location: location, resultsPerPage: 10, page: 1 }));
+        dispatch(action({ location: location, currentPage: 1 }));
     };
+
+    useEffect(() => {
+        if (dataFetched) {
+            navigate('/results', { state: { location, category } });
+        }
+    }, [dataFetched, navigate, location, category]);
+
+    if (loading) {
+        return <div>Loading apartments...</div>;
+    }
+
+    if (error) {
+        return <div>An error occurred: {error}</div>;
+    }
 
     return (
         <div style={{ height: '100vh', position: 'relative' }}>
@@ -64,7 +72,7 @@ const Home = () => {
                         </p>
                         <div className="sm:flex items-center bg-white rounded-lg overflow-hidden px-2 py-1 justify-between">
                             <input
-                                className="text-base text-gray-400 flex-grow outline-none px-2"
+                                className="text-base text-gray-400 flex-grow outline-none px-2 border-none focus:ring-0"
                                 type="text"
                                 placeholder="Enter location (e.g., New York, Los Angeles)"
                                 value={location}
@@ -72,7 +80,7 @@ const Home = () => {
                             />
                             <div className="flex items-center px-2 rounded-lg space-x-4 mx-auto">
                                 <select
-                                    className="text-base text-gray-800 outline-none border-3 border-dark-100 px-4 py-2 rounded-lg"
+                                    className="text-base text-gray-800 outline-none border-3 border-dark-100 px-4 py-2 rounded-lg focus:ring-primary-200 focus:ring-2 focus:border-none"
                                     value={category}
                                     onChange={categoryChangeHandler}>
                                     <option value="for-sale">For Sale</option>
