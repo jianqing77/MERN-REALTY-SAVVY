@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import WelcomePic from '../assets/auth-2.jpg';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLoadScript, Autocomplete } from '@react-google-maps/api';
 
 import {
     fetchRentalsThunk,
     fetchSalesThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js';
+
+const libraries = ['places'];
+const GOOGLE_MAPS_API_KEY = import.meta.env.GOOGLE_MAPS_API_KEY;
 
 const Home = () => {
     const [category, setCategory] = useState('for-sale'); // Default category
@@ -36,13 +40,8 @@ const Home = () => {
         }
     }, [dataFetched, navigate, location, category]);
 
-    if (loading) {
-        return <div>Loading apartments...</div>;
-    }
-
-    if (error) {
-        return <div>An error occurred: {error}</div>;
-    }
+    if (loading) return <div>Loading apartments...</div>;
+    if (error) return <div>An error occurred: {error}</div>;
 
     return (
         <div style={{ height: '100vh', position: 'relative' }}>

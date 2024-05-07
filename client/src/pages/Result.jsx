@@ -36,9 +36,6 @@ const ResultPage = () => {
     const totalPages = Math.ceil(totalRecords / resultsPerPage);
 
     const fetchPageData = (pageNum) => {
-        console.log('fetchPageData is called');
-        console.log(location);
-        console.log(pageNum);
         const action = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
         dispatch(action({ location, page: pageNum }));
         navigate('/results', { state: { location, category } });
@@ -68,18 +65,13 @@ const ResultPage = () => {
     };
 
     const searchBtnHandler = () => {
-        setPage(1); // Reset to page 1 on new search
+        setPage(1);
         dispatch(
             category === 'for-sale'
-                ? fetchSalesThunk({ location, currentPage: 1 })
-                : fetchRentalsThunk({ location, currentPage: 1 })
+                ? fetchSalesThunk({ location: location, currentPage: 1 })
+                : fetchRentalsThunk({ location: location, currentPage: 1 })
         );
     };
-
-    // useEffect(() => {
-    //     const fetchThunk = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
-    //     dispatch(fetchThunk({ location, currentPage: page }));
-    // }, [page, dispatch, category, location, searchLocation]);
 
     return (
         <div className="grid grid-cols-6">
