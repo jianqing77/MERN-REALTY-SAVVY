@@ -11,7 +11,7 @@ import NavBar from './components/Navigation.jsx';
 import Footer from './components/Footer.jsx';
 import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
-import ResultPage from './pages/Result.jsx';
+import ResultPage from './pages/listing/results.jsx';
 
 function App() {
     return (

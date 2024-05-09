@@ -4,10 +4,11 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import {
     fetchRentalsThunk,
     fetchSalesThunk,
-} from '../services/apartmentAPI/apartment-api-thunk.js';
-import ListingStack from './listing/listingStack.jsx';
-import ListingCard from './listing/listingCard.jsx';
-import { setCurrentPage } from '../reducers/apartmentAPI-reducer.js';
+    fetchCoordinatesThunk, // Make sure you import this thunk
+} from '../../services/apartmentAPI/apartment-api-thunk.js';
+import ListingCard from './listingCard.jsx';
+import { setCurrentPage } from '../../reducers/apartmentAPI-reducer.js';
+import MapComponent from './mapCluster.jsx';
 
 const ResultPage = () => {
     const searchLocation = useLocation();
@@ -15,14 +16,6 @@ const ResultPage = () => {
 
     const [location, setLocation] = useState('');
     const [category, setCategory] = useState('for-sale');
-
-    useEffect(() => {
-        if (state) {
-            setLocation(state.location);
-            setCategory(state.category);
-        }
-    }, [state]);
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -34,6 +27,28 @@ const ResultPage = () => {
 
     // Calculate total pages
     const totalPages = Math.ceil(totalRecords / resultsPerPage);
+
+    useEffect(() => {
+        if (state) {
+            setLocation(state.location);
+            setCategory(state.category);
+        }
+    }, [state]);
+
+    useEffect(() => {
+        if (listings.length > 0) {
+            listings.forEach((listing) => {
+                if (!listing.coordinates) {
+                    const fullAddress = `${listing.location.address}, ${listing.location.city}, ${listing.location.state}, ${listing.location.zipCode}`;
+                    dispatch(fetchCoordinatesThunk({ address: fullAddress }));
+                }
+            });
+        }
+        console.log(
+            'Filtered listings for MapComponent:',
+            listings.filter((listing) => listing.coordinates)
+        );
+    }, [listings, dispatch]);
 
     const fetchPageData = (pageNum) => {
         const action = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
@@ -55,7 +70,7 @@ const ResultPage = () => {
         }
     };
 
-    // Search Bar
+    // Search Bar Handling
     const locationChangeHandler = (event) => {
         setLocation(event.target.value);
     };
@@ -72,10 +87,13 @@ const ResultPage = () => {
                 : fetchRentalsThunk({ location: location, currentPage: 1 })
         );
     };
-
     return (
         <div className="grid grid-cols-6">
-            <div className="col-span-3"></div>
+            <div className="col-span-3">
+                <MapComponent
+                    listings={listings.filter((listing) => listing.coordinates)}
+                />
+            </div>
             <div className="col-span-3 pe-24">
                 {/* Search Bar */}
                 <div className="sm:flex items-center bg-white rounded-lg overflow-hidden py-4 justify-between">

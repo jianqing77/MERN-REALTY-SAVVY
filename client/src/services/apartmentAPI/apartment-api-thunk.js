@@ -1,12 +1,12 @@
 // apartmentsThunk.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { findRentals, findSales } from './apartment-api-service.js'; // Adjust the import path as needed
+import { fetchCoordinates, fetchRentals, fetchSales } from './apartment-api-service.js'; // Adjust the import path as needed
 
 export const fetchRentalsThunk = createAsyncThunk(
     'apartments/fetchRentals',
     async ({ location, resultsPerPage, page }, { rejectWithValue }) => {
         try {
-            const rentalsPayload = await findRentals({
+            const rentalsPayload = await fetchRentals({
                 location,
                 resultsPerPage,
                 page,
@@ -23,14 +23,26 @@ export const fetchSalesThunk = createAsyncThunk(
     'apartments/fetchSales',
     async ({ location, page }, { rejectWithValue }) => {
         try {
-            const salesPayload = await findSales({
+            const salesPayload = await fetchSales({
                 location,
                 page,
             });
-            console.log(salesPayload);
             return salesPayload;
         } catch (error) {
             console.error('Error in thunk fetchSales:', error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const fetchCoordinatesThunk = createAsyncThunk(
+    'apartments/fetchCoordinates',
+    async ({ address }, { rejectWithValue }) => {
+        try {
+            const coordinatesPayload = await fetchCoordinates(address);
+            return coordinatesPayload;
+        } catch (error) {
+            console.error('Error in thunk fetch Coordinates:', error);
             return rejectWithValue(error.message);
         }
     }

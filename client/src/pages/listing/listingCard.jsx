@@ -73,6 +73,10 @@ ListingCard.propTypes = {
             imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
         }).isRequired,
         metadata: PropTypes.object,
+        coordinates: PropTypes.shape({
+            latitude: PropTypes.number,
+            longitude: PropTypes.number,
+        }),
     }).isRequired,
 };
 

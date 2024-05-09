@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
     fetchRentalsThunk,
     fetchSalesThunk,
+    fetchCoordinatesThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js'; // Adjust the import path as needed
 
 const apartmentsSlice = createSlice({
@@ -16,6 +17,7 @@ const apartmentsSlice = createSlice({
         currentPage: 1,
         totalRecords: 0,
         resultsPerPage: 20,
+        coordinates: null,
     },
     reducers: {
         setCurrentPage(state, action) {
@@ -63,9 +65,40 @@ const apartmentsSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 state.listings = [];
+            })
+            // Handling of fetchCoordinatesThunk
+            .addCase(fetchCoordinatesThunk.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchCoordinatesThunk.fulfilled, (state, action) => {
+                state.loading = false;
+                const fullAddress = action.meta.arg.address;
+                // console.log('Full address from action:', fullAddress);
+                // console.log('state.listings:', JSON.stringify(state.listings));
+
+                const index = state.listings.findIndex((listing) => {
+                    // Create a full address from the listing's location parts
+                    const listingFullAddress = `${listing.location.address}, ${listing.location.city}, ${listing.location.state}, ${listing.location.zipCode}`;
+                    return listingFullAddress === fullAddress;
+                });
+
+                // console.log('Index of the listing to update:', index);
+                if (index !== -1) {
+                    state.listings[index].coordinates = action.payload; // Add coordinates to the listing
+                }
+
+                // console.log(
+                //     'Coordinates fetched and about to update listing:',
+                //     action.payload
+                // );
+            })
+            .addCase(fetchCoordinatesThunk.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error?.message || action.payload;
             });
     },
 });
 
-export const { setCurrentPage, setLimit, resetFetchState } = apartmentsSlice.actions;
+export const { setCurrentPage, resetFetchState } = apartmentsSlice.actions;
 export default apartmentsSlice.reducer;

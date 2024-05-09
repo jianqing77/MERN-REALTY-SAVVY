@@ -3,8 +3,9 @@ import axios from 'axios';
 const SERVER_API_URL = import.meta.env.VITE_SERVER_API_URL;
 const APARTMENT_API_URL = `${SERVER_API_URL}/apartments`;
 const api = axios.create({ withCredentials: true });
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-export const findRentals = async ({ location, resultsPerPage, page }) => {
+export const fetchRentals = async ({ location, resultsPerPage, page }) => {
     try {
         const response = await api.get(`${APARTMENT_API_URL}/rentals`, {
             params: {
@@ -20,7 +21,7 @@ export const findRentals = async ({ location, resultsPerPage, page }) => {
     }
 };
 
-export const findSales = async ({ location, page }) => {
+export const fetchSales = async ({ location, page }) => {
     try {
         const response = await api.get(`${APARTMENT_API_URL}/sales`, {
             params: {
@@ -38,5 +39,22 @@ export const findSales = async ({ location, page }) => {
         return result;
     } catch (error) {
         console.error('Error fetching sales listings:', error);
+    }
+};
+
+export const fetchCoordinates = async (address) => {
+    console.log('Fetching coordinates in service:', address);
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        address
+    )}&key=${GOOGLE_MAPS_API_KEY}`;
+    // console.log('Requesting URL:', url);
+    const response = await fetch(url);
+    const data = await response.json();
+    // console.log('API Response:', data);
+    if (data.status === 'OK') {
+        console.log(data.results[0].geometry.location);
+        return data.results[0].geometry.location;
+    } else {
+        throw new Error('Geocoding failed: ' + data.status);
     }
 };
