@@ -52,7 +52,7 @@ export const fetchCoordinates = async (address) => {
     const data = await response.json();
     // console.log('API Response:', data);
     if (data.status === 'OK') {
-        console.log(data.results[0].geometry.location);
+        // console.log(data.results[0].geometry.location);
         return data.results[0].geometry.location;
     } else {
         throw new Error('Geocoding failed: ' + data.status);

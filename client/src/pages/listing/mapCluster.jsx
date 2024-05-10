@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -15,6 +15,8 @@ const defaultCenter = {
 };
 
 const MapComponent = ({ listings }) => {
+    const [selected, setSelected] = useState(null);
+
     const center = useMemo(() => {
         let validListings = listings.filter((l) => l.coordinates);
         if (validListings.length === 0) return defaultCenter;
@@ -33,6 +35,15 @@ const MapComponent = ({ listings }) => {
         };
     }, [listings]);
 
+    const svgMarker = {
+        path: 'M 0, 0 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0',
+        fillColor: 'green',
+        fillOpacity: 0.7,
+        scale: 0.15,
+        strokeColor: 'gold',
+        strokeWeight: 1,
+    };
+
     return (
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
             <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
@@ -45,9 +56,39 @@ const MapComponent = ({ listings }) => {
                                     lat: listing.coordinates.lat,
                                     lng: listing.coordinates.lng,
                                 }}
+                                icon={svgMarker}
+                                onClick={() => setSelected(listing)}
                             />
                         )
                 )}
+                {/* {selected && (
+                    <InfoWindow
+                        position={selected.coordinates}
+                        onCloseClick={() => setSelected(null)}>
+                        <div>
+                            <h2>{selected.title}</h2>
+                            <p>{selected.description}</p>
+                        </div>
+                    </InfoWindow>
+                )} */}
+                {/* <InfoWindow
+                    position={selected.coordinates}
+                    onCloseClick={() => setSelected(null)}>
+                    <div style={{ width: '200px', fontSize: '14px' }}>
+                        <h1 style={{ color: 'blue', fontSize: '16px' }}>
+                            {selected.title}
+                        </h1>
+                        <img
+                            src={selected.imageUrl}
+                            alt={selected.title}
+                            style={{ width: '100%' }}
+                        />
+                        <p>{selected.description}</p>
+                        <button onClick={() => console.log('Info button clicked!')}>
+                            More Info
+                        </button>
+                    </div>
+                </InfoWindow> */}
             </GoogleMap>
         </LoadScript>
     );

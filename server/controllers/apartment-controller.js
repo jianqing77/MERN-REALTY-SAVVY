@@ -58,11 +58,11 @@ const mapApiDataToListingSchema = (listing) => {
                       listing.description?.baths_max
                   ),
             squareFootage: listing.description?.sqft
-                ? `${listing.description.sqft} sqft`
+                ? `${listing.description.sqft}`
                 : formatRange(
                       listing.description?.sqft_min,
                       listing.description?.sqft_max
-                  ) + ' sqft',
+                  ),
         },
         contactInfo: {
             agentName: listing.advertisers?.[0]?.name || 'N/A',

@@ -120,7 +120,7 @@ const ResultPage = () => {
                     </div>
                 </div>
                 {/* Result List */}
-                <div className="mx-auto shadow-lg bg-white ms-3">
+                <div className="max-h-[90vh] overflow-y-auto mx-auto shadow-lg bg-white ms-3">
                     <ul role="list" className="divide-y divide-gray-100">
                         {listings.map((listing) => (
                             <ListingCard key={listing.id} listing={listing} />
