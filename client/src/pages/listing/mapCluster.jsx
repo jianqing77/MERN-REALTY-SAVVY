@@ -16,6 +16,8 @@ const defaultCenter = {
 };
 
 const MapComponent = ({ listings }) => {
+    console.log('LoadScript Mounted');
+
     const [selected, setSelected] = useState(null);
 
     const center = useMemo(() => {
@@ -37,25 +39,25 @@ const MapComponent = ({ listings }) => {
     }, [listings]);
 
     return (
-        <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
-            <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
-                {listings.map(
-                    (listing) =>
-                        listing.coordinates && (
-                            <Marker
-                                key={listing.id}
-                                position={{
-                                    lat: listing.coordinates.lat,
-                                    lng: listing.coordinates.lng,
-                                }}
-                                icon={{
-                                    url: svgMarker,
-                                }}
-                                onClick={() => setSelected(listing)}
-                            />
-                        )
-                )}
-                {/* {selected && (
+        // <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+            {listings.map(
+                (listing) =>
+                    listing.coordinates && (
+                        <Marker
+                            key={listing.id}
+                            position={{
+                                lat: listing.coordinates.lat,
+                                lng: listing.coordinates.lng,
+                            }}
+                            icon={{
+                                url: svgMarker,
+                            }}
+                            onClick={() => setSelected(listing)}
+                        />
+                    )
+            )}
+            {/* {selected && (
                     <InfoWindow
                         position={selected.coordinates}
                         onCloseClick={() => setSelected(null)}>
@@ -65,7 +67,7 @@ const MapComponent = ({ listings }) => {
                         </div>
                     </InfoWindow>
                 )} */}
-                {/* <InfoWindow
+            {/* <InfoWindow
                     position={selected.coordinates}
                     onCloseClick={() => setSelected(null)}>
                     <div style={{ width: '200px', fontSize: '14px' }}>
@@ -83,8 +85,8 @@ const MapComponent = ({ listings }) => {
                         </button>
                     </div>
                 </InfoWindow> */}
-            </GoogleMap>
-        </LoadScript>
+        </GoogleMap>
+        // </LoadScript>
     );
 };
 

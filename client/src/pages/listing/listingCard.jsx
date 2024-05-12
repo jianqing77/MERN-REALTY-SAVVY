@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import states from 'states-us';
+import HeartIcon from '../../components/HeartIcon';
 
 // Function to format price
 function formatPrice(value) {
@@ -10,6 +11,15 @@ function formatPrice(value) {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
     });
+
+    // Check if the price is a range
+    if (value.includes('-')) {
+        const prices = value.split('-').map((price) => price.trim());
+        const formattedPrices = prices.map((price) => formatter.format(price));
+        return formattedPrices.join(' - ');
+    }
+
+    // Handle single price
     return formatter.format(value);
 }
 
@@ -19,6 +29,15 @@ function formatSquareFeet(value) {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
     });
+
+    // Check if the value is a range
+    if (value.includes('-')) {
+        const sqftRange = value.split('-').map((sqft) => sqft.trim());
+        const formattedSqft = sqftRange.map((sqft) => formatter.format(sqft));
+        return formattedSqft.join(' - ');
+    }
+
+    // Handle single value
     return formatter.format(value);
 }
 
@@ -67,12 +86,14 @@ const ListingCard = ({ listing }) => {
         contactInfo,
     } = listing;
 
+    const displayAgentInfo = listingType === 'for_sale';
+
     return (
         <div className="grid grid-cols-10 rounded overflow-hidden shadow-lg bg-white py-2 border-0">
             <div
                 className="col-span-3 w-40 h-32 bg-cover bg-center rounded-xl ms-12"
                 style={{ backgroundImage: `url(${media.imageUrls[0]})` }}></div>
-            <div className="col-span-7 ms-6">
+            <div className="col-span-6 ms-6">
                 <div className="pe-1">
                     <div className="text-xl font-bold mb-1">{formatPrice(price)}</div>
                     <p className="text-base text-gray-600">
@@ -80,16 +101,33 @@ const ListingCard = ({ listing }) => {
                         {formatSquareFeet(features.squareFootage)} sqft
                     </p>
                     <p className="text-base text-gray-600">
-                        {formatPropertyType(propertyType)}{' '}
-                        {formatListingType(listingType)}
-                    </p>
-                    <p className="text-base text-gray-600">
                         {location.address}, {location.city},{' '}
                         {getAbbreviation(location.state)}, {location.zipCode}
                     </p>
-                    <p className="text-xs text-gray-500 uppercase">
-                        {contactInfo.agentCompany} | {contactInfo.agentName}{' '}
+                    <p className="text-base text-gray-600">
+                        {formatPropertyType(propertyType)}{' '}
+                        {formatListingType(listingType)}
                     </p>
+                    {displayAgentInfo ? (
+                        <p className="text-xs text-gray-500 uppercase">
+                            {contactInfo.agentCompany} | {contactInfo.agentName}
+                        </p>
+                    ) : (
+                        <p className="text-xs text-gray-500">{contactInfo.agentName}</p>
+                    )}
+                    {/* <p>{media.refUrl}</p> */}
+                </div>
+            </div>
+            <div className="col-span-1 flex items-top justify-around">
+                <a
+                    href={media.refUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Details">
+                    <i className="fa fa-ellipsis-h" aria-hidden="true"></i>
+                </a>
+                <div>
+                    <HeartIcon />
                 </div>
             </div>
         </div>
@@ -104,7 +142,7 @@ ListingCard.propTypes = {
         listingType: PropTypes.string.isRequired,
         description: PropTypes.string,
         listingDate: PropTypes.string,
-        price: PropTypes.string.isRequired, // Updated to expect a number
+        price: PropTypes.string.isRequired,
         propertyType: PropTypes.string.isRequired,
         location: PropTypes.shape({
             address: PropTypes.string.isRequired,
@@ -125,6 +163,7 @@ ListingCard.propTypes = {
         }),
         media: PropTypes.shape({
             imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+            refUrl: PropTypes.string,
         }).isRequired,
         metadata: PropTypes.object,
         coordinates: PropTypes.shape({

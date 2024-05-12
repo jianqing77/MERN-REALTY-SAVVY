@@ -43,8 +43,12 @@ const apartmentsSlice = createSlice({
             })
             .addCase(fetchRentalsThunk.fulfilled, (state, action) => {
                 state.loading = false;
-                state.listings = action.payload;
                 state.dataFetched = true;
+                state.searchLocation = action.payload.searchLocation;
+                state.currentPage = action.payload.currentPage;
+                state.totalRecords = action.payload.totalRecords;
+                state.listings = action.payload.listings;
+                state.resultsPerPage = action.payload.resultsPerPage;
             })
             .addCase(fetchRentalsThunk.rejected, (state, action) => {
                 state.loading = false;

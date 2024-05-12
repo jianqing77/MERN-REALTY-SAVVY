@@ -71,6 +71,7 @@ const mapApiDataToListingSchema = (listing) => {
         },
         media: {
             imageUrls: imageUrls.length > 0 ? imageUrls : ['default-image.jpg'],
+            refUrl: listing.href || 'N/A',
         },
         metadata: {},
     };
@@ -153,28 +154,37 @@ export const getLocationId = async (req, res, next) => {
 };
 
 export const getRentalListings = async (req, res) => {
-    const locationId = req.locationId; // Use the location ID set by getLocationId middleware
-    const resultsPerPage = req.query.resultsPerPage || 20;
-    const page = req.query.page || 1;
+    const locationId = req.locationId;
+    const currentPage = req.query.page || 1;
 
     const options = {
         method: 'GET',
         url: 'https://realty-us.p.rapidapi.com/properties/search-rent',
         params: {
-            location: locationId, // Use location ID here
-            resultsPerPage: resultsPerPage,
-            page: page,
+            location: locationId,
+            page: currentPage,
         },
         headers: {
             'X-RapidAPI-Key': APARTMENT_API_KEY,
             'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',
         },
     };
-
     try {
         const response = await axios.request(options);
+        const currentPage = response.data.meta.currentPage;
+        const totalRecords = response.data.meta.totalRecords;
+        const resultsPerPage = response.data.meta.limit;
         const listings = response.data.data.results.map(mapApiDataToListingSchema);
-        res.json(listings);
+
+        const result = {
+            searchLocation: locationId,
+            totalRecords: totalRecords,
+            resultsPerPage: resultsPerPage,
+            currentPage: currentPage,
+            listings: listings,
+        };
+
+        res.json(result);
     } catch (error) {
         console.error('Error fetching rental properties:', error);
         res.status(500).send('Error fetching rental properties');

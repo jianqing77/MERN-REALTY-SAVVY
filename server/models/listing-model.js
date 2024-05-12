@@ -47,6 +47,7 @@ const ListingSchema = new Schema(
         },
         media: {
             imageUrls: [{ type: String }],
+            refUrl: { type: String, required: false },
         },
         metadata: {
             views: { type: Number, default: 0 },

@@ -44,10 +44,10 @@ const ResultPage = () => {
                 }
             });
         }
-        console.log(
-            'Filtered listings for MapComponent:',
-            listings.filter((listing) => listing.coordinates)
-        );
+        // console.log(
+        //     'Filtered listings for MapComponent:',
+        //     listings.filter((listing) => listing.coordinates)
+        // );
     }, [listings, dispatch]);
 
     const fetchPageData = (pageNum) => {
