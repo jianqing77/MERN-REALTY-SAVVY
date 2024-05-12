@@ -33,16 +33,16 @@ const mapApiDataToListingSchema = (listing) => {
         title:
             listing.location && listing.location.address
                 ? `${listing.location.address.line}, ${listing.location.address.city}`
-                : 'Address not available', // Default title if address is missing
+                : 'N/A',
         listingType: listing.status,
         listingDate: listing.list_date,
         price: price,
         propertyType: listing.description && listing.description.type,
         location: {
-            address: listing.location?.address?.line || 'Not provided',
-            city: listing.location?.address?.city || 'Not provided',
-            state: listing.location?.address?.state || 'Not provided',
-            zipCode: listing.location?.address?.postal_code || 'Not provided',
+            address: listing.location?.address?.line || 'N/A',
+            city: listing.location?.address?.city || 'N/A',
+            state: listing.location?.address?.state || 'N/A',
+            zipCode: listing.location?.address?.postal_code || 'N/A',
         },
         features: {
             bedrooms: listing.description?.beds
@@ -65,6 +65,7 @@ const mapApiDataToListingSchema = (listing) => {
                   ),
         },
         contactInfo: {
+            agentCompany: listing.branding?.[0]?.name || 'N/A',
             agentName: listing.advertisers?.[0]?.name || 'N/A',
             email: listing.advertisers?.[0]?.email || 'N/A',
         },

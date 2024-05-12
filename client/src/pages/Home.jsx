@@ -8,6 +8,7 @@ import {
     fetchRentalsThunk,
     fetchSalesThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js';
+import { resetFetchState } from '../reducers/apartmentAPI-reducer.js';
 
 const libraries = ['places'];
 const GOOGLE_MAPS_API_KEY = import.meta.env.GOOGLE_MAPS_API_KEY;
@@ -34,11 +35,17 @@ const Home = () => {
         dispatch(action({ location: location, currentPage: 1 }));
     };
 
+    // Navigation Effect
     useEffect(() => {
-        if (dataFetched) {
+        if (dataFetched && location) {
             navigate('/results', { state: { location, category } });
         }
     }, [dataFetched, navigate, location, category]);
+
+    // State Reset Effect
+    useEffect(() => {
+        dispatch(resetFetchState());
+    }, [dispatch]);
 
     if (loading) return <div>Loading apartments...</div>;
     if (error) return <div>An error occurred: {error}</div>;

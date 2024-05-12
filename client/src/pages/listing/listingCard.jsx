@@ -22,6 +22,31 @@ function formatSquareFeet(value) {
     return formatter.format(value);
 }
 
+function formatPropertyType(type) {
+    const typeMap = {
+        condos: 'Condo',
+        co_op: 'Co-op',
+        cond_op: 'Cond-op',
+        townhome: 'Town home',
+        single_family: 'Single-Family',
+        multi_family: 'Multi-Family',
+        mobile_mfd: 'Mobile/Mfd',
+        farm_ranch: 'Farm Ranch',
+        land: 'Land',
+    };
+
+    return typeMap[type] || type; // Return original type if no match found
+}
+
+function formatListingType(type) {
+    const typeMap = {
+        for_sale: 'for sale',
+        for_rent: 'for rent',
+    };
+
+    return typeMap[type] || type; // Return original type if no match found
+}
+
 // Function to format the state to an abbreviation
 function getAbbreviation(stateName) {
     const state = states.find(
@@ -47,24 +72,26 @@ const ListingCard = ({ listing }) => {
             <div
                 className="col-span-3 w-40 h-32 bg-cover bg-center rounded-xl ms-12"
                 style={{ backgroundImage: `url(${media.imageUrls[0]})` }}></div>
-            <div className="col-span-6">
-                <div className="pe-4">
-                    <div className="text-xl font-bold mb-2">{formatPrice(price)}</div>
+            <div className="col-span-7 ms-6">
+                <div className="pe-1">
+                    <div className="text-xl font-bold mb-1">{formatPrice(price)}</div>
                     <p className="text-base text-gray-600">
                         Beds: {features.bedrooms} | Baths: {features.bathrooms} |{' '}
-                        {formatSquareFeet(features.squareFootage)} sqft {propertyType}{' '}
-                        {listingType}
+                        {formatSquareFeet(features.squareFootage)} sqft
+                    </p>
+                    <p className="text-base text-gray-600">
+                        {formatPropertyType(propertyType)}{' '}
+                        {formatListingType(listingType)}
                     </p>
                     <p className="text-base text-gray-600">
                         {location.address}, {location.city},{' '}
                         {getAbbreviation(location.state)}, {location.zipCode}
                     </p>
-                    <p className="text-sm text-gray-500">
-                        {contactInfo.agentName} | {contactInfo.email}
+                    <p className="text-xs text-gray-500 uppercase">
+                        {contactInfo.agentCompany} | {contactInfo.agentName}{' '}
                     </p>
                 </div>
             </div>
-            <div className="col-span-1"></div>
         </div>
     );
 };
@@ -92,6 +119,7 @@ ListingCard.propTypes = {
             lotSize: PropTypes.string,
         }).isRequired,
         contactInfo: PropTypes.shape({
+            agentCompany: PropTypes.string,
             agentName: PropTypes.string,
             email: PropTypes.string,
         }),

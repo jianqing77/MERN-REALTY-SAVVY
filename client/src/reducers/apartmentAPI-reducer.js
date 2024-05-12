@@ -28,6 +28,10 @@ const apartmentsSlice = createSlice({
             state.error = null;
             state.dataFetched = false;
             state.listings = [];
+            state.currentPage = 1; // Reset to the first page
+            state.totalRecords = 0; // Reset the count of total records
+            state.searchLocation = null; // Reset any specific search locations
+            state.coordinates = null; // Clear coordinates if they are temporarily stored
         },
     },
     extraReducers: (builder) => {

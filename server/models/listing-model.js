@@ -41,8 +41,9 @@ const ListingSchema = new Schema(
             sqft: { type: String },
         },
         contactInfo: {
+            agentCompany: { type: String, required: true },
             agentName: { type: String, required: true },
-            email: { type: String, required: true },
+            email: { type: String, required: false },
         },
         media: {
             imageUrls: [{ type: String }],

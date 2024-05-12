@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import svgMarker from '../../assets/map-marker.svg';
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -35,15 +36,6 @@ const MapComponent = ({ listings }) => {
         };
     }, [listings]);
 
-    const svgMarker = {
-        path: 'M 0, 0 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0',
-        fillColor: 'green',
-        fillOpacity: 0.7,
-        scale: 0.15,
-        strokeColor: 'gold',
-        strokeWeight: 1,
-    };
-
     return (
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
             <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
@@ -56,7 +48,9 @@ const MapComponent = ({ listings }) => {
                                     lat: listing.coordinates.lat,
                                     lng: listing.coordinates.lng,
                                 }}
-                                icon={svgMarker}
+                                icon={{
+                                    url: svgMarker,
+                                }}
                                 onClick={() => setSelected(listing)}
                             />
                         )
