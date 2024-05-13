@@ -28,6 +28,27 @@ const mapApiDataToListingSchema = (listing) => {
         ? `${listing.list_price}`
         : formatRange(listing.list_price_min, listing.list_price_max);
 
+    // Handle pet policies with 'null' as 'unknown'
+    const petsPolicy = listing.pet_policy
+        ? {
+              cats:
+                  listing.pet_policy.cats === true
+                      ? 'Allowed'
+                      : listing.pet_policy.cats === false
+                      ? 'Not allowed'
+                      : 'Unknown',
+              dogs:
+                  listing.pet_policy.dogs === true
+                      ? 'Allowed'
+                      : listing.pet_policy.dogs === false
+                      ? 'Not allowed'
+                      : 'Unknown',
+          }
+        : {
+              cats: 'Unknown',
+              dogs: 'Unknown',
+          };
+
     return {
         id: listing.property_id,
         title:
@@ -69,6 +90,7 @@ const mapApiDataToListingSchema = (listing) => {
             agentName: listing.advertisers?.[0]?.name || 'N/A',
             email: listing.advertisers?.[0]?.email || 'N/A',
         },
+        pet_policy: petsPolicy,
         media: {
             imageUrls: imageUrls.length > 0 ? imageUrls : ['default-image.jpg'],
             refUrl: listing.href || 'N/A',
@@ -153,38 +175,130 @@ export const getLocationId = async (req, res, next) => {
     }
 };
 
+// export const getRentalListings = async (req, res) => {
+//     const locationId = req.locationId;
+//     const currentPage = req.query.page || 1;
+//     const prices = req.query.prices;
+//     const homeSize = req.query.homeSize;
+//     const bedrooms = req.query.bedrooms;
+//     const bathrooms = req.query.bathrooms;
+//     const moveInDate = req.query.moveInDate;
+//     const pets = req.query.pets;
+
+//     const params = {
+//         location: locationId,
+//         page: currentPage,
+//     };
+
+//     // Handle the pets parameter
+//     if (pets) {
+//         params.pets = pets;
+//     }
+
+//     // Handle the price parameter
+//     if (prices) {
+//         params.prices = prices;
+//     }
+
+//     // Handle the bedrooms parameter
+//     if (bedrooms) {
+//         params.bedrooms = bedrooms;
+//     }
+//     // Handle the bathrooms parameter
+//     if (bathrooms) {
+//         params.bathrooms = bathrooms;
+//     }
+//     // Handle the moveInDate parameter
+//     if (moveInDate) {
+//         params.moveInDate = moveInDate;
+//     }
+//     // Handle the sizeRange parameter
+//     if (homeSize) {
+//         params.homeSize = homeSize.trim();
+//     }
+
+//     const options = {
+//         method: 'GET',
+//         url: 'https://realty-us.p.rapidapi.com/properties/search-rent',
+//         params: params,
+//         headers: {
+//             'X-RapidAPI-Key': APARTMENT_API_KEY,
+//             'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',
+//         },
+//     };
+
+//     try {
+//         const response = await axios.request(options);
+//         const { currentPage, totalRecords, limit: resultsPerPage } = response.data.meta;
+//         const listings = response.data.data.results.map(mapApiDataToListingSchema);
+
+//         const result = {
+//             searchLocation: locationId,
+//             totalRecords: totalRecords,
+//             resultsPerPage: resultsPerPage,
+//             currentPage: currentPage,
+//             listings: listings,
+//         };
+
+//         res.json(result);
+//     } catch (error) {
+//         console.error('Error fetching rental properties:', error);
+//         res.status(500).send('Error fetching rental properties');
+//     }
+// };
+
 export const getRentalListings = async (req, res) => {
-    const locationId = req.locationId;
-    const currentPage = req.query.page || 1;
+    const {
+        locationId,
+        query: { page = 1, prices, homeSize, bedrooms, bathrooms, moveInDate, pets },
+    } = req;
+
+    const params = {
+        location: locationId,
+        page,
+    };
+
+    const optionalParams = {
+        prices,
+        pets,
+        bedrooms,
+        bathrooms,
+        moveInDate,
+        homeSize: homeSize?.trim(),
+    };
+
+    // Add parameters only if they exist
+    Object.keys(optionalParams).forEach((key) => {
+        if (optionalParams[key]) {
+            params[key] = optionalParams[key];
+        }
+    });
 
     const options = {
         method: 'GET',
         url: 'https://realty-us.p.rapidapi.com/properties/search-rent',
-        params: {
-            location: locationId,
-            page: currentPage,
-        },
+        params,
         headers: {
             'X-RapidAPI-Key': APARTMENT_API_KEY,
             'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',
         },
     };
+
     try {
         const response = await axios.request(options);
-        const currentPage = response.data.meta.currentPage;
-        const totalRecords = response.data.meta.totalRecords;
-        const resultsPerPage = response.data.meta.limit;
-        const listings = response.data.data.results.map(mapApiDataToListingSchema);
+        const {
+            data: { meta, data },
+        } = response;
+        const { currentPage, totalRecords, limit: resultsPerPage } = meta;
+        const listings = data.results.map(mapApiDataToListingSchema);
 
-        const result = {
+        res.json({
             searchLocation: locationId,
-            totalRecords: totalRecords,
-            resultsPerPage: resultsPerPage,
-            currentPage: currentPage,
-            listings: listings,
-        };
-
-        res.json(result);
+            totalRecords,
+            resultsPerPage,
+            currentPage,
+            listings,
+        });
     } catch (error) {
         console.error('Error fetching rental properties:', error);
         res.status(500).send('Error fetching rental properties');

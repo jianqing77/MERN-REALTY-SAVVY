@@ -4,12 +4,9 @@ import { fetchCoordinates, fetchRentals, fetchSales } from './apartment-api-serv
 
 export const fetchRentalsThunk = createAsyncThunk(
     'apartments/fetchRentals',
-    async ({ location, page }, { rejectWithValue }) => {
+    async (searchParams, { rejectWithValue }) => {
         try {
-            const salesPayload = await fetchRentals({
-                location,
-                page,
-            });
+            const salesPayload = await fetchRentals(searchParams);
             return salesPayload;
         } catch (error) {
             console.error('Error in thunk fetchRentals:', error);

@@ -5,24 +5,44 @@ const APARTMENT_API_URL = `${SERVER_API_URL}/apartments`;
 const api = axios.create({ withCredentials: true });
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-export const fetchRentals = async ({ location, page }) => {
+export const fetchRentals = async ({
+    location,
+    page,
+    prices,
+    homeSize,
+    bedrooms,
+    bathrooms,
+    moveInDate,
+    pets,
+}) => {
     try {
-        const response = await api.get(`${APARTMENT_API_URL}/rentals`, {
-            params: {
-                location,
-                page,
-            },
-        });
+        const params = {
+            location,
+            page,
+            prices, // Added other parameters as optional
+            homeSize,
+            bedrooms,
+            bathrooms,
+            moveInDate,
+            pets,
+        };
+        // Filter out undefined or null parameters from the params object
+        Object.keys(params).forEach(
+            (key) => params[key] === undefined && delete params[key]
+        );
+
+        const response = await api.get(`${APARTMENT_API_URL}/rentals`, { params });
         const result = {
             searchLocation: response.data.searchLocation,
             resultsPerPage: response.data.resultsPerPage,
-            currentPage: response.data.currentPage, // Current page number
-            totalRecords: response.data.totalRecords, // Total number of pages
-            listings: response.data.listings, // Array of listings
+            currentPage: response.data.currentPage,
+            totalRecords: response.data.totalRecords,
+            listings: response.data.listings,
         };
         return result;
     } catch (error) {
         console.error('Error fetching rental listings:', error);
+        throw error;
     }
 };
 

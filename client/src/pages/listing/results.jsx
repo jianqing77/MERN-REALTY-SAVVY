@@ -9,6 +9,9 @@ import {
 import ListingCard from './listingCard.jsx';
 import { setCurrentPage } from '../../reducers/apartmentAPI-reducer.js';
 import MapComponent from './mapCluster.jsx';
+import DatePicker from 'react-date-picker';
+import DropdownMultiple from '../../components/DropDownMultiple.jsx';
+import DropdownSingle from '../../components/DropDownSingle.jsx';
 
 const ResultPage = () => {
     const searchLocation = useLocation();
@@ -16,6 +19,9 @@ const ResultPage = () => {
 
     const [location, setLocation] = useState('');
     const [category, setCategory] = useState('for-sale');
+    const [selectedPets, setSelectedPets] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -44,10 +50,6 @@ const ResultPage = () => {
                 }
             });
         }
-        // console.log(
-        //     'Filtered listings for MapComponent:',
-        //     listings.filter((listing) => listing.coordinates)
-        // );
     }, [listings, dispatch]);
 
     const fetchPageData = (pageNum) => {
@@ -75,8 +77,17 @@ const ResultPage = () => {
         setLocation(event.target.value);
     };
 
-    const categoryChangeHandler = (event) => {
-        setCategory(event.target.value);
+    const categoryOptions = [
+        { label: 'For Sale', value: 'for-sale' },
+        { label: 'For Rent', value: 'for-rent' },
+    ];
+
+    const categoryChangeHandler = (value) => {
+        setCategory(value);
+    };
+
+    const petChangeHandler = (selectedOptions) => {
+        setSelectedPets(selectedOptions);
     };
 
     const searchBtnHandler = () => {
@@ -89,14 +100,9 @@ const ResultPage = () => {
     };
     return (
         <div className="grid grid-cols-6">
-            <div className="col-span-3">
-                <MapComponent
-                    listings={listings.filter((listing) => listing.coordinates)}
-                />
-            </div>
-            <div className="col-span-3 pe-24">
+            <div className="col-span-6  ps-10 pe-20">
                 {/* Search Bar */}
-                <div className="sm:flex items-center bg-white rounded-lg overflow-hidden py-4 justify-between">
+                <div className=" sm:flex items-center bg-white rounded-lg overflow-hidden py-4 justify-between">
                     <input
                         className="text-base text-gray-400 flex-grow outline-none border-3 ms-3 border-dark-100 rounded-lg focus:ring-primary-200 focus:ring-2 focus:border-none"
                         type="text"
@@ -105,13 +111,24 @@ const ResultPage = () => {
                         onChange={locationChangeHandler}
                     />
                     <div className="flex items-center px-2 rounded-lg space-x-4 mx-auto">
-                        <select
+                        {/* <select
                             className="text-base text-gray-800 outline-none border-3 border-dark-100 px-4 py-2 rounded-lg focus:ring-primary-200 focus:ring-2 focus:border-none"
                             value={category}
                             onChange={categoryChangeHandler}>
                             <option value="for-sale">For Sale</option>
                             <option value="for-rent">For Rent</option>
-                        </select>
+                        </select> */}
+                        <DropdownSingle
+                            options={categoryOptions}
+                            onSelectionChange={categoryChangeHandler}
+                            className="absolute z-50 mt-1"
+                        />
+                        <DropdownMultiple
+                            options={['Dog', 'Cat', 'No Pets Allowed']}
+                            buttonLabel="Pet"
+                            onSelectionChange={petChangeHandler}
+                            className="absolute z-50 mt-1"
+                        />
                         <button
                             className="bg-dark-200 text-white text-base rounded-lg px-4 py-2"
                             onClick={searchBtnHandler}>
@@ -119,6 +136,13 @@ const ResultPage = () => {
                         </button>
                     </div>
                 </div>
+            </div>
+            <div className="col-span-3">
+                <MapComponent
+                    listings={listings.filter((listing) => listing.coordinates)}
+                />
+            </div>
+            <div className="col-span-3 pe-20">
                 {/* Result List */}
                 <div className="max-h-[90vh] overflow-y-auto mx-auto shadow-lg bg-white ms-3">
                     <ul role="list" className="divide-y divide-gray-100">

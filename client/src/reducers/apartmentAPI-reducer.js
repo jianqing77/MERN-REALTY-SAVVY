@@ -82,24 +82,15 @@ const apartmentsSlice = createSlice({
             .addCase(fetchCoordinatesThunk.fulfilled, (state, action) => {
                 state.loading = false;
                 const fullAddress = action.meta.arg.address;
-                // console.log('Full address from action:', fullAddress);
-                // console.log('state.listings:', JSON.stringify(state.listings));
 
                 const index = state.listings.findIndex((listing) => {
                     // Create a full address from the listing's location parts
                     const listingFullAddress = `${listing.location.address}, ${listing.location.city}, ${listing.location.state}, ${listing.location.zipCode}`;
                     return listingFullAddress === fullAddress;
                 });
-
-                // console.log('Index of the listing to update:', index);
                 if (index !== -1) {
                     state.listings[index].coordinates = action.payload; // Add coordinates to the listing
                 }
-
-                // console.log(
-                //     'Coordinates fetched and about to update listing:',
-                //     action.payload
-                // );
             })
             .addCase(fetchCoordinatesThunk.rejected, (state, action) => {
                 state.loading = false;
