@@ -250,7 +250,7 @@ export const getLocationId = async (req, res, next) => {
 export const getRentalListings = async (req, res) => {
     const {
         locationId,
-        query: { page = 1, prices, homeSize, bedrooms, bathrooms, moveInDate, pets },
+        query: { page = 1, prices, homeSize, bedrooms, bathrooms, pets },
     } = req;
 
     const params = {
@@ -263,7 +263,6 @@ export const getRentalListings = async (req, res) => {
         pets,
         bedrooms,
         bathrooms,
-        moveInDate,
         homeSize: homeSize?.trim(),
     };
 

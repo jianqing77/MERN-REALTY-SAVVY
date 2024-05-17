@@ -10,11 +10,8 @@ import {
 } from '../services/apartmentAPI/apartment-api-thunk.js';
 import { resetFetchState } from '../reducers/apartmentAPI-reducer.js';
 
-const libraries = ['places'];
-const GOOGLE_MAPS_API_KEY = import.meta.env.GOOGLE_MAPS_API_KEY;
-
 const Home = () => {
-    const [category, setCategory] = useState('for-sale'); // Default category
+    const [category, setCategory] = useState('for-rent'); // Default category
     const [location, setLocation] = useState('');
     const { loading, error, dataFetched } = useSelector((state) => state.apartments);
 

@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-function DropdownSingle({ label, options, onSelectionChange }) {
+function DropdownSingle({ label, initialValue, options, onSelectionChange }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(null);
-    const [selectedOption, setSelectedOption] = useState(options[0]); // Default to the first option
-
+    const [selectedOption, setSelectedOption] = useState(
+        options.find((option) => option.value === initialValue) || options[0]
+    );
     const dropdownRef = useRef(null);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
@@ -25,7 +26,6 @@ function DropdownSingle({ label, options, onSelectionChange }) {
     const handleSelectionChange = (option) => {
         setSelectedOption(option);
         onSelectionChange(option.value); // Pass the value to the handler
-        // setIsOpen(false);
     };
 
     const applySelection = () => {
@@ -94,6 +94,7 @@ function DropdownSingle({ label, options, onSelectionChange }) {
 // Define prop types
 DropdownSingle.propTypes = {
     label: PropTypes.string.isRequired,
+    initialValue: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSelectionChange: PropTypes.func.isRequired,
 };

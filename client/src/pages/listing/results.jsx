@@ -9,7 +9,6 @@ import {
 import ListingCard from './listingCard.jsx';
 import { setCurrentPage } from '../../reducers/apartmentAPI-reducer.js';
 import MapComponent from './mapCluster.jsx';
-import DatePicker from 'react-date-picker';
 import DropdownMultiple from '../../components/DropDownMultiple.jsx';
 import DropdownSingle from '../../components/DropDownSingle.jsx';
 import { formatRange, formatPets } from './formatUtils.jsx';
@@ -26,13 +25,13 @@ const ResultPage = () => {
     const [selectedBeds, setSelectedBeds] = useState('');
     const [selectedBaths, setSelectedBaths] = useState('');
     const [selectedPets, setSelectedPets] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { listings, totalRecords, currentPage, resultsPerPage, loading, error } =
-        useSelector((state) => state.apartments);
+    const { listings, totalRecords, currentPage, resultsPerPage } = useSelector(
+        (state) => state.apartments
+    );
 
     // Pagination
     const [page, setPage] = useState(currentPage || 1);
@@ -43,6 +42,7 @@ const ResultPage = () => {
         if (state) {
             setLocation(state.location);
             setCategory(state.category);
+            console.log(state.category);
         }
     }, [state]);
 
@@ -71,7 +71,6 @@ const ResultPage = () => {
                 homeSize: sizeRange,
                 bedrooms: selectedBeds,
                 bathrooms: selectedBaths,
-                // moveInDate: selectedMoveInDate,
                 pets: formattedPets,
             };
             console.log('category: ' + category);
@@ -83,28 +82,14 @@ const ResultPage = () => {
         navigate('/results', { state: { location, category } });
     };
 
-    const handleNextPage = () => {
-        const nextPage = page + 1;
-        setPage(nextPage);
-        dispatch(setCurrentPage(nextPage));
-        fetchPageData(nextPage);
-    };
-
-    const handlePreviousPage = () => {
-        if (page > 1) {
-            const prevPage = page - 1;
-            setPage(prevPage);
-        }
-    };
-
     // Search Bar Handling
     const locationChangeHandler = (event) => {
         setLocation(event.target.value);
     };
 
     const categoryOptions = [
-        { label: 'For Sale', value: 'for-sale' },
         { label: 'For Rent', value: 'for-rent' },
+        { label: 'For Sale', value: 'for-sale' },
     ];
 
     const bedroomsOptions = [
@@ -160,14 +145,23 @@ const ResultPage = () => {
         setSelectedPets(selectedOptions);
     };
 
+    const nextBtnHandler = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        dispatch(setCurrentPage(nextPage));
+        fetchPageData(nextPage);
+    };
+
+    const prevBtnHandler = () => {
+        if (page > 1) {
+            const prevPage = page - 1;
+            setPage(prevPage);
+        }
+    };
+
     const searchBtnHandler = () => {
         setPage(1);
         fetchPageData(page);
-        // dispatch(
-        //     category === 'for-sale'
-        //         ? fetchSalesThunk({ location: location, currentPage: 1 })
-        //         : fetchRentalsThunk({ location: location, currentPage: 1 })
-        // );
     };
     return (
         <div className="grid grid-cols-6">
@@ -184,6 +178,7 @@ const ResultPage = () => {
                     <div className="flex items-center px-2 rounded-lg space-x-4 mx-auto">
                         <DropdownSingle
                             label="Category"
+                            initialValue={state.category}
                             options={categoryOptions}
                             onSelectionChange={categoryChangeHandler}
                         />
@@ -233,13 +228,13 @@ const ResultPage = () => {
                     </ul>
                 </div>
                 <div>
-                    <button onClick={handlePreviousPage} disabled={page <= 1}>
+                    <button onClick={prevBtnHandler} disabled={page <= 1}>
                         Previous
                     </button>
                     <span>
                         Page {page} of {totalPages}
                     </span>
-                    <button onClick={handleNextPage} disabled={page >= totalPages}>
+                    <button onClick={nextBtnHandler} disabled={page >= totalPages}>
                         Next
                     </button>
                 </div>

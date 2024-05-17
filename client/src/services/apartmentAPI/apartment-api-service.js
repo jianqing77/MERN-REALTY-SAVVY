@@ -23,7 +23,6 @@ export const fetchRentals = async ({
             homeSize,
             bedrooms,
             bathrooms,
-            moveInDate,
             pets,
         };
         // filter out undefined or null parameters from the params object
