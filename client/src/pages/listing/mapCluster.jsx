@@ -16,7 +16,7 @@ const defaultCenter = {
 };
 
 const MapComponent = ({ listings }) => {
-    console.log('LoadScript Mounted');
+    // console.log('LoadScript Mounted');
 
     const [selected, setSelected] = useState(null);
 

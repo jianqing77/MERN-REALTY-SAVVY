@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-function DropdownSingle({ options, onSelectionChange }) {
+function DropdownSingle({ label, options, onSelectionChange }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [selectedOption, setSelectedOption] = useState(options[0]); // Default to the first option
@@ -36,7 +36,7 @@ function DropdownSingle({ options, onSelectionChange }) {
     };
 
     return (
-        <div ref={dropdownRef}>
+        <div ref={dropdownRef} className="mt-1">
             <button
                 onClick={toggleDropdown}
                 className="text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg text-base px-5 py-2 text-center inline-flex items-center"
@@ -56,6 +56,9 @@ function DropdownSingle({ options, onSelectionChange }) {
             </button>
             {isOpen && (
                 <div className="absolute z-50 mt-1 bg-white rounded-lg shadow border-2 w-72 max-h-48 overflow-y-auto">
+                    <div className="p-3 border-b">
+                        <p className="text-sm font-semibold">{label}</p>
+                    </div>
                     <ul className="p-3 space-y-1 text-sm text-gray-800 ">
                         {options.map((option, index) => (
                             <li
@@ -90,6 +93,7 @@ function DropdownSingle({ options, onSelectionChange }) {
 
 // Define prop types
 DropdownSingle.propTypes = {
+    label: PropTypes.string.isRequired,
     options: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSelectionChange: PropTypes.func.isRequired,
 };

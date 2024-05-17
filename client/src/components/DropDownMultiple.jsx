@@ -9,6 +9,11 @@ function DropdownMultiple({ options, buttonLabel, onSelectionChange }) {
 
     const dropdownRef = useRef(null);
 
+    // specifically handle pets options
+    const dogIndex = options.indexOf('Dog');
+    const catIndex = options.indexOf('Cat');
+    const noPetsIndex = options.indexOf('No Pets Allowed');
+
     const toggleDropdown = () => setIsOpen(!isOpen);
 
     useEffect(() => {
@@ -24,15 +29,31 @@ function DropdownMultiple({ options, buttonLabel, onSelectionChange }) {
     }, []);
 
     const handleCheckboxChange = (position) => {
-        const updatedCheckedState = checkedState.map((item, index) =>
-            index === position ? !item : item
-        );
+        let updatedCheckedState = [...checkedState];
+
+        if (position === noPetsIndex) {
+            // If "No Pets Allowed" is clicked, either check it and uncheck others, or uncheck it
+            if (!checkedState[noPetsIndex]) {
+                updatedCheckedState = updatedCheckedState.map(
+                    (_, index) => index === noPetsIndex
+                );
+            } else {
+                updatedCheckedState[noPetsIndex] = false;
+            }
+        } else {
+            // If any other option is clicked, ensure "No Pets Allowed" is unchecked
+            updatedCheckedState[position] = !updatedCheckedState[position];
+            if (updatedCheckedState[dogIndex] || updatedCheckedState[catIndex]) {
+                updatedCheckedState[noPetsIndex] = false;
+            }
+        }
+
         setCheckedState(updatedCheckedState);
         onSelectionChange(options.filter((_, index) => updatedCheckedState[index]));
     };
 
     return (
-        <div ref={dropdownRef}>
+        <div ref={dropdownRef} className="mt-1">
             <button
                 onClick={toggleDropdown}
                 className="text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg text-base px-5 py-2 text-center inline-flex items-center"

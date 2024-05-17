@@ -12,6 +12,8 @@ import MapComponent from './mapCluster.jsx';
 import DatePicker from 'react-date-picker';
 import DropdownMultiple from '../../components/DropDownMultiple.jsx';
 import DropdownSingle from '../../components/DropDownSingle.jsx';
+import { formatRange, formatPets } from './formatUtils.jsx';
+import DropdownRange from '../../components/DropDownRange.jsx';
 
 const ResultPage = () => {
     const searchLocation = useLocation();
@@ -19,6 +21,10 @@ const ResultPage = () => {
 
     const [location, setLocation] = useState('');
     const [category, setCategory] = useState('for-sale');
+    const [priceRange, setPriceRange] = useState('');
+    const [sizeRange, setSizeRange] = useState('');
+    const [selectedBeds, setSelectedBeds] = useState('');
+    const [selectedBaths, setSelectedBaths] = useState('');
     const [selectedPets, setSelectedPets] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -30,8 +36,7 @@ const ResultPage = () => {
 
     // Pagination
     const [page, setPage] = useState(currentPage || 1);
-
-    // Calculate total pages
+    // calculate total pages
     const totalPages = Math.ceil(totalRecords / resultsPerPage);
 
     useEffect(() => {
@@ -53,8 +58,28 @@ const ResultPage = () => {
     }, [listings, dispatch]);
 
     const fetchPageData = (pageNum) => {
+        let params = { location, page: pageNum };
+
+        if (category === 'for-sale') {
+            params = { ...params };
+        } else if (category === 'for-rent') {
+            // format the pets
+            const formattedPets = formatPets(selectedPets);
+            params = {
+                ...params,
+                prices: priceRange,
+                homeSize: sizeRange,
+                bedrooms: selectedBeds,
+                bathrooms: selectedBaths,
+                // moveInDate: selectedMoveInDate,
+                pets: formattedPets,
+            };
+            console.log('category: ' + category);
+            console.log('params: ' + JSON.stringify(params));
+        }
+
         const action = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
-        dispatch(action({ location, page: pageNum }));
+        dispatch(action(params));
         navigate('/results', { state: { location, category } });
     };
 
@@ -82,21 +107,67 @@ const ResultPage = () => {
         { label: 'For Rent', value: 'for-rent' },
     ];
 
+    const bedroomsOptions = [
+        { label: '0+', value: '0' },
+        { label: '1+', value: '1' },
+        { label: '2+', value: '2' },
+        { label: '3+', value: '3' },
+        { label: '4+', value: '4' },
+        { label: '5+', value: '5' },
+    ];
+
+    const bathroomsOptions = [
+        { label: '0+', value: '0' },
+        { label: '1+', value: '1' },
+        { label: '2+', value: '2' },
+        { label: '3+', value: '3' },
+        { label: '4+', value: '4' },
+        { label: '5+', value: '5' },
+    ];
+
     const categoryChangeHandler = (value) => {
+        console.log('categoryChangeHandler before:' + category);
         setCategory(value);
+        console.log('categoryChangeHandler after: ' + category);
+    };
+
+    const bedroomsChangeHandler = (value) => {
+        console.log('bedsChangeHandler before:' + selectedBeds);
+        setSelectedBeds(value);
+        console.log('bedsChangeHandler after:' + selectedBeds);
+    };
+
+    const bathroomsChangeHandler = (value) => {
+        console.log('bedsChangeHandler before:' + selectedBaths);
+        setSelectedBaths(value);
+        console.log('bedsChangeHandler after:' + selectedBaths);
+    };
+
+    const priceRangeChangeHandler = (range) => {
+        const formattedPriceRange = formatRange(range); // Use the utility function to format the price range
+        setPriceRange(formattedPriceRange); // Update the state with the new formatted price range
+        console.log('Updated Price Range:', formattedPriceRange);
+    };
+
+    const sizeRangeChangeHandler = (range) => {
+        const formattedSizeRange = formatRange(range);
+        setSizeRange(formattedSizeRange);
+        console.log('Updated size Range:', formattedSizeRange);
     };
 
     const petChangeHandler = (selectedOptions) => {
+        console.log('selectedOptions: ' + JSON.stringify(selectedOptions));
         setSelectedPets(selectedOptions);
     };
 
     const searchBtnHandler = () => {
         setPage(1);
-        dispatch(
-            category === 'for-sale'
-                ? fetchSalesThunk({ location: location, currentPage: 1 })
-                : fetchRentalsThunk({ location: location, currentPage: 1 })
-        );
+        fetchPageData(page);
+        // dispatch(
+        //     category === 'for-sale'
+        //         ? fetchSalesThunk({ location: location, currentPage: 1 })
+        //         : fetchRentalsThunk({ location: location, currentPage: 1 })
+        // );
     };
     return (
         <div className="grid grid-cols-6">
@@ -111,23 +182,33 @@ const ResultPage = () => {
                         onChange={locationChangeHandler}
                     />
                     <div className="flex items-center px-2 rounded-lg space-x-4 mx-auto">
-                        {/* <select
-                            className="text-base text-gray-800 outline-none border-3 border-dark-100 px-4 py-2 rounded-lg focus:ring-primary-200 focus:ring-2 focus:border-none"
-                            value={category}
-                            onChange={categoryChangeHandler}>
-                            <option value="for-sale">For Sale</option>
-                            <option value="for-rent">For Rent</option>
-                        </select> */}
                         <DropdownSingle
+                            label="Category"
                             options={categoryOptions}
                             onSelectionChange={categoryChangeHandler}
-                            className="absolute z-50 mt-1"
+                        />
+                        <DropdownRange
+                            buttonLabel="Price"
+                            onRangeChange={priceRangeChangeHandler}
+                        />
+                        <DropdownRange
+                            buttonLabel="Size"
+                            onRangeChange={sizeRangeChangeHandler}
+                        />
+                        <DropdownSingle
+                            label="Bedrooms"
+                            options={bedroomsOptions}
+                            onSelectionChange={bedroomsChangeHandler}
+                        />
+                        <DropdownSingle
+                            label="Bathrooms"
+                            options={bathroomsOptions}
+                            onSelectionChange={bathroomsChangeHandler}
                         />
                         <DropdownMultiple
                             options={['Dog', 'Cat', 'No Pets Allowed']}
                             buttonLabel="Pet"
                             onSelectionChange={petChangeHandler}
-                            className="absolute z-50 mt-1"
                         />
                         <button
                             className="bg-dark-200 text-white text-base rounded-lg px-4 py-2"

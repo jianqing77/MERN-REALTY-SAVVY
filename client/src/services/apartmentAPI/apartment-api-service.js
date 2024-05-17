@@ -19,14 +19,14 @@ export const fetchRentals = async ({
         const params = {
             location,
             page,
-            prices, // Added other parameters as optional
+            prices, // other parameters as optional
             homeSize,
             bedrooms,
             bathrooms,
             moveInDate,
             pets,
         };
-        // Filter out undefined or null parameters from the params object
+        // filter out undefined or null parameters from the params object
         Object.keys(params).forEach(
             (key) => params[key] === undefined && delete params[key]
         );
