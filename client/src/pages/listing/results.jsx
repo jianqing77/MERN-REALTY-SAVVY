@@ -13,6 +13,7 @@ import DropdownMultiple from '../../components/DropDownMultiple.jsx';
 import DropdownSingle from '../../components/DropDownSingle.jsx';
 import { formatRange, formatPets } from './formatUtils.jsx';
 import DropdownRange from '../../components/DropDownRange.jsx';
+import Pagination from '../../components/Pagination.jsx';
 
 const ResultPage = () => {
     const searchLocation = useLocation();
@@ -32,11 +33,6 @@ const ResultPage = () => {
     const { listings, totalRecords, currentPage, resultsPerPage } = useSelector(
         (state) => state.apartments
     );
-
-    // Pagination
-    const [page, setPage] = useState(currentPage || 1);
-    // calculate total pages
-    const totalPages = Math.ceil(totalRecords / resultsPerPage);
 
     useEffect(() => {
         if (state) {
@@ -145,24 +141,40 @@ const ResultPage = () => {
         setSelectedPets(selectedOptions);
     };
 
-    const nextBtnHandler = () => {
-        const nextPage = page + 1;
-        setPage(nextPage);
-        dispatch(setCurrentPage(nextPage));
-        fetchPageData(nextPage);
-    };
-
-    const prevBtnHandler = () => {
-        if (page > 1) {
-            const prevPage = page - 1;
-            setPage(prevPage);
-        }
-    };
-
     const searchBtnHandler = () => {
         setPage(1);
         fetchPageData(page);
     };
+
+    // Pagination
+    const [page, setPage] = useState(currentPage || 1);
+    // calculate total pages
+    const totalPages = Math.ceil(totalRecords / resultsPerPage);
+
+    // const nextBtnHandler = () => {
+    //     if (page < totalPages) {
+    //         const nextPage = page + 1;
+    //         setPage(nextPage);
+    //         dispatch(setCurrentPage(nextPage));
+    //         fetchPageData(nextPage);
+    //     }
+    // };
+
+    // const prevBtnHandler = () => {
+    //     if (page > 1) {
+    //         const prevPage = page - 1;
+    //         setPage(prevPage);
+    //         dispatch(setCurrentPage(prevPage));
+    //         fetchPageData(prevPage);
+    //     }
+    // };
+
+    const pageChangeHandler = (newPage) => {
+        setPage(newPage);
+        dispatch(setCurrentPage(newPage));
+        fetchPageData(newPage);
+    };
+
     return (
         <div className="grid grid-cols-6">
             <div className="col-span-6  ps-10 pe-20">
@@ -228,7 +240,7 @@ const ResultPage = () => {
                     </ul>
                 </div>
                 <div>
-                    <button onClick={prevBtnHandler} disabled={page <= 1}>
+                    {/* <button onClick={prevBtnHandler} disabled={page <= 1}>
                         Previous
                     </button>
                     <span>
@@ -236,7 +248,12 @@ const ResultPage = () => {
                     </span>
                     <button onClick={nextBtnHandler} disabled={page >= totalPages}>
                         Next
-                    </button>
+                    </button> */}
+                    <Pagination
+                        page={page}
+                        totalPages={totalPages}
+                        onPageChange={pageChangeHandler}
+                    />
                 </div>
             </div>
         </div>

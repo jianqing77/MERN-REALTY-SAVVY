@@ -1,66 +1,60 @@
 import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid';
+import PropTypes from 'prop-types';
 
-export default function Pagination() {
+function Pagination({ page, totalPages, onPageChange }) {
+    const prevClickHandler = (e) => {
+        e.preventDefault();
+        if (page > 1) {
+            onPageChange(page - 1);
+        }
+    };
+
+    const nextClickHandler = (e) => {
+        e.preventDefault();
+        if (page < totalPages) {
+            onPageChange(page + 1);
+        }
+    };
+
     return (
-        <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
-            <div className="-mt-px flex w-0 flex-1">
+        <nav className="flex items-center justify-between border-t px-4 sm:px-0">
+            <div className="flex w-0 flex-1 justify-end">
                 <a
                     href="#"
-                    className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    <ArrowLongLeftIcon
-                        className="mr-3 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                    />
+                    onClick={prevClickHandler}
+                    className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-6 text-base font-medium ${
+                        page <= 1 ? 'text-gray-300' : 'text-dark-100 hover:text-dark-200'
+                    }`}>
+                    <ArrowLongLeftIcon className="mr-3 h-5 w-5" aria-hidden="true" />
                     Previous
                 </a>
             </div>
-            <div className="hidden md:-mt-px md:flex">
-                <a
-                    href="#"
-                    className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    1
-                </a>
-                <a
-                    href="#"
-                    className="inline-flex items-center border-t-2 border-indigo-500 px-4 pt-4 text-sm font-medium text-indigo-600"
-                    aria-current="page">
-                    2
-                </a>
-                <a
-                    href="#"
-                    className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    3
-                </a>
-                <span className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500">
-                    ...
+            <div className="hidden md:flex">
+                <span className="inline-flex items-center border-t-2 border-transparent px-6 pt-6 text-base font-medium text-dark-100">
+                    Page {page} of {totalPages}
                 </span>
-                <a
-                    href="#"
-                    className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    8
-                </a>
-                <a
-                    href="#"
-                    className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    9
-                </a>
-                <a
-                    href="#"
-                    className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    10
-                </a>
             </div>
-            <div className="-mt-px flex w-0 flex-1 justify-end">
+            <div className="flex w-0 flex-1 justify-start">
                 <a
                     href="#"
-                    className="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+                    onClick={nextClickHandler}
+                    className={`inline-flex items-center border-t-2 border-transparent pl-1 pt-6 text-base font-medium ${
+                        page >= totalPages
+                            ? 'text-gray-300'
+                            : 'text-dark-100 hover:text-dark-200'
+                    }`}>
                     Next
-                    <ArrowLongRightIcon
-                        className="ml-3 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                    />
+                    <ArrowLongRightIcon className="ml-3 h-5 w-5" aria-hidden="true" />
                 </a>
             </div>
         </nav>
     );
 }
+
+Pagination.propTypes = {
+    page: PropTypes.number.isRequired,
+    totalPages: PropTypes.number.isRequired,
+    onPageChange: PropTypes.func.isRequired,
+};
+
+export default Pagination;
