@@ -57,17 +57,8 @@ const MapComponent = ({ listings }) => {
                         />
                     )
             )}
-            {/* {selected && (
-                    <InfoWindow
-                        position={selected.coordinates}
-                        onCloseClick={() => setSelected(null)}>
-                        <div>
-                            <h2>{selected.title}</h2>
-                            <p>{selected.description}</p>
-                        </div>
-                    </InfoWindow>
-                )} */}
-            {/* <InfoWindow
+            {selected && (
+                <InfoWindow
                     position={selected.coordinates}
                     onCloseClick={() => setSelected(null)}>
                     <div style={{ width: '200px', fontSize: '14px' }}>
@@ -84,7 +75,16 @@ const MapComponent = ({ listings }) => {
                             More Info
                         </button>
                     </div>
-                </InfoWindow> */}
+                </InfoWindow>
+                // <InfoWindow
+                //     position={selected.coordinates}
+                //     onCloseClick={() => setSelected(null)}>
+                //     <div>
+                //         <h2>{selected.title}</h2>
+                //         <p>{selected.description}</p>
+                //     </div>
+                // </InfoWindow>
+            )}
         </GoogleMap>
         // </LoadScript>
     );

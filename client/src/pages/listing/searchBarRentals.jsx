@@ -74,9 +74,7 @@ const SearchBarRentals = ({
 SearchBarRentals.propTypes = {
     initialCategory: PropTypes.string.isRequired,
     onCategoryChange: PropTypes.func.isRequired,
-    priceRange: PropTypes.array.isRequired,
     onPriceRangeChange: PropTypes.func.isRequired,
-    sizeRange: PropTypes.array.isRequired,
     onSizeRangeChange: PropTypes.func.isRequired,
     onBedroomsChange: PropTypes.func.isRequired,
     onBathroomsChange: PropTypes.func.isRequired,

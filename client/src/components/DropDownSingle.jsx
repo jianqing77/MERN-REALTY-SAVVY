@@ -95,7 +95,12 @@ function DropdownSingle({ label, initialValue, options, onSelectionChange }) {
 DropdownSingle.propTypes = {
     label: PropTypes.string.isRequired,
     initialValue: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.string).isRequired,
+    options: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string.isRequired,
+            value: PropTypes.string.isRequired,
+        })
+    ).isRequired,
     onSelectionChange: PropTypes.func.isRequired,
 };
 

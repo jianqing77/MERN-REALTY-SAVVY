@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DropdownSingle from '../../components/DropDownSingle.jsx';
-import DropdownMultiple from '../../components/DropDownMultiple.jsx';
 import DropdownRange from '../../components/DropDownRange.jsx';
 
 const SearchBarSales = ({
@@ -73,7 +72,7 @@ SearchBarSales.propTypes = {
     onCategoryChange: PropTypes.func.isRequired,
     onPriceRangeChange: PropTypes.func.isRequired,
     onSizeRangeChange: PropTypes.func.isRequired,
-    onHomeAgeRangeChange: PropTypes.func.isRequired,
+    onHomeAgeRangeChange: PropTypes.func,
     onBedroomsChange: PropTypes.func.isRequired,
     onBathroomsChange: PropTypes.func.isRequired,
     onSearch: PropTypes.func.isRequired,

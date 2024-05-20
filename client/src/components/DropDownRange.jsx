@@ -97,7 +97,7 @@ function DropdownRange({ buttonLabel, onRangeChange }) {
 // Define prop types
 DropdownRange.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
-    onRangeChange: PropTypes.func.isRequired,
+    onRangeChange: PropTypes.func,
 };
 
 export default DropdownRange;

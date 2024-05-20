@@ -161,7 +161,7 @@ const ResultPage = () => {
                 {/* Conditional Rendering of Search Bars based on Category */}
                 {category === 'for-rent' ? (
                     <SearchBarRentals
-                        category={category}
+                        initialCategory={category}
                         onCategoryChange={categoryChangeHandler}
                         onPriceRangeChange={priceRangeChangeHandler}
                         onSizeRangeChange={sizeRangeChangeHandler}
@@ -172,7 +172,7 @@ const ResultPage = () => {
                     />
                 ) : (
                     <SearchBarSales
-                        category={category}
+                        initialCategory={category}
                         onCategoryChange={categoryChangeHandler}
                         onPriceRangeChange={priceRangeChangeHandler}
                         onSizeRangeChange={sizeRangeChangeHandler}
