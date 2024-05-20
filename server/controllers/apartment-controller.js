@@ -49,7 +49,7 @@ const mapApiDataToListingSchema = (listing) => {
               dogs: 'Unknown',
           };
 
-    return {
+    const baseSchema = {
         id: listing.property_id,
         title:
             listing.location && listing.location.address
@@ -90,13 +90,22 @@ const mapApiDataToListingSchema = (listing) => {
             agentName: listing.advertisers?.[0]?.name || 'N/A',
             email: listing.advertisers?.[0]?.email || 'N/A',
         },
-        pet_policy: petsPolicy,
         media: {
             imageUrls: imageUrls.length > 0 ? imageUrls : ['default-image.jpg'],
             refUrl: listing.href || 'N/A',
         },
         metadata: {},
     };
+
+    if (listing.status === 'for_rent') {
+        baseSchema.pet_policy = petsPolicy;
+    }
+
+    // if (listing.status === 'for_sale') {
+    //     baseSchema.lastSoldDate = listing.home_age || 'Not provided';
+    // }
+
+    return baseSchema;
 };
 
 export const getPublicListings = async (req, res) => {
@@ -305,16 +314,34 @@ export const getRentalListings = async (req, res) => {
 };
 
 export const getSaleListings = async (req, res) => {
-    const locationId = req.locationId; // Use the location ID set by getLocationId middleware
-    const currentPage = req.query.page || 1;
+    const {
+        locationId,
+        query: { page = 1, prices, homeSize, homeAge, bedrooms, bathrooms },
+    } = req;
+
+    const params = {
+        location: locationId,
+        page,
+    };
+
+    const optionalParams = {
+        prices,
+        homeSize: homeSize?.trim(),
+        homeAge: homeAge?.trim(),
+        bedrooms,
+        bathrooms,
+    };
+
+    Object.keys(optionalParams).forEach((key) => {
+        if (optionalParams[key]) {
+            params[key] = optionalParams[key];
+        }
+    });
 
     const options = {
         method: 'GET',
         url: 'https://realty-us.p.rapidapi.com/properties/search-buy',
-        params: {
-            location: locationId,
-            page: currentPage,
-        },
+        params,
         headers: {
             'X-RapidAPI-Key': APARTMENT_API_KEY,
             'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',

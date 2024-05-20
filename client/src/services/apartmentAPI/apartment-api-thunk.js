@@ -17,12 +17,9 @@ export const fetchRentalsThunk = createAsyncThunk(
 
 export const fetchSalesThunk = createAsyncThunk(
     'apartments/fetchSales',
-    async ({ location, page }, { rejectWithValue }) => {
+    async (searchParams, { rejectWithValue }) => {
         try {
-            const salesPayload = await fetchSales({
-                location,
-                page,
-            });
+            const salesPayload = await fetchSales(searchParams);
             return salesPayload;
         } catch (error) {
             console.error('Error in thunk fetchSales:', error);

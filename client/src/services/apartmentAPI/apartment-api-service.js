@@ -12,7 +12,6 @@ export const fetchRentals = async ({
     homeSize,
     bedrooms,
     bathrooms,
-    moveInDate,
     pets,
 }) => {
     try {
@@ -45,20 +44,37 @@ export const fetchRentals = async ({
     }
 };
 
-export const fetchSales = async ({ location, page }) => {
+export const fetchSales = async ({
+    location,
+    page,
+    prices,
+    homeSize,
+    homeAge,
+    bedrooms,
+    bathrooms,
+}) => {
     try {
-        const response = await api.get(`${APARTMENT_API_URL}/sales`, {
-            params: {
-                location,
-                page,
-            },
-        });
+        const params = {
+            location,
+            page,
+            prices, // other parameters as optional
+            homeSize,
+            homeAge,
+            bedrooms,
+            bathrooms,
+        };
+        // filter out undefined or null parameters from the params object
+        Object.keys(params).forEach(
+            (key) => params[key] === undefined && delete params[key]
+        );
+
+        const response = await api.get(`${APARTMENT_API_URL}/sales`, { params });
         const result = {
             searchLocation: response.data.searchLocation,
             resultsPerPage: response.data.resultsPerPage,
-            currentPage: response.data.currentPage, // Current page number
-            totalRecords: response.data.totalRecords, // Total number of pages
-            listings: response.data.listings, // Array of listings
+            currentPage: response.data.currentPage,
+            totalRecords: response.data.totalRecords,
+            listings: response.data.listings,
         };
         return result;
     } catch (error) {
