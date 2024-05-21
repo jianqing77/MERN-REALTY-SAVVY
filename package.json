@@ -18,6 +18,7 @@
         "@headlessui/react": "^1.7.18",
         "@heroicons/react": "^2.1.1",
         "@react-google-maps/api": "^2.19.3",
+        "@tailwindcss/aspect-ratio": "^0.4.2",
         "@vis.gl/react-google-maps": "^1.0.0",
         "bcryptjs": "^2.4.3",
         "connect-mongo": "^5.1.0",

@@ -24,7 +24,7 @@ function App() {
                     <BrowserRouter>
                         <div className="flex flex-col min-h-screen">
                             <NavBar />
-                            <main className="flex-grow min-h-screen">
+                            <main className="flex-grow overflow-auto">
                                 <Routes>
                                     <Route index path="/" element={<Home />}></Route>
                                     <Route

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import WelcomePic from '../assets/auth-2.jpg';
+// import WelcomePic from '../assets/auth-3.png';
+
 import { Link, useNavigate } from 'react-router-dom';
 import { useLoadScript, Autocomplete } from '@react-google-maps/api';
-
+import ImageTiles from '../components/ImageTiles.jsx';
 import {
     fetchRentalsThunk,
     fetchSalesThunk,
@@ -97,6 +99,7 @@ const Home = () => {
                     </form>
                 </div>
             </div>
+            <ImageTiles />
         </div>
     );
 };
