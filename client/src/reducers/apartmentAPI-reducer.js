@@ -16,7 +16,7 @@ const apartmentsSlice = createSlice({
         dataFetched: false, // Flag to indicate successful data fetching
         currentPage: 1,
         totalRecords: 0,
-        resultsPerPage: 20,
+        resultsPerPage: 50,
         coordinates: null,
     },
     reducers: {

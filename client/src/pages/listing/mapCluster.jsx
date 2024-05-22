@@ -20,7 +20,6 @@ const MapComponent = ({ listings }) => {
     // console.log('LoadScript Mounted');
 
     const [selected, setSelected] = useState(null);
-    console.log(JSON.stringify(selected));
     const center = useMemo(() => {
         let validListings = listings.filter((l) => l.coordinates);
         if (validListings.length === 0) return defaultCenter;
@@ -41,7 +40,7 @@ const MapComponent = ({ listings }) => {
 
     return (
         // <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
-        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={11}>
             {listings.map(
                 (listing) =>
                     listing.coordinates && (

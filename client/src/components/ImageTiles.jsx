@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import pic1 from '../assets/auth-4.png';
 import pic2 from '../assets/auth-3.png';
 import pic3 from '../assets/auth-5.png';
+import logoAvatar from '../assets/logo-rs-3.jpg';
 
 const collections = [
     {
@@ -71,6 +72,9 @@ export default function ImageTiles() {
                     <div className="h-48 w-full bg-white" />
                 </div>
                 <div className="relative py-32">
+                    <div className="flex items-center justify-center">
+                        <img src={logoAvatar} alt="Logo" className="h-20 mb-10" />
+                    </div>
                     <h1 className="text-4xl font-bold tracking-tight text-dark-100 sm:text-3xl md:text-4xl">
                         Expertise Meets Innovation
                     </h1>

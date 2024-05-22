@@ -23,6 +23,7 @@ const InfoWindowComponent = ({ selected, onClose }) => {
             <div className="w-full max-w-xs text-sm font-sans">
                 {/* Carousel Implementation */}
                 <div className="relative w-full">
+                    {/* Images */}
                     <div className="relative h-20 overflow-hidden rounded-lg md:h-36 mb-2">
                         {imageUrls.map((url, index) => (
                             <div
@@ -36,19 +37,6 @@ const InfoWindowComponent = ({ selected, onClose }) => {
                                     alt={`Slide ${index + 1}`}
                                 />
                             </div>
-                        ))}
-                    </div>
-                    <div className="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-1 left-1/2">
-                        {imageUrls.map((_, index) => (
-                            <button
-                                key={index}
-                                className={`w-2 h-2 rounded-full ${
-                                    index === currentImageIndex
-                                        ? 'bg-primary-200'
-                                        : 'bg-white'
-                                }`}
-                                aria-label={`Slide ${index + 1}`}
-                                onClick={() => setCurrentImageIndex(index)}></button>
                         ))}
                     </div>
                     {/* Arrows */}
@@ -102,8 +90,24 @@ const InfoWindowComponent = ({ selected, onClose }) => {
                     </div>
                 </div>
                 {/* Other Information */}
-                <h1 className="text-black text-base font-semibold">{selected.title}</h1>
-                <p>{selected.description}</p>
+                <div className="flex justify-between items-center">
+                    <span className="text-black text-base font-semibold">
+                        {selected.title}
+                    </span>
+                    {/* Buttons for More Info and Likes */}
+                    <span>
+                        <a
+                            href={selected.media.refUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Details">
+                            <i className="fa fa-ellipsis-h ms-2" aria-hidden="true"></i>
+                        </a>
+                        <span className="mx-2">
+                            <HeartIcon />
+                        </span>
+                    </span>
+                </div>
                 <p className="text-base text-gray-600">
                     <span className="font-semibold">Price:</span>{' '}
                     {formatPrice(selected.price)}
@@ -115,20 +119,6 @@ const InfoWindowComponent = ({ selected, onClose }) => {
                     {selected.features.bathrooms} |{' '}
                     {formatSquareFeet(selected.features.squareFootage)} sqft
                 </p>
-                <div>
-                    <span>
-                        <a
-                            href={selected.media.refUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Details">
-                            <i className="fa fa-ellipsis-h" aria-hidden="true"></i>
-                        </a>
-                    </span>
-                    <span className="ms-3">
-                        <HeartIcon />
-                    </span>
-                </div>
             </div>
         </InfoWindow>
     );

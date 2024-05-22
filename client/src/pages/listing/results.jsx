@@ -175,15 +175,15 @@ const ResultPage = () => {
                         initialCategory={category}
                         onCategoryChange={categoryChangeHandler}
                         onPriceRangeChange={priceRangeChangeHandler}
+                        onHomeAgeRangeChange={homeAgeRangeChangeHandler}
                         onSizeRangeChange={sizeRangeChangeHandler}
                         onBedroomsChange={bedroomsChangeHandler}
                         onBathroomsChange={bathroomsChangeHandler}
-                        onPetsChange={petChangeHandler}
                         onSearch={searchBtnHandler}
                     />
                 )}
                 {/* Result List */}
-                <div className="max-h-[90vh] overflow-y-auto mx-auto shadow-lg bg-white ms-3 mt-4">
+                <div className="max-h-[90vh] overflow-y-auto mx-auto shadow-lg bg-white ms-3 mt-5">
                     <ul role="list" className="divide-y divide-gray-100">
                         {listings.map((listing) => (
                             <ListingCard key={listing.id} listing={listing} />

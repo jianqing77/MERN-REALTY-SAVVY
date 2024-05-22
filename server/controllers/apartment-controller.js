@@ -184,78 +184,6 @@ export const getLocationId = async (req, res, next) => {
     }
 };
 
-// export const getRentalListings = async (req, res) => {
-//     const locationId = req.locationId;
-//     const currentPage = req.query.page || 1;
-//     const prices = req.query.prices;
-//     const homeSize = req.query.homeSize;
-//     const bedrooms = req.query.bedrooms;
-//     const bathrooms = req.query.bathrooms;
-//     const moveInDate = req.query.moveInDate;
-//     const pets = req.query.pets;
-
-//     const params = {
-//         location: locationId,
-//         page: currentPage,
-//     };
-
-//     // Handle the pets parameter
-//     if (pets) {
-//         params.pets = pets;
-//     }
-
-//     // Handle the price parameter
-//     if (prices) {
-//         params.prices = prices;
-//     }
-
-//     // Handle the bedrooms parameter
-//     if (bedrooms) {
-//         params.bedrooms = bedrooms;
-//     }
-//     // Handle the bathrooms parameter
-//     if (bathrooms) {
-//         params.bathrooms = bathrooms;
-//     }
-//     // Handle the moveInDate parameter
-//     if (moveInDate) {
-//         params.moveInDate = moveInDate;
-//     }
-//     // Handle the sizeRange parameter
-//     if (homeSize) {
-//         params.homeSize = homeSize.trim();
-//     }
-
-//     const options = {
-//         method: 'GET',
-//         url: 'https://realty-us.p.rapidapi.com/properties/search-rent',
-//         params: params,
-//         headers: {
-//             'X-RapidAPI-Key': APARTMENT_API_KEY,
-//             'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',
-//         },
-//     };
-
-//     try {
-//         const response = await axios.request(options);
-//         const { currentPage, totalRecords, limit: resultsPerPage } = response.data.meta;
-//         const listings = response.data.data.results.map(mapApiDataToListingSchema);
-
-//         const result = {
-//             searchLocation: locationId,
-//             totalRecords: totalRecords,
-//             resultsPerPage: resultsPerPage,
-//             currentPage: currentPage,
-//             listings: listings,
-//         };
-
-//         res.json(result);
-//     } catch (error) {
-//         console.error('Error fetching rental properties:', error);
-//         res.status(500).send('Error fetching rental properties');
-//     }
-// };
-
 export const getRentalListings = async (req, res) => {
     const {
         locationId,
@@ -264,6 +192,7 @@ export const getRentalListings = async (req, res) => {
 
     const params = {
         location: locationId,
+        resultsPerPage: 50,
         page,
     };
 
@@ -321,6 +250,7 @@ export const getSaleListings = async (req, res) => {
 
     const params = {
         location: locationId,
+        resultsPerPage: 50,
         page,
     };
 
