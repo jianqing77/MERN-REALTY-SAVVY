@@ -69,6 +69,14 @@ const UserSchema = new Schema(
             default: 'user',
             enum: ['admin', 'user', 'guest'],
         },
+        favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'InternalListing' }],
+        externalFavorites: [
+            {
+                propertyID: String, // ID used in the public API
+                title: String, // Optional, for quick reference
+                lastAccessed: { type: Date, default: Date.now },
+            },
+        ],
     },
     { timestamps: true },
     { collection: 'users' }

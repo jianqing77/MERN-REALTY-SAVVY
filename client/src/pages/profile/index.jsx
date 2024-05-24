@@ -37,7 +37,9 @@ export default function Profile() {
 
     return (
         <div className="grid grid-cols-12 px-10">
-            <div className="hidden md:block sm:col-span-2">
+            <div className="hidden lg:block lg:col-span-1">{/* nav sidebar */}</div>
+
+            <div className="hidden lg:block lg:col-span-2">
                 {/* nav sidebar */}
                 <div className="flex flex-col py-16 gap-y-5 px-6 ring-1 ring-white/5">
                     <nav>
@@ -66,7 +68,7 @@ export default function Profile() {
                     </nav>
                 </div>
             </div>
-            <div className="col-span-12 sm:col-span-10 ms-8 mt-2">
+            <div className="col-span-12 lg:col-span-8 ms-8 mt-2">
                 {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8"> */}
                 <Routes>
                     <Route index path="general" element={<General />} />

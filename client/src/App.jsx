@@ -37,6 +37,7 @@ function App() {
                                         <Route
                                             path="/profile/*"
                                             element={<Profile />}></Route>
+                                        {/* <Route path="/create"></Route> */}
                                     </Route>
                                 </Routes>
                             </main>

@@ -36,7 +36,7 @@ export default function Listings() {
                     <button
                         type="button"
                         onClick={CreateNewListingHandler}
-                        className="block rounded-md bg-dark-100 px-3 py-2 text-center text-sm font-semibold text-primary-100 shadow-sm hover:bg-primary-200 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
+                        className="block rounded-md bg-dark-100 px-3 py-2 text-center text-sm font-semibold text-primary-100 shadow-sm hover:bg-yellow-500 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
                         Add New Listing
                     </button>
                 </div>
@@ -127,7 +127,7 @@ export default function Listings() {
                                             )}>
                                             <a
                                                 href="#"
-                                                className="text-indigo-600 hover:text-indigo-900">
+                                                className="text-dark-100 hover:text-primary-200">
                                                 View Details
                                                 <span className="sr-only">
                                                     , {person.name}

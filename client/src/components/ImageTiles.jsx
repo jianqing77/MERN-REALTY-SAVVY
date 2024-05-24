@@ -3,6 +3,7 @@ import pic1 from '../assets/auth-4.png';
 import pic2 from '../assets/auth-3.png';
 import pic3 from '../assets/auth-5.png';
 import logoAvatar from '../assets/logo-rs-3.jpg';
+import { Link } from 'react-router-dom';
 
 const collections = [
     {
@@ -25,7 +26,7 @@ const collections = [
     },
     {
         name: 'List a Home',
-        href: '#',
+        href: '/profile/listings/new',
         imageSrc: pic1,
         description:
             'Simplify the process of listing your property with our expert guidance and personalized services that ensure a smooth and successful transaction',
@@ -111,95 +112,22 @@ export default function ImageTiles() {
                                 <div className="absolute inset-0 flex items-center justify-center rounded-lg">
                                     <div>
                                         <div className="mt-1 flex justify-center items-center text-2xl font-bold text-primary-500">
-                                            <a href={collection.href}>
-                                                <span className="" />
-                                                {collection.name}
-                                            </a>
+                                            {collection.name}
                                         </div>
 
                                         <div className="mt-1 p-4 flex flex-col justify-center items-center text-base text-primary-500 text-center">
-                                            <a href={collection.href}>
-                                                {collection.description}
-                                            </a>
+                                            {collection.description}
                                         </div>
                                         <div className="mt-2 sm:mt-3 flex justify-center items-center">
-                                            <a
-                                                href={collection.href}
+                                            <Link
+                                                to={collection.href}
                                                 className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
                                                 {collection.btnText}
-                                            </a>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {/* <div className="relative rounded-lg overflow-hidden">
-                                <div className="overflow-hidden">
-                                    <img
-                                        src={collection.imageSrc}
-                                        alt={collection.imageAlt}
-                                        className="w-full object-cover object-center transform transition-transform duration-300 group-hover:scale-110 group-hover:opacity-70"
-                                    />
-                                </div>
-
-                                <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-transparent to-black opacity-50" />
-
-                                <div className="p-4 text-center">
-                                    <div className="text-2xl font-bold text-primary-500">
-                                        <a href={collection.href}>{collection.name}</a>
-                                    </div>
-                                    <div className="mt-1 text-base text-primary-500">
-                                        <a href={collection.href}>
-                                            {collection.description}
-                                        </a>
-                                    </div>
-                                    <div className="mt-2 sm:mt-3">
-                                        <a
-                                            href={collection.href}
-                                            className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
-                                            {collection.btnText}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div> */}
-                            {/* <div>
-                                <div
-                                    aria-hidden="true"
-                                    className="relative overflow-hidden rounded-lg">
-                                    <div className="absolute inset-0 overflow-hidden">
-                                        <img
-                                            src={collection.imageSrc}
-                                            alt={collection.imageAlt}
-                                            className="h-full w-full object-cover object-center transition-transform duration-300 transform group-hover:scale-110"
-                                        />
-                                    </div>
-
-                                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black transition-opacity duration-300 opacity-50 group-hover:opacity-70" />
-                                </div>
-
-                                <div className="absolute inset-0 flex items-center justify-center rounded-lg">
-                                    <div>
-                                        <div className="mt-1 flex justify-center items-center text-2xl font-bold text-primary-500">
-                                            <a href={collection.href}>
-                                                {collection.name}
-                                            </a>
-                                        </div>
-
-                                        <div className="mt-1 p-4 flex flex-col justify-center items-center text-base text-primary-500 text-center">
-                                            <a href={collection.href}>
-                                                {collection.description}
-                                            </a>
-                                        </div>
-
-                                        <div className="mt-2 sm:mt-3 flex justify-center items-center">
-                                            <a
-                                                href={collection.href}
-                                                className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
-                                                {collection.btnText}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                         </div>
                     ))}
                 </div>

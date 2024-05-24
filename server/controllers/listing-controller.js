@@ -1,9 +1,9 @@
 import ErrorHandler from '../utils/ErrorHandler.js';
 import catchAsync from '../utils/catchAsync.js';
-import ListingDAO from '../dao/listing-dao.js';
+import InternalListingDAO from '../dao/internal-listing-dao.js';
 
 export const findAllListings = catchAsync(async (req, res) => {
-    const listings = await ListingDAO.findAllListing();
+    const listings = await InternalListingDAO.findAllListing();
     res.status(200).json({
         success: true,
         results: listings.length,
@@ -13,13 +13,14 @@ export const findAllListings = catchAsync(async (req, res) => {
 
 export const findListingById = catchAsync(async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
-    const foundedListing = await ListingDAO.findListingById(id);
+    const foundedListing = await InternalListingDAO.findListingById(id);
     res.status(200).json(foundedListing);
 });
 
 export const createListing = catchAsync(async (req, res) => {
     const listingData = req.body;
-    const newListing = await ListingDAO.createListing(listingData);
+    console.log('createListing in the listing controller was called');
+    const newListing = await InternalListingDAO.createListing(listingData);
     res.status(201).json(newListing);
 });
 
@@ -28,13 +29,13 @@ export const updateListing = catchAsync(async (req, res) => {
     const updateData = req.body;
     console.log('ID:', id); // Check the ID
     console.log('Update Data:', updateData); // Check the update data
-    const updatedListing = await ListingDAO.updateListing(id, updateData);
+    const updatedListing = await InternalListingDAO.updateListing(id, updateData);
     res.status(201).json(updatedListing);
 });
 
 export const deleteListing = catchAsync(async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
-    const deletedListing = await ListingDAO.deleteListing(id);
+    const deletedListing = await InternalListingDAO.deleteListing(id);
 
     // Check if the deletion was successful, and if not, return a 404 error.
     if (!deletedListing) {

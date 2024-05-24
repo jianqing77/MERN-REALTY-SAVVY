@@ -9,10 +9,9 @@ const ListingSchema = new Schema(
             enum: ['Lease', 'Sell'],
             required: true,
         },
-        description: { type: String, required: true },
-        listingDate: { type: Date, default: Date.now },
+        description: { type: String, required: false },
+        availableDate: { type: Date, default: Date.now },
         price: { type: String, required: true },
-        reducedAmount: { type: Number },
         propertyType: {
             type: String,
             enum: [
@@ -43,7 +42,8 @@ const ListingSchema = new Schema(
         contactInfo: {
             agentCompany: { type: String, required: true },
             agentName: { type: String, required: true },
-            email: { type: String, required: false },
+            agentPhone: { type: String, required: false },
+            email: { type: String, required: true },
         },
         media: {
             imageUrls: [{ type: String }],
@@ -59,7 +59,7 @@ const ListingSchema = new Schema(
 );
 
 // The collection name 'listings' is specified here.
-ListingSchema.set('collection', 'listings');
+ListingSchema.set('collection', 'InternalListing');
 
-const ListingModel = mongoose.model('Listing', ListingSchema);
-export default ListingModel;
+const InternalListingModel = mongoose.model('InternalListing', ListingSchema);
+export default InternalListingModel;

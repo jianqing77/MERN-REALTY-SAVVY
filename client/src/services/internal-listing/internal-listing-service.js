@@ -35,7 +35,9 @@ export const findListingById = async (listingId) => {
 
 export const createListing = async (listingData) => {
     try {
-        const server_res = await api.post(LISTING_URL, listingData);
+        console.log('Creating listing: listingData => ' + JSON.stringify(listingData));
+        const server_res = await api.post(`${LISTING_URL}/`, listingData);
+        console.log('server_res => ' + JSON.stringify(server_res.data));
         const createdListing = server_res.data;
         return createdListing;
     } catch (error) {
@@ -44,9 +46,9 @@ export const createListing = async (listingData) => {
     }
 };
 
-export const updateListing = async ({ tarId, updateData }) => {
+export const updateListing = async ({ tarId, updatedData }) => {
     try {
-        const server_res = await api.put(`${LISTING_URL}/${tarId}`, updateData);
+        const server_res = await api.put(`${LISTING_URL}/${tarId}`, updatedData);
         const updatedListing = server_res.data;
         return updatedListing;
     } catch (error) {

@@ -1,10 +1,10 @@
-import ListingModel from '../models/listing-model.js';
+import InternalListingModel from '../models/internal-listing-model.js';
 import ErrorHandler from '../utils/ErrorHandler.js'; // Update with the actual path
 
-const ListingDAO = {
+const InternalListingDao = {
     findAllListing: async () => {
         try {
-            const listings = await ListingModel.find({});
+            const listings = await InternalListingModel.find({});
             return listings;
         } catch (error) {
             throw new ErrorHandler('Error fetching listings', 500);
@@ -12,7 +12,7 @@ const ListingDAO = {
     },
     createListing: async (listingData) => {
         try {
-            const listing = new ListingModel(listingData);
+            const listing = new InternalListingModel(listingData);
             return await listing.save();
         } catch (error) {
             throw new ErrorHandler('Error creating listing', 500);
@@ -20,7 +20,7 @@ const ListingDAO = {
     },
     findListingById: async (id) => {
         try {
-            const listing = await ListingModel.findById(id);
+            const listing = await InternalListingModel.findById(id);
             if (!listing) {
                 throw new ErrorHandler('Listing not found', 404);
             }
@@ -33,7 +33,7 @@ const ListingDAO = {
     // Update a listing by ID
     updateListing: async (id, updateData) => {
         try {
-            const updatedListing = await ListingModel.findByIdAndUpdate(
+            const updatedListing = await InternalListingModel.findByIdAndUpdate(
                 id,
                 { $set: updateData }, // Use the $set operator to update fields
                 { new: true }
@@ -50,7 +50,7 @@ const ListingDAO = {
     // Delete a listing by ID
     deleteListing: async (id) => {
         try {
-            const deletedListing = await ListingModel.findByIdAndDelete(id);
+            const deletedListing = await InternalListingModel.findByIdAndDelete(id);
             if (!deletedListing) {
                 throw new ErrorHandler('Listing not found', 404);
             }
@@ -64,7 +64,7 @@ const ListingDAO = {
     findListings: async (filters) => {
         try {
             try {
-                const query = ListingModel.find();
+                const query = InternalListingModel.find();
 
                 // Filter by title
                 if (filters.title) {
@@ -134,4 +134,4 @@ const ListingDAO = {
     },
 };
 
-export default ListingDAO;
+export default InternalListingDao;

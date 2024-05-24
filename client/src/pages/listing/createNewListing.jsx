@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import Datepicker from 'flowbite-datepicker/Datepicker';
+import { createListingThunk } from '../../services/internal-listing/internal-listing-thunk';
+import { useDispatch } from 'react-redux';
 
 export default function CreateNewListing() {
     const datePickerRef = useRef(null); // Create a ref that we can assign to the input element
@@ -14,9 +16,72 @@ export default function CreateNewListing() {
         }
     }, []);
 
+    const [formData, setFormData] = useState({
+        title: '',
+        listingType: '',
+        description: '',
+        availableDate: '',
+        price: '',
+        propertyType: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        bedrooms: '',
+        bathrooms: '',
+        sqft: '',
+        agentCompany: '',
+        agentName: '',
+        agentPhone: '',
+        email: '',
+    });
+
+    const dispatch = useDispatch();
+
+    const formChangeHandler = (e) => {
+        const { name, value } = e.target;
+        console.log('form change handler is called. Name: ' + name + 'Value: ' + value);
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        const listingData = {
+            ...formData,
+            location: {
+                address: formData.address,
+                city: formData.city,
+                state: formData.state,
+                zipCode: formData.zipCode,
+            },
+            features: {
+                bedrooms: formData.bedrooms,
+                bathrooms: formData.bathrooms,
+                sqft: formData.sqft,
+            },
+            contactInfo: {
+                agentCompany: formData.agentCompany,
+                agentName: formData.agentName,
+                agentPhone: formData.agentPhone,
+                email: formData.email,
+            },
+        };
+        dispatch(createListingThunk({ listingData }));
+    };
+
     return (
-        <form className="max-w-9xl  gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
+        <form
+            onSubmit={submitHandler}
+            className="max-w-9xl  gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
             <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-x-8 gap-y-2 border-b border-gray-900/10 pb-8 md:grid-cols-1 font-bold">
+                    <h2 className="text-lg font-semibold leading-7 text-gray-900">
+                        Create New Listings
+                    </h2>
+                </div>
                 {/* General Information*/}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                     <div>
@@ -43,6 +108,8 @@ export default function CreateNewListing() {
                                         id="title"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                         placeholder="Realty Savvy Apartment"
+                                        value={formData.title}
+                                        onChange={formChangeHandler}
                                     />
                                 </div>
                             </div>
@@ -61,6 +128,8 @@ export default function CreateNewListing() {
                                     rows={3}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                     placeholder="Write a few sentences to describe the new listing..."
+                                    value={formData.description}
+                                    onChange={formChangeHandler}
                                 />
                             </div>
                         </div>
@@ -74,7 +143,9 @@ export default function CreateNewListing() {
                             <div className="mt-2">
                                 <select
                                     id="listing-type"
-                                    name="listing-type"
+                                    name="listingType"
+                                    value={formData.listingType}
+                                    onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
                                     <option>Lease</option>
                                     <option>Sell</option>
@@ -91,7 +162,9 @@ export default function CreateNewListing() {
                             <div className="mt-2">
                                 <select
                                     id="building-type"
-                                    name="building-type"
+                                    name="propertyType"
+                                    value={formData.propertyType}
+                                    onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
                                     <option>Single-family Home</option>
                                     <option>Multi-family Home</option>
@@ -102,25 +175,7 @@ export default function CreateNewListing() {
                                 </select>
                             </div>
                         </div>
-                        {/* Year built */}
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="year-built"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Year Built
-                            </label>
-                            <div className="mt-2">
-                                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                                    <input
-                                        type="number"
-                                        name="year-built"
-                                        id="year-built"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        {/* listing date */}
+                        {/* Available date */}
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="available-date"
@@ -143,6 +198,8 @@ export default function CreateNewListing() {
                                         ref={datePickerRef}
                                         type="text"
                                         id="available-date"
+                                        value={formData.availableDate}
+                                        onChange={formChangeHandler}
                                         className="pl-10 p-2.5 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                         placeholder="Select date"
                                     />
@@ -159,33 +216,16 @@ export default function CreateNewListing() {
                             <div className="mt-2">
                                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                     <input
-                                        type="number"
+                                        type="text"
                                         name="price"
                                         id="price"
+                                        value={formData.price}
+                                        onChange={formChangeHandler}
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
                         </div>
-                        {/* listingStatus */}
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="listing-status"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Listing Status
-                            </label>
-                            <div className="mt-2">
-                                <select
-                                    id="listing-status"
-                                    name="listing-status"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
-                                    <option>Active</option>
-                                    <option>Pending</option>
-                                    <option>Off Market</option>
-                                </select>
-                            </div>
-                        </div>
-
                         {/* photos */}
                         <div className="col-span-full">
                             <label
@@ -245,6 +285,8 @@ export default function CreateNewListing() {
                                     type="text"
                                     name="city"
                                     id="city"
+                                    value={formData.city}
+                                    onChange={formChangeHandler}
                                     autoComplete="address-level2"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
@@ -253,15 +295,17 @@ export default function CreateNewListing() {
                         {/* State */}
                         <div className="sm:col-span-2">
                             <label
-                                htmlFor="region"
+                                htmlFor="state"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 State
                             </label>
                             <div className="mt-2">
                                 <input
                                     type="text"
-                                    name="region"
-                                    id="region"
+                                    name="state"
+                                    id="state"
+                                    value={formData.state}
+                                    onChange={formChangeHandler}
                                     autoComplete="address-level1"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
@@ -270,15 +314,17 @@ export default function CreateNewListing() {
                         {/* zipcode */}
                         <div className="sm:col-span-2">
                             <label
-                                htmlFor="postal-code"
+                                htmlFor="zipCode"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 ZIP
                             </label>
                             <div className="mt-2">
                                 <input
                                     type="text"
-                                    name="postal-code"
-                                    id="postal-code"
+                                    name="zipCode"
+                                    id="zipCode"
+                                    value={formData.zipCode}
+                                    onChange={formChangeHandler}
                                     autoComplete="postal-code"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
@@ -287,15 +333,17 @@ export default function CreateNewListing() {
                         {/* address */}
                         <div className="col-span-full">
                             <label
-                                htmlFor="street-address"
+                                htmlFor="address"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Street address
                             </label>
                             <div className="mt-2">
                                 <input
                                     type="text"
-                                    name="street-address"
-                                    id="street-address"
+                                    name="address"
+                                    id="address"
+                                    value={formData.address}
+                                    onChange={formChangeHandler}
                                     autoComplete="street-address"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
@@ -324,9 +372,11 @@ export default function CreateNewListing() {
                             </label>
                             <div className="mt-2">
                                 <input
-                                    type="Number"
+                                    type="text"
                                     name="bedrooms"
                                     id="bedrooms"
+                                    value={formData.bedrooms}
+                                    onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
@@ -340,9 +390,11 @@ export default function CreateNewListing() {
                             </label>
                             <div className="mt-2">
                                 <input
-                                    type="Number"
+                                    type="text"
                                     name="bathrooms"
                                     id="bathrooms"
+                                    value={formData.bathrooms}
+                                    onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
@@ -350,70 +402,24 @@ export default function CreateNewListing() {
                         {/* Square Footage */}
                         <div className="sm:col-span-3">
                             <label
-                                htmlFor="sqrt"
+                                htmlFor="sqft"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Square Footage
                             </label>
                             <div className="mt-2">
                                 <input
-                                    type="Number"
-                                    name="sqrt"
-                                    id="sqrt"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                        {/* Lot Size */}
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="sqrt"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Lot Size
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="Number"
-                                    name="sqrt"
-                                    id="sqrt"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                        {/* Parking */}
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="parking"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Parking
-                            </label>
-                            <div className="mt-2">
-                                <input
                                     type="text"
-                                    name="parking"
-                                    id="parking"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                        {/* Heat & cooling */}
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="heat-cooling"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Heat & Cooling
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="heat-cooling"
-                                    id="heat-cooling"
+                                    name="sqft"
+                                    id="sqft"
+                                    value={formData.sqft}
+                                    onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
-                -{/* Contact Info */}
+                {/* Contact Info */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                     <div>
                         <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -424,36 +430,20 @@ export default function CreateNewListing() {
                         </p>
                     </div>
                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-                        {/* first name */}
+                        {/* agent name */}
                         <div className="sm:col-span-3">
                             <label
-                                htmlFor="first-name"
+                                htmlFor="agentName"
                                 className="block text-sm font-medium leading-6 text-gray-900">
-                                First Name
+                                Contact Name
                             </label>
                             <div className="mt-2">
                                 <input
                                     type="text"
-                                    name="first-name"
-                                    id="first-name"
-                                    autoComplete="given-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                        {/* last name */}
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="last-name"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Last Name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    name="last-name"
-                                    id="last-name"
-                                    autoComplete="family-name"
+                                    name="agentName"
+                                    id="agentName"
+                                    value={formData.agentName}
+                                    onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
@@ -461,29 +451,59 @@ export default function CreateNewListing() {
                         {/* agency name */}
                         <div className="sm:col-span-4">
                             <label
-                                htmlFor="agency-name"
+                                htmlFor="agentCompany"
                                 className="block text-sm font-medium leading-6 ">
                                 Agency
                             </label>
                             <div className="relative mt-2 rounded-md shadow-sm">
                                 <input
                                     type="text"
-                                    name="agency-name"
-                                    id="agency-name"
+                                    name="agentCompany"
+                                    id="agentCompany"
+                                    value={formData.agentCompany}
+                                    onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
                         {/* phone number */}
-                        <div className="sm:col-span-4">
+                        <div className="col-span-4">
                             <label
-                                htmlFor="phoneNumber"
+                                htmlFor="agentPhone"
                                 className="block text-sm font-medium leading-6 ">
                                 Phone Number
                             </label>
                             <div className="relative mt-2 rounded-md shadow-sm">
                                 <div className="absolute inset-y-0 left-0 flex items-center">
                                     <label htmlFor="country" className="sr-only">
+                                        Country
+                                    </label>
+                                    <select
+                                        id="country"
+                                        name="country"
+                                        autoComplete="country"
+                                        className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-7 text-gray-900 focus:ring-2 focus:ring-inset focus:ring-primary-200 sm:text-sm">
+                                        <option>US +1</option>
+                                    </select>
+                                </div>
+                                <input
+                                    type="text"
+                                    name="agentPhone"
+                                    id="agentPhone"
+                                    value={formData.agentPhone}
+                                    onChange={formChangeHandler}
+                                    className="block w-full rounded-md border-0 py-1.5 pl-24 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    // onChange={generalInfoChangeHandler}
+                                />
+                            </div>
+                            {/* <label
+                                htmlFor="phoneNumber"
+                                className="block text-sm font-medium leading-6 ">
+                                Phone Number
+                            </label>
+                            <div className="relative mt-2 rounded-md shadow-sm">
+                                <div className="absolute inset-y-0 left-0 flex items-center">
+                                    <label htmlFor="country" className="sr-only border-0">
                                         Country
                                     </label>
                                     <select
@@ -500,7 +520,7 @@ export default function CreateNewListing() {
                                     id="phoneNumber"
                                     className="block w-full rounded-md border-0 py-1.5 pl-16 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
-                            </div>
+                            </div> */}
                         </div>
                         {/* email */}
                         <div className="sm:col-span-4">
@@ -514,6 +534,8 @@ export default function CreateNewListing() {
                                     id="email"
                                     name="email"
                                     type="email"
+                                    value={formData.email}
+                                    onChange={formChangeHandler}
                                     autoComplete="email"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
@@ -531,7 +553,7 @@ export default function CreateNewListing() {
                 </button>
                 <button
                     type="submit"
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    className="rounded-md bg-dark-100 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-dark-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                     Save
                 </button>
             </div>
