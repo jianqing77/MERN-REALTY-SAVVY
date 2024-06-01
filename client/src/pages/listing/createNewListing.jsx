@@ -135,11 +135,11 @@ export default function CreateNewListing() {
 
     const [formData, setFormData] = useState({
         title: '',
-        listingType: '',
+        listingType: 'Lease',
         description: '',
         availableDate: '',
         price: '',
-        propertyType: '',
+        propertyType: 'Apartment',
         address: '',
         city: '',
         state: '',
@@ -167,12 +167,10 @@ export default function CreateNewListing() {
     };
 
     const submitHandler = (e) => {
-        // console.log('imagePreviews: ' + JSON.stringify(imagePreviews));
         e.preventDefault();
 
         // Convert availableDate from string to Date object
         const formattedDate = new Date(formData.availableDate);
-        console.log(formattedDate);
 
         // Extract URLs from imagePreviews if the upload was successful
         const imageUrls = imagePreviews
@@ -182,8 +180,7 @@ export default function CreateNewListing() {
         const listingData = {
             ...formData,
             listingType: formData.listingType,
-            availableDate: formattedDate, // Ensure the date is in ISO format
-
+            availableDate: formattedDate,
             location: {
                 address: formData.address,
                 city: formData.city,
