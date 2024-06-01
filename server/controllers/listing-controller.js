@@ -19,7 +19,6 @@ export const findListingById = catchAsync(async (req, res) => {
 
 export const createListing = catchAsync(async (req, res) => {
     const listingData = req.body;
-    console.log('createListing in the listing controller was called');
     const newListing = await InternalListingDAO.createListing(listingData);
     res.status(201).json(newListing);
 });

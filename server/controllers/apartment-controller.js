@@ -192,7 +192,7 @@ export const getRentalListings = async (req, res) => {
 
     const params = {
         location: locationId,
-        resultsPerPage: 50,
+        resultsPerPage: 20,
         page,
     };
 
@@ -250,7 +250,7 @@ export const getSaleListings = async (req, res) => {
 
     const params = {
         location: locationId,
-        resultsPerPage: 50,
+        resultsPerPage: 20,
         page,
     };
 

@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
+import { CalendarIcon, PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import Datepicker from 'flowbite-datepicker/Datepicker';
+import Datepicker from 'tailwind-datepicker-react';
 import { createListingThunk } from '../../services/internal-listing/internal-listing-thunk';
 import { useDispatch } from 'react-redux';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import FirebaseApp from '../../config/firebase';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CreateNewListing() {
-    const datePickerRef = useRef(null); // Create a ref that we can assign to the input element
+    const datePickerRef = useRef(null);
 
     useEffect(() => {
         if (datePickerRef.current) {
@@ -15,6 +19,119 @@ export default function CreateNewListing() {
             });
         }
     }, []);
+
+    // image handling
+    const imageFileRef = useRef(null);
+    const [imgFiles, setImgFiles] = useState([]); // To handle multiple files
+    const [imagePreviews, setImagePreviews] = useState([]);
+    const [uploadProgress, setUploadProgress] = useState({}); // To track progress for multiple files    const [imgFileError, setImgFileError] = useState(false);
+
+    const maxFileSize = 1024 * 1024 * 2; // 1MB
+    const maxFileCount = 15;
+
+    const removeImageHandler = (index) => {
+        const filteredPreviews = imagePreviews.filter((_, idx) => idx !== index);
+        setImagePreviews(filteredPreviews);
+        console.log('imagePreviews: ' + JSON.stringify(imagePreviews));
+        console.log('filteredPreviews: ' + JSON.stringify(filteredPreviews));
+        console.log('imgFiles: ' + JSON.stringify(imgFiles));
+        const filteredFiles = imgFiles.filter((_, idx) => idx !== index);
+        setImgFiles(filteredFiles);
+
+        // Clean up the URL to prevent memory leaks
+        URL.revokeObjectURL(imagePreviews[index].url);
+    };
+
+    const fileChangeHandler = (event) => {
+        const newFiles = Array.from(event.target.files);
+        console.log('newFiles:', newFiles);
+
+        const updatedPreviews = newFiles.map((file) => {
+            if (
+                file.size > maxFileSize ||
+                (file.type !== 'image/jpeg' && file.type !== 'image/png')
+            ) {
+                return {
+                    status: 'error',
+                    message: 'Invalid format or size',
+                };
+            } else {
+                console.log('file in the fileChangeHandler: ' + file);
+                return {
+                    url: URL.createObjectURL(file),
+                    file,
+                    status: 'pending',
+                    progress: 0,
+                };
+            }
+        });
+        setImagePreviews((prev) => [...prev, ...updatedPreviews]);
+    };
+
+    const handleImageFileUpload = (imgFiles) => {
+        const storage = getStorage(FirebaseApp);
+        console.log('image files:', imgFiles); // Log without JSON.stringify for better clarity
+        imgFiles.forEach((imgFileObj, index) => {
+            if (!imgFileObj.file) {
+                console.error('No file to upload for index', index);
+                return; // Skip this iteration if no file object is present
+            }
+            const imgFile = imgFileObj.file; // Access the actual file object
+            const imgFileName = `${new Date().getTime()}_${imgFile.name}`;
+
+            const storageRef = ref(storage, imgFileName);
+            const uploadTask = uploadBytesResumable(storageRef, imgFile);
+
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    // Update progress in the state for each file
+                    setImagePreviews((prev) =>
+                        prev.map((item, idx) =>
+                            idx === index
+                                ? { ...item, progress, status: 'uploading' }
+                                : item
+                        )
+                    );
+                },
+                (error) => {
+                    console.error('Upload error: ', error);
+                    setImagePreviews((prev) =>
+                        prev.map((item, idx) =>
+                            idx === index
+                                ? { ...item, status: 'error', message: 'Upload failed' }
+                                : item
+                        )
+                    );
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        // Update success status and add URL in the state for each file
+                        setImagePreviews((prev) =>
+                            prev.map((item, idx) =>
+                                idx === index
+                                    ? {
+                                          ...item,
+                                          status: 'success',
+                                          message: 'Upload successful',
+                                          url: downloadURL,
+                                      }
+                                    : item
+                            )
+                        );
+                    });
+                }
+            );
+        });
+    };
+
+    useEffect(() => {
+        return () => {
+            imagePreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+        };
+    }, [imagePreviews]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -33,6 +150,8 @@ export default function CreateNewListing() {
         agentCompany: '',
         agentName: '',
         agentPhone: '',
+        imageUrls: [],
+        refUrl: '',
         email: '',
     });
 
@@ -48,9 +167,23 @@ export default function CreateNewListing() {
     };
 
     const submitHandler = (e) => {
+        // console.log('imagePreviews: ' + JSON.stringify(imagePreviews));
         e.preventDefault();
+
+        // Convert availableDate from string to Date object
+        const formattedDate = new Date(formData.availableDate);
+        console.log(formattedDate);
+
+        // Extract URLs from imagePreviews if the upload was successful
+        const imageUrls = imagePreviews
+            .filter((preview) => preview.status === 'success')
+            .map((preview) => preview.url);
+
         const listingData = {
             ...formData,
+            listingType: formData.listingType,
+            availableDate: formattedDate, // Ensure the date is in ISO format
+
             location: {
                 address: formData.address,
                 city: formData.city,
@@ -67,6 +200,10 @@ export default function CreateNewListing() {
                 agentName: formData.agentName,
                 agentPhone: formData.agentPhone,
                 email: formData.email,
+            },
+            media: {
+                imageUrls: imageUrls,
+                refUrl: formData.refUrl,
             },
         };
         dispatch(createListingThunk({ listingData }));
@@ -136,13 +273,13 @@ export default function CreateNewListing() {
                         {/* listing type */}
                         <div className="sm:col-span-3">
                             <label
-                                htmlFor="listing-type"
+                                htmlFor="listingType"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Listing Type
                             </label>
                             <div className="mt-2">
                                 <select
-                                    id="listing-type"
+                                    id="listingType"
                                     name="listingType"
                                     value={formData.listingType}
                                     onChange={formChangeHandler}
@@ -178,13 +315,13 @@ export default function CreateNewListing() {
                         {/* Available date */}
                         <div className="sm:col-span-3">
                             <label
-                                htmlFor="available-date"
+                                htmlFor="availableDate"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Available Date
                             </label>
                             <div className="mt-2">
                                 <div className="relative max-w-sm">
-                                    <div className="absolute inset-y-0 start0 flex items-center pl-3 pointer-events-none ">
+                                    {/* <div className="absolute inset-y-0 start0 flex items-center pl-3 pointer-events-none ">
                                         <svg
                                             className="w-4 h-4 text-gray-500 dark:text-gray-400"
                                             aria-hidden="true"
@@ -193,19 +330,21 @@ export default function CreateNewListing() {
                                             viewBox="0 0 20 20">
                                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                         </svg>
-                                    </div>
+                                    </div> */}
                                     <input
                                         ref={datePickerRef}
-                                        type="text"
-                                        id="available-date"
+                                        type="date"
+                                        id="availableDate"
+                                        name="availableDate"
                                         value={formData.availableDate}
                                         onChange={formChangeHandler}
-                                        className="pl-10 p-2.5 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                        className="p-2.5 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                         placeholder="Select date"
                                     />
                                 </div>
                             </div>
                         </div>
+
                         {/* Price */}
                         <div className="sm:col-span-3">
                             <label
@@ -233,29 +372,124 @@ export default function CreateNewListing() {
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Photos
                             </label>
-                            <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-700 px-6 py-10">
-                                <div className="text-center">
-                                    <PhotoIcon
-                                        className="mx-auto h-12 w-12 text-gray-300"
-                                        aria-hidden="true"
-                                    />
-                                    <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                                        <label
-                                            htmlFor="file-upload"
-                                            className="relative cursor-pointer rounded-md bg-white font-semibold text-primary-200 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                                            <span>Upload a file</span>
-                                            <input
-                                                id="file-upload"
-                                                name="file-upload"
-                                                type="file"
-                                                className="sr-only"
-                                            />
-                                        </label>
-                                        <p className="pl-1">or drag and drop</p>
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* COLUMN LEFT: Allow user to upload photos */}
+                                <div className="flex justify-center rounded-lg border border-dashed border-gray-700 px-6 py-10">
+                                    <div className="text-center">
+                                        <PhotoIcon
+                                            className="mx-auto h-12 w-12 text-gray-300"
+                                            aria-hidden="true"
+                                        />
+                                        <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                                            <label
+                                                htmlFor="file-upload"
+                                                className="relative cursor-pointer rounded-md bg-white font-semibold text-primary-200 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                                <span>Upload Image Files</span>
+                                                <input
+                                                    id="file-upload"
+                                                    ref={imageFileRef}
+                                                    type="file"
+                                                    className="sr-only"
+                                                    accept="image/*"
+                                                    multiple
+                                                    onChange={fileChangeHandler}
+                                                />
+                                            </label>
+                                            <p className="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p className="text-xs leading-5 text-gray-600">
+                                            PNG, JPG, GIF up to 10MB
+                                        </p>
                                     </div>
-                                    <p className="text-xs leading-5 text-gray-600">
-                                        PNG, JPG, GIF up to 10MB
-                                    </p>
+                                </div>
+                                {/* COLUMN RIGHT: Allow user to preview photos and manage their upload */}
+                                {/* <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className="relative">
+                                            <img
+                                                src={preview.url}
+                                                alt="Preview"
+                                                className="h-10 w-10 rounded-lg bg-gray-800 object-cover"
+                                            />
+                                            {preview.status === 'uploading' && (
+                                                <div className="absolute bottom-0 left-0 right-0 bg-gray-900 text-white text-center">
+                                                    {preview.progress}%
+                                                </div>
+                                            )}
+                                            {preview.status === 'error' && (
+                                                <div className="absolute bottom-0 left-0 right-0 bg-red-600 text-white text-center">
+                                                    {preview.message}
+                                                </div>
+                                            )}
+                                            {preview.status === 'success' && (
+                                                <div className="absolute bottom-0 left-0 right-0 bg-green-500 text-white text-center">
+                                                    {preview.message}
+                                                </div>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeImageHandler(index)}
+                                                className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
+                                                aria-label="Delete image">
+                                                &times;
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        className="bg-dark-100 text-primary-200"
+                                        onClick={() =>
+                                            handleImageFileUpload(
+                                                imagePreviews.filter(
+                                                    (p) => p.status === 'pending'
+                                                )
+                                            )
+                                        }>
+                                        Upload
+                                    </button>
+                                </div> */}
+                                <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
+                                    {imagePreviews.length > 0 ? (
+                                        imagePreviews.map((preview, index) => (
+                                            <div key={index} className="relative">
+                                                {preview.url && (
+                                                    <img
+                                                        src={preview.url}
+                                                        alt="Preview"
+                                                        className="h-10 w-10 rounded-lg bg-gray-800 object-cover"
+                                                    />
+                                                )}
+                                                {/* Display progress, error, and success indicators here */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        removeImageHandler(index)
+                                                    }
+                                                    className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
+                                                    aria-label="Delete image">
+                                                    &times;
+                                                </button>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>No images chosen</div>
+                                    )}
+                                    {imagePreviews.some(
+                                        (p) => p.status === 'pending'
+                                    ) && (
+                                        <button
+                                            className="bg-dark-100 text-primary-200"
+                                            onClick={() =>
+                                                handleImageFileUpload(
+                                                    imagePreviews.filter(
+                                                        (p) =>
+                                                            p.status === 'pending' &&
+                                                            p.file
+                                                    )
+                                                )
+                                            }>
+                                            Upload
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -431,7 +665,7 @@ export default function CreateNewListing() {
                     </div>
                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
                         {/* agent name */}
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-4">
                             <label
                                 htmlFor="agentName"
                                 className="block text-sm font-medium leading-6 text-gray-900">

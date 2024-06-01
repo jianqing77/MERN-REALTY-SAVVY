@@ -36,7 +36,7 @@ export const findListingById = async (listingId) => {
 export const createListing = async (listingData) => {
     try {
         console.log('Creating listing: listingData => ' + JSON.stringify(listingData));
-        const server_res = await api.post(`${LISTING_URL}/`, listingData);
+        const server_res = await api.post(LISTING_URL, listingData);
         console.log('server_res => ' + JSON.stringify(server_res.data));
         const createdListing = server_res.data;
         return createdListing;
