@@ -13,6 +13,8 @@ import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import ResultPage from './pages/listing/results.jsx';
 import { LoadScript } from '@react-google-maps/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -42,6 +44,7 @@ function App() {
                                 </Routes>
                             </main>
                             <Footer />
+                            {/* <ToastContainer /> */}
                         </div>
                     </BrowserRouter>
                 </LoadScript>

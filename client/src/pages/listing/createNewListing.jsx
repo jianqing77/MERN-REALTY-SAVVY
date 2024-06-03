@@ -6,8 +6,7 @@ import { createListingThunk } from '../../services/internal-listing/internal-lis
 import { useDispatch } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import FirebaseApp from '../../config/firebase';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 export default function CreateNewListing() {
     const datePickerRef = useRef(null);
@@ -24,17 +23,25 @@ export default function CreateNewListing() {
     const imageFileRef = useRef(null);
     const [imgFiles, setImgFiles] = useState([]); // To handle multiple files
     const [imagePreviews, setImagePreviews] = useState([]);
-    const [uploadProgress, setUploadProgress] = useState({}); // To track progress for multiple files    const [imgFileError, setImgFileError] = useState(false);
 
-    const maxFileSize = 1024 * 1024 * 2; // 1MB
+    const maxFileSize = 1024 * 1024 * 3; // 3MB
     const maxFileCount = 15;
+
+    // Handle image counts
+    const [fileCountError, setFileCountError] = useState('');
+    useEffect(() => {
+        if (fileCountError) {
+            const timer = setTimeout(() => {
+                setFileCountError('');
+            }, 3000); // Clear the error message after 3 seconds
+
+            return () => clearTimeout(timer); // Clear the timer if the component unmounts or the error changes
+        }
+    }, [fileCountError]);
 
     const removeImageHandler = (index) => {
         const filteredPreviews = imagePreviews.filter((_, idx) => idx !== index);
         setImagePreviews(filteredPreviews);
-        console.log('imagePreviews: ' + JSON.stringify(imagePreviews));
-        console.log('filteredPreviews: ' + JSON.stringify(filteredPreviews));
-        console.log('imgFiles: ' + JSON.stringify(imgFiles));
         const filteredFiles = imgFiles.filter((_, idx) => idx !== index);
         setImgFiles(filteredFiles);
 
@@ -42,40 +49,78 @@ export default function CreateNewListing() {
         URL.revokeObjectURL(imagePreviews[index].url);
     };
 
+    // Handler image error message time out
+    const clearErrorMessage = (file) => {
+        setImagePreviews((currentPreviews) =>
+            currentPreviews.map((preview) => {
+                if (preview.file === file) {
+                    return { ...preview, message: '' }; // Clear the message
+                }
+                return preview;
+            })
+        );
+    };
+
     const fileChangeHandler = (event) => {
         const newFiles = Array.from(event.target.files);
-        console.log('newFiles:', newFiles);
+        const totalFileCount = imgFiles.length + newFiles.length;
+
+        if (totalFileCount > maxFileCount) {
+            setFileCountError(`You can only upload up to ${maxFileCount} images.`);
+            return; // Prevent further execution if the limit is exceeded
+        } else {
+            setFileCountError(''); // Clear error message if under limit
+        }
 
         const updatedPreviews = newFiles.map((file) => {
             if (
                 file.size > maxFileSize ||
                 (file.type !== 'image/jpeg' && file.type !== 'image/png')
             ) {
+                setTimeout(() => {
+                    clearErrorMessage(file);
+                }, 3000); // Clear the error message after 3 seconds
+
                 return {
+                    file,
                     status: 'error',
-                    message: 'Invalid format or size',
+                    message: `${file.name} has invalid format or size`,
                 };
             } else {
-                console.log('file in the fileChangeHandler: ' + file);
+                // console.log('file in the fileChangeHandler: ' + file);
                 return {
                     url: URL.createObjectURL(file),
                     file,
                     status: 'pending',
                     progress: 0,
+                    isUploading: false,
                 };
             }
         });
+        // Update state with the new files, adding to the existing files
         setImagePreviews((prev) => [...prev, ...updatedPreviews]);
+        setImgFiles((prevFiles) => [...prevFiles, ...newFiles.map((f) => f.file)]);
     };
 
+    const updateFileUploadStatus = (file, isUploading) => {
+        setImagePreviews((currentPreviews) =>
+            currentPreviews.map((preview) => {
+                if (preview.file === file) {
+                    return { ...preview, isUploading };
+                } else {
+                    return preview;
+                }
+            })
+        );
+    };
     const handleImageFileUpload = (imgFiles) => {
         const storage = getStorage(FirebaseApp);
-        console.log('image files:', imgFiles); // Log without JSON.stringify for better clarity
+        // console.log('image files:', imgFiles); // Log without JSON.stringify for better clarity
         imgFiles.forEach((imgFileObj, index) => {
             if (!imgFileObj.file) {
-                console.error('No file to upload for index', index);
                 return; // Skip this iteration if no file object is present
             }
+            updateFileUploadStatus(imgFileObj.file, true); // Set isUploading to true
             const imgFile = imgFileObj.file; // Access the actual file object
             const imgFileName = `${new Date().getTime()}_${imgFile.name}`;
 
@@ -97,7 +142,6 @@ export default function CreateNewListing() {
                     );
                 },
                 (error) => {
-                    console.error('Upload error: ', error);
                     setImagePreviews((prev) =>
                         prev.map((item, idx) =>
                             idx === index
@@ -395,86 +439,62 @@ export default function CreateNewListing() {
                                             <p className="pl-1">or drag and drop</p>
                                         </div>
                                         <p className="text-xs leading-5 text-gray-600">
-                                            PNG, JPG, GIF up to 10MB
+                                            PNG, JPG, JPEG up to 3MB
                                         </p>
                                     </div>
                                 </div>
                                 {/* COLUMN RIGHT: Allow user to preview photos and manage their upload */}
-                                {/* <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
-                                    {imagePreviews.map((preview, index) => (
-                                        <div key={index} className="relative">
-                                            <img
-                                                src={preview.url}
-                                                alt="Preview"
-                                                className="h-10 w-10 rounded-lg bg-gray-800 object-cover"
-                                            />
-                                            {preview.status === 'uploading' && (
-                                                <div className="absolute bottom-0 left-0 right-0 bg-gray-900 text-white text-center">
-                                                    {preview.progress}%
-                                                </div>
-                                            )}
-                                            {preview.status === 'error' && (
-                                                <div className="absolute bottom-0 left-0 right-0 bg-red-600 text-white text-center">
-                                                    {preview.message}
-                                                </div>
-                                            )}
-                                            {preview.status === 'success' && (
-                                                <div className="absolute bottom-0 left-0 right-0 bg-green-500 text-white text-center">
-                                                    {preview.message}
-                                                </div>
-                                            )}
-                                            <button
-                                                type="button"
-                                                onClick={() => removeImageHandler(index)}
-                                                className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
-                                                aria-label="Delete image">
-                                                &times;
-                                            </button>
-                                        </div>
-                                    ))}
-                                    <button
-                                        className="bg-dark-100 text-primary-200"
-                                        onClick={() =>
-                                            handleImageFileUpload(
-                                                imagePreviews.filter(
-                                                    (p) => p.status === 'pending'
-                                                )
-                                            )
-                                        }>
-                                        Upload
-                                    </button>
-                                </div> */}
                                 <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
                                     {imagePreviews.length > 0 ? (
                                         imagePreviews.map((preview, index) => (
                                             <div key={index} className="relative">
-                                                {preview.url && (
+                                                {preview.url &&
+                                                preview.status !== 'error' ? (
                                                     <img
                                                         src={preview.url}
                                                         alt="Preview"
                                                         className="h-10 w-10 rounded-lg bg-gray-800 object-cover"
                                                     />
+                                                ) : (
+                                                    <div className="w-full rounded-lg bg-red-500 flex items-center justify-center text-white text-sm">
+                                                        {preview.message}
+                                                    </div>
                                                 )}
-                                                {/* Display progress, error, and success indicators here */}
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        removeImageHandler(index)
-                                                    }
-                                                    className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
-                                                    aria-label="Delete image">
-                                                    &times;
-                                                </button>
+                                                {preview.status !== 'error' && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            removeImageHandler(index)
+                                                        }
+                                                        className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
+                                                        aria-label="Delete image">
+                                                        &times;
+                                                    </button>
+                                                )}
+                                                {/* display progress bars */}
+                                                {preview.progress > 0 &&
+                                                    preview.status === 'uploading' && (
+                                                        <div
+                                                            style={{
+                                                                width: `${preview.progress}%`,
+                                                            }}
+                                                            className="bg-blue-500 h-1"></div>
+                                                    )}
                                             </div>
                                         ))
                                     ) : (
                                         <div>No images chosen</div>
                                     )}
+                                    {fileCountError && (
+                                        <span className="text-red-500">
+                                            {fileCountError}
+                                        </span>
+                                    )}
                                     {imagePreviews.some(
                                         (p) => p.status === 'pending'
                                     ) && (
                                         <button
-                                            className="bg-dark-100 text-primary-200"
+                                            className="bg-dark-200 text-yellow-400 rounded-lg py-1 mt-2 mb-4"
                                             onClick={() =>
                                                 handleImageFileUpload(
                                                     imagePreviews.filter(

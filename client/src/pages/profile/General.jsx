@@ -14,7 +14,7 @@ export default function GeneralSettings() {
     const imageFileRef = useRef(null);
     const [imgFile, setImgFile] = useState(undefined); // track the image file chosen
     const [imgFilePercentage, setImgFilePercentage] = useState(0); // track the percentage of image file uploading
-    const [imgFileError, setImgFileError] = useState(false); // track the percentage of image file uploading
+    const [imgFileError, setImgFileError] = useState(false);
 
     // track the file chosen
     const fileChangeHandler = (event) => {
