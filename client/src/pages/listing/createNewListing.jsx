@@ -9,6 +9,7 @@ import FirebaseApp from '../../config/firebase';
 import { toast } from 'react-toastify';
 
 export default function CreateNewListing() {
+    // Data Picker
     const datePickerRef = useRef(null);
 
     useEffect(() => {
@@ -19,7 +20,7 @@ export default function CreateNewListing() {
         }
     }, []);
 
-    // image handling
+    // Image Handling
     const imageFileRef = useRef(null);
     const [imgFiles, setImgFiles] = useState([]); // To handle multiple files
     const [imagePreviews, setImagePreviews] = useState([]);
@@ -102,17 +103,18 @@ export default function CreateNewListing() {
         setImgFiles((prevFiles) => [...prevFiles, ...newFiles.map((f) => f.file)]);
     };
 
-    const updateFileUploadStatus = (file, isUploading) => {
-        setImagePreviews((currentPreviews) =>
-            currentPreviews.map((preview) => {
-                if (preview.file === file) {
-                    return { ...preview, isUploading };
-                } else {
-                    return preview;
-                }
-            })
-        );
-    };
+    // const updateFileUploadStatus = (file, isUploading) => {
+    //     setImagePreviews((currentPreviews) =>
+    //         currentPreviews.map((preview) => {
+    //             if (preview.file === file) {
+    //                 return { ...preview, isUploading };
+    //             } else {
+    //                 return preview;
+    //             }
+    //         })
+    //     );
+    // };
+
     const handleImageFileUpload = (imgFiles) => {
         const storage = getStorage(FirebaseApp);
         // console.log('image files:', imgFiles); // Log without JSON.stringify for better clarity
@@ -120,7 +122,7 @@ export default function CreateNewListing() {
             if (!imgFileObj.file) {
                 return; // Skip this iteration if no file object is present
             }
-            updateFileUploadStatus(imgFileObj.file, true); // Set isUploading to true
+            // updateFileUploadStatus(imgFileObj.file, true); // Set isUploading to true
             const imgFile = imgFileObj.file; // Access the actual file object
             const imgFileName = `${new Date().getTime()}_${imgFile.name}`;
 
@@ -198,7 +200,7 @@ export default function CreateNewListing() {
         refUrl: '',
         email: '',
     });
-
+    const [formErrors, setFormErrors] = useState({});
     const dispatch = useDispatch();
 
     const formChangeHandler = (e) => {
@@ -210,8 +212,46 @@ export default function CreateNewListing() {
         }));
     };
 
+    const validateForm = () => {
+        const errors = {};
+        const requiredFields = {
+            title: formData.title,
+            listingType: formData.listingType,
+            price: formData.price,
+            propertyType: formData.propertyType,
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zipCode: formData.zipCode,
+            bedrooms: formData.bedrooms,
+            bathrooms: formData.bathrooms,
+            agentCompany: formData.agentCompany,
+            agentName: formData.agentName,
+            email: formData.email,
+        };
+
+        // Check each field and add to errors if empty
+        for (const key in requiredFields) {
+            if (!requiredFields[key]) {
+                errors[key] = 'This field is required';
+            }
+        }
+
+        return errors;
+    };
+
     const submitHandler = (e) => {
         e.preventDefault();
+
+        // Check if any of the required fields are empty
+        const errors = validateForm();
+        if (Object.keys(errors).length > 0) {
+            setFormErrors(errors);
+            return; // Stop the submission if there are errors
+        }
+
+        // Clear previous errors if all required fields are filled
+        setFormErrors({});
 
         // Convert availableDate from string to Date object
         const formattedDate = new Date(formData.availableDate);
@@ -284,12 +324,21 @@ export default function CreateNewListing() {
                                         type="text"
                                         name="title"
                                         id="title"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                            formErrors.title ? 'ring-2 ring-red-500' : ''
+                                        }`}
                                         placeholder="Realty Savvy Apartment"
                                         value={formData.title}
                                         onChange={formChangeHandler}
                                     />
                                 </div>
+                                <p>
+                                    {formErrors.title && (
+                                        <p className="text-red-500 text-xs mt-1 ml-1">
+                                            {formErrors.title}
+                                        </p>
+                                    )}
+                                </p>
                             </div>
                         </div>
                         {/* description */}
@@ -401,9 +450,18 @@ export default function CreateNewListing() {
                                         id="price"
                                         value={formData.price}
                                         onChange={formChangeHandler}
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                            formErrors.price ? 'ring-2 ring-red-500' : ''
+                                        }`}
                                     />
                                 </div>
+                                <p>
+                                    {formErrors.price && (
+                                        <p className="text-red-500 text-xs mt-1 ml-1">
+                                            {formErrors.price}
+                                        </p>
+                                    )}
+                                </p>
                             </div>
                         </div>
                         {/* photos */}
@@ -539,9 +597,18 @@ export default function CreateNewListing() {
                                     value={formData.city}
                                     onChange={formChangeHandler}
                                     autoComplete="address-level2"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.city ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.city && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.city}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         {/* State */}
                         <div className="sm:col-span-2">
@@ -558,16 +625,25 @@ export default function CreateNewListing() {
                                     value={formData.state}
                                     onChange={formChangeHandler}
                                     autoComplete="address-level1"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.state ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.state && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.state}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         {/* zipcode */}
                         <div className="sm:col-span-2">
                             <label
                                 htmlFor="zipCode"
                                 className="block text-sm font-medium leading-6 text-gray-900">
-                                ZIP
+                                ZipCode
                             </label>
                             <div className="mt-2">
                                 <input
@@ -577,9 +653,18 @@ export default function CreateNewListing() {
                                     value={formData.zipCode}
                                     onChange={formChangeHandler}
                                     autoComplete="postal-code"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.zipCode ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.zipCode && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.zipCode}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         {/* address */}
                         <div className="col-span-full">
@@ -596,9 +681,18 @@ export default function CreateNewListing() {
                                     value={formData.address}
                                     onChange={formChangeHandler}
                                     autoComplete="street-address"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.address ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.address && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.address}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -628,14 +722,23 @@ export default function CreateNewListing() {
                                     id="bedrooms"
                                     value={formData.bedrooms}
                                     onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.bedrooms ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.bedrooms && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.bedrooms}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         {/* bathrooms */}
                         <div className="sm:col-span-3">
                             <label
-                                htmlFor="bedrooms"
+                                htmlFor="bathrooms"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Bathrooms
                             </label>
@@ -646,9 +749,18 @@ export default function CreateNewListing() {
                                     id="bathrooms"
                                     value={formData.bathrooms}
                                     onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.bathrooms ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.bathrooms && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.bathrooms}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         {/* Square Footage */}
                         <div className="sm:col-span-3">
@@ -695,9 +807,18 @@ export default function CreateNewListing() {
                                     id="agentName"
                                     value={formData.agentName}
                                     onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.agentName ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.agentName && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.agentName}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         {/* agency name */}
                         <div className="sm:col-span-4">
@@ -713,9 +834,20 @@ export default function CreateNewListing() {
                                     id="agentCompany"
                                     value={formData.agentCompany}
                                     onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.agentCompany
+                                            ? 'ring-2 ring-red-500'
+                                            : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.agentCompany && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.agentCompany}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         {/* phone number */}
                         <div className="col-span-4">
@@ -788,9 +920,18 @@ export default function CreateNewListing() {
                                     value={formData.email}
                                     onChange={formChangeHandler}
                                     autoComplete="email"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.email ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.email && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.email}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                     </div>
                 </div>
