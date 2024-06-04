@@ -23,7 +23,7 @@ app.use(cookieParser()); // get the information from the cookie
 const sessionConfig = {
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_CONNECTION_STRING }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week

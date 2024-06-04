@@ -1,9 +1,15 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const ListingSchema = new Schema(
     {
         title: { type: String, required: true },
+        createdBy: {
+            type: ObjectId,
+            ref: 'User',
+            required: true,
+        },
         listingType: {
             type: String,
             enum: ['Lease', 'Sell'],

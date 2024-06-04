@@ -18,7 +18,17 @@ export const findListingById = catchAsync(async (req, res) => {
 });
 
 export const createListing = catchAsync(async (req, res) => {
-    const listingData = req.body;
+    // Extract the currentUser from session to automatically fill in the createdBy attribute
+    const currentUser = req.session['currentUser'];
+    if (!currentUser) {
+        console.log('No current user');
+    }
+    // console.log('current user is: ' + JSON.stringify(currentUser));
+    const userId = currentUser._id;
+    const listingData = {
+        ...req.body, // Spread the existing body to maintain other properties
+        createdBy: userId, // Add the createdBy field
+    };
     const newListing = await InternalListingDAO.createListing(listingData);
     res.status(201).json(newListing);
 });

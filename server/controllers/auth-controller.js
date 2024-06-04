@@ -26,10 +26,10 @@ export const signUp = catchAsync(async (req, res) => {
 export const signIn = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
     const result = await UserDao.findUserByCredentials(email, password);
-
     if (result && !result.error) {
         // If result is a user object, set the user in the session and respond
         req.session['currentUser'] = result;
+        req.session.save();
         res.status(200).json(result);
     } else if (result.error === 'UserNotFound') {
         // If user is not found, send a specific message
