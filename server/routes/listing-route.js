@@ -19,8 +19,9 @@ const validateListing = [
 ];
 
 // Route with validation
-router.get('/', ListingController.findAllListings); // Retrieve all listings
+router.get('/', ListingController.findListingByCurrentUser); // Retrieve all listings
 router.get('/:id', ListingController.findListingById); // Retrieve a single listing by ID
+// router.get('/current-user', ListingController.findListingByCurrentUser); // Retrieve a single listing by ID
 router.post('/', validateListing, ListingController.createListing); // Create a new listing
 router.put('/:id', validateListing, ListingController.updateListing); // Update an existing listing by ID
 router.delete('/:id', ListingController.deleteListing); // Delete an existing listing by ID

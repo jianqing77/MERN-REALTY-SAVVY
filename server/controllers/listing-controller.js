@@ -17,6 +17,14 @@ export const findListingById = catchAsync(async (req, res) => {
     res.status(200).json(foundedListing);
 });
 
+export const findListingByCurrentUser = catchAsync(async (req, res) => {
+    // console.log('in server side controller -- findListingByCurrentUser was called');
+    const userId = req.session['currentUser']['_id']; // Get the user ID from the URL parameters
+    // console.log('user id in the listing controller: ' + userId);
+    const foundedListing = await InternalListingDAO.findListingsByUserId(userId);
+    res.status(200).json(foundedListing);
+});
+
 export const createListing = catchAsync(async (req, res) => {
     // Extract the currentUser from session to automatically fill in the createdBy attribute
     const currentUser = req.session['currentUser'];
@@ -36,8 +44,8 @@ export const createListing = catchAsync(async (req, res) => {
 export const updateListing = catchAsync(async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
     const updateData = req.body;
-    console.log('ID:', id); // Check the ID
-    console.log('Update Data:', updateData); // Check the update data
+    console.log('ID:', id);
+    console.log('Update Data:', updateData);
     const updatedListing = await InternalListingDAO.updateListing(id, updateData);
     res.status(201).json(updatedListing);
 });

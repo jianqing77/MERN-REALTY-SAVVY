@@ -29,7 +29,17 @@ const InternalListingDao = {
             throw new ErrorHandler('Error reading listing', 500);
         }
     },
-
+    findListingsByUserId: async (userId) => {
+        try {
+            const listings = await InternalListingModel.find({ createdBy: userId });
+            if (!listings.length) {
+                throw new ErrorHandler('No listings found for this user', 404);
+            }
+            return listings;
+        } catch (error) {
+            throw new ErrorHandler('Error fetching listings by user ID', 500);
+        }
+    },
     // Update a listing by ID
     updateListing: async (id, updateData) => {
         try {

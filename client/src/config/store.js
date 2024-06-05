@@ -5,11 +5,12 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import authReducer from '../reducers/auth-reducer';
 import apartmentsReducer from '../reducers/apartmentAPI-reducer';
 import userReducer from '../reducers/user-reducer';
-
+import internalListingReducer from '../reducers/internal-listing-reducer';
 const rootReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
     apartments: apartmentsReducer, // add the apartments reducer here
+    'internal-listings': internalListingReducer,
 });
 
 const persistConfig = {

@@ -27,6 +27,21 @@ export const findListingByIdThunk = createAsyncThunk(
     }
 );
 
+export const findListingByCurrentUserThunk = createAsyncThunk(
+    'internal-listing/findByCurrentUser',
+    async (_, { rejectWithValue }) => {
+        try {
+            // console.log('findListingByCurrentUserThunk is called');
+            const listingsPayload = await ListingService.findListingByCurrentUser();
+            console.log('listingsPayload in the thunk' + JSON.stringify(listingsPayload));
+            return listingsPayload;
+        } catch (error) {
+            console.error('Error in thunk find listing by current user:', error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 export const createListingThunk = createAsyncThunk(
     'internal-listing/createListing',
     async ({ listingData }, { rejectWithValue }) => {
