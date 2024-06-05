@@ -6,9 +6,11 @@ import { createListingThunk } from '../../services/internal-listing/internal-lis
 import { useDispatch } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import FirebaseApp from '../../config/firebase';
-import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateNewListing() {
+    const navigate = useNavigate();
+
     // Data Picker
     const datePickerRef = useRef(null);
 
@@ -240,6 +242,10 @@ export default function CreateNewListing() {
         return errors;
     };
 
+    const cancelHandler = () => {
+        navigate('/profile/listings');
+    };
+
     const submitHandler = (e) => {
         e.preventDefault();
 
@@ -287,7 +293,9 @@ export default function CreateNewListing() {
                 refUrl: formData.refUrl,
             },
         };
-        dispatch(createListingThunk({ listingData }));
+        dispatch(createListingThunk(listingData)).then(() => {
+            navigate('/profile/listings');
+        });
     };
 
     return (
@@ -940,6 +948,7 @@ export default function CreateNewListing() {
             <div className="mt-6 flex items-center justify-end gap-x-6">
                 <button
                     type="button"
+                    onClick={cancelHandler}
                     className="text-sm font-semibold leading-6 text-gray-900">
                     Cancel
                 </button>
