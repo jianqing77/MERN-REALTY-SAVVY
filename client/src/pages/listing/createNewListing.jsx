@@ -293,9 +293,12 @@ export default function CreateNewListing() {
                 refUrl: formData.refUrl,
             },
         };
-        dispatch(createListingThunk(listingData)).then(() => {
-            navigate('/profile/listings');
-        });
+        // dispatch(createListingThunk({ listingData }));
+        dispatch(createListingThunk({ listingData }))
+            .then(() => navigate('/profile/listings'))
+            .catch((error) => {
+                console.error('Error during listing creation:', error);
+            });
     };
 
     return (
