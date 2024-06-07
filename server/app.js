@@ -59,6 +59,10 @@ mongoose
 // =================================================================
 // ======================= Routes ==================================
 // =================================================================
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to Realty Savvy Server!' });
+});
+
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/listing', listingRouter);
