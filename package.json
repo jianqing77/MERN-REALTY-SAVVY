@@ -20,6 +20,7 @@
         "@react-google-maps/api": "^2.19.3",
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "@vis.gl/react-google-maps": "^1.0.0",
+        "axios": "^1.7.2",
         "bcryptjs": "^2.4.3",
         "connect-mongo": "^5.1.0",
         "cookie-parser": "^1.4.6",
