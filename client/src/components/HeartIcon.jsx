@@ -9,7 +9,7 @@ import {
 } from '../services/user/user-thunk';
 
 function HeartIcon({ listingId, type }) {
-    console.log('listing ID in the UI: ' + listingId);
+    // console.log('listing ID in the UI: ' + listingId);
     const dispatch = useDispatch();
     const { profile, loading } = useSelector((state) => state.user);
     const [isLiked, setIsLiked] = useState(false);
@@ -53,7 +53,7 @@ function HeartIcon({ listingId, type }) {
 
     return (
         <i
-            className={isLiked ? 'fa fa-heart' : 'fa fa-heart-o'}
+            className={isLiked ? 'fa fa-heart text-primary-200' : 'fa fa-heart-o'}
             aria-hidden="true"
             onClick={toggleHeart}></i>
     );
