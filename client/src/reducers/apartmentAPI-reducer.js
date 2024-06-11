@@ -4,6 +4,7 @@ import {
     fetchRentalsThunk,
     fetchSalesThunk,
     fetchCoordinatesThunk,
+    fetchAPIListingByIdThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js'; // Adjust the import path as needed
 
 const apartmentsSlice = createSlice({
@@ -11,6 +12,7 @@ const apartmentsSlice = createSlice({
     initialState: {
         searchLocation: null,
         listings: [],
+        foundedListing: null,
         loading: false,
         error: null,
         dataFetched: false, // Flag to indicate successful data fetching
@@ -28,6 +30,7 @@ const apartmentsSlice = createSlice({
             state.error = null;
             state.dataFetched = false;
             state.listings = [];
+            state.foundedListing = null;
             state.currentPage = 1; // Reset to the first page
             state.totalRecords = 0; // Reset the count of total records
             state.searchLocation = null; // Reset any specific search locations
@@ -95,6 +98,19 @@ const apartmentsSlice = createSlice({
             .addCase(fetchCoordinatesThunk.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error?.message || action.payload;
+            })
+            // fetchPropertyDetailsByIdThunk
+            .addCase(fetchAPIListingByIdThunk.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchAPIListingByIdThunk.fulfilled, (state, action) => {
+                state.loading = false;
+                state.foundedListing = action.payload;
+            })
+            .addCase(fetchAPIListingByIdThunk.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     },
 });

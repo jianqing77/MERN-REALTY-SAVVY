@@ -98,3 +98,14 @@ export const fetchCoordinates = async (address) => {
         throw new Error('Geocoding failed: ' + data.status);
     }
 };
+
+export const fetchPropertyDetailsById = async (propertyId) => {
+    try {
+        const server_res = await api.get(`${APARTMENT_API_URL}/property/${propertyId}`);
+        const foundedListing = server_res.data;
+        return foundedListing;
+    } catch (error) {
+        console.error('Error fetching property by ID in the service:', error);
+        throw error;
+    }
+};

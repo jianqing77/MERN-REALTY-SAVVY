@@ -1,5 +1,7 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
+import catchAsync from '../utils/catchAsync.js';
+import ErrorHandler from '../utils/ErrorHandler.js';
 
 // Get the env variables
 dotenv.config();
@@ -106,46 +108,6 @@ const mapApiDataToListingSchema = (listing) => {
     // }
 
     return baseSchema;
-};
-
-export const getPublicListings = async (req, res) => {
-    const {
-        page = 1, // Default to page 1
-        limit = 20, // Default limit changed to variable
-        location = 'boston',
-        state_code = 'MA',
-        area_type = 'state',
-    } = req.query;
-
-    const options = {
-        method: 'GET',
-        url: 'https://realty-us.p.rapidapi.com/properties/search-rent',
-        params: { location, state_code, area_type, limit },
-        headers: {
-            'X-RapidAPI-Key': APARTMENT_API_KEY,
-            'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',
-        },
-    };
-
-    try {
-        const response = await axios.request(options);
-        const listings = response.data.data.map(mapApiDataToListingSchema);
-        res.json(listings);
-    } catch (error) {
-        console.error('Error fetching data from API:', error.message);
-        if (error.response) {
-            console.error('Error data:', error.response.data);
-            console.error('Error status:', error.response.status);
-            console.error('Error headers:', error.response.headers);
-            res.status(error.response.status).send('Error fetching listings');
-        } else if (error.request) {
-            console.error('Error request:', error.request);
-            res.status(500).send('No response received from the API');
-        } else {
-            console.error('Error message:', error.message);
-            res.status(500).send('An error occurred while setting up the request');
-        }
-    }
 };
 
 export const getLocationId = async (req, res, next) => {
@@ -299,3 +261,29 @@ export const getSaleListings = async (req, res) => {
         res.status(500).send('Error fetching sale properties');
     }
 };
+
+export const getPropertyDetails = catchAsync(async (req, res) => {
+    const propertyId = req.params.propertyId;
+
+    if (!propertyId) {
+        throw new ErrorHandler('Property ID is required', 400);
+    }
+
+    const options = {
+        method: 'GET',
+        url: `https://realty-us.p.rapidapi.com/properties/detail`,
+        params: { propertyId },
+        headers: {
+            'X-RapidAPI-Key': APARTMENT_API_KEY,
+            'X-RapidAPI-Host': 'realty-us.p.rapidapi.com',
+        },
+    };
+
+    const response = await axios.request(options);
+    if (response.data && response.data.data) {
+        const propertyDetails = mapApiDataToListingSchema(response.data.data);
+        res.json(propertyDetails);
+    } else {
+        throw new ErrorHandler('No details found for this property', 404);
+    }
+});
