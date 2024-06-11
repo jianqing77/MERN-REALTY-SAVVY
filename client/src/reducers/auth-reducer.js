@@ -103,7 +103,7 @@ const authSlice = createSlice({
             state.message = action.payload;
         });
         builder.addCase(signOutThunk.rejected, (state, action) => {
-            console.log(state);
+            // console.log(state);
             state.loading = false;
             state.error = action.error.message;
         });

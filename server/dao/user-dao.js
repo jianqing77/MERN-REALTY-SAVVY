@@ -22,7 +22,6 @@ const UserDAO = {
     findUserByEmail: async (email) => {
         return UserModel.findOne({ email });
     },
-
     findUserByCredentials: async (email, password) => {
         const user = await UserModel.findOne({ email });
         if (!user) {
@@ -34,7 +33,6 @@ const UserDAO = {
         }
         return user;
     },
-
     createUser: async (userData) => {
         try {
             const hashedPassword = await bcrypt.hash(userData.password, 8);
@@ -51,7 +49,6 @@ const UserDAO = {
             }
         }
     },
-
     updateUser: async (uid, updatedUserData) => {
         const updatedUser = await UserModel.findByIdAndUpdate(uid, updatedUserData, {
             new: true,
@@ -61,13 +58,79 @@ const UserDAO = {
         }
         return updatedUser;
     },
-
     deleteUser: async (uid) => {
         const deletedUser = await UserModel.findByIdAndDelete(uid);
         if (!deletedUser) {
             throw new ErrorHandler('User not found', 404);
         }
         return deletedUser;
+    },
+    addLikedInternalListing: async (uid, propertyID) => {
+        const user = await UserModel.findById(uid);
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        const index = user.likedInternalListings.findIndex((item) =>
+            item.listingId.equals(propertyID)
+        );
+        if (index === -1) {
+            // If listing is not already in the array, add it with isLiked true
+            user.likedInternalListings.push({ propertyID, isLiked: true });
+        } else {
+            // If already present and not liked, update the isLiked to true
+            user.likedInternalListings[index].isLiked = true;
+        }
+        await user.save();
+        return user;
+    },
+    removeLikedInternalListing: async (uid, propertyID) => {
+        const user = await UserModel.findById(uid);
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        const index = user.likedInternalListings.findIndex((item) =>
+            item.listingId.equals(propertyID)
+        );
+        if (index !== -1) {
+            // Set isLiked to false instead of removing the item
+            user.likedInternalListings[index].isLiked = false;
+        }
+        await user.save();
+        return user;
+    },
+    addLikedExternalListing: async (uid, propertyID) => {
+        console.log('propertyID id: ' + propertyID);
+        const user = await UserModel.findById(uid);
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        const index = user.likedExternalListings.findIndex(
+            (item) => item.propertyID === propertyID
+        );
+        if (index === -1) {
+            user.likedExternalListings.push({ propertyID, isLiked: true });
+        } else {
+            user.likedExternalListings[index].isLiked = true;
+        }
+        await user.save();
+        console.log('ADDED new EXTERNAL listing');
+        console.log(JSON.stringify(user.likedExternalListings));
+        return user;
+    },
+    removeLikedExternalListing: async (uid, propertyID) => {
+        const user = await UserModel.findById(uid);
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+        const index = user.likedExternalListings.findIndex(
+            (item) => item.propertyID === propertyID
+        );
+        if (index !== -1) {
+            user.likedExternalListings[index].isLiked = false;
+        }
+        await user.save();
+        console.log('REMOVED a liked external listing');
+        return user;
     },
 };
 

@@ -104,7 +104,7 @@ const InfoWindowComponent = ({ selected, onClose }) => {
                             <i className="fa fa-ellipsis-h ms-2" aria-hidden="true"></i>
                         </a>
                         <span className="mx-2">
-                            <HeartIcon />
+                            <HeartIcon listingId={selected.id} type="external" />
                         </span>
                     </span>
                 </div>

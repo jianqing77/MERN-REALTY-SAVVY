@@ -1,8 +1,8 @@
 import ErrorHandler from '../utils/ErrorHandler.js';
 import catchAsync from '../utils/catchAsync.js';
 import bcryptjs from 'bcryptjs';
-
-import * as UserDao from '../dao/user-dao.js';
+import { checkUserAccess } from '../utils/util.js';
+import UserDao from '../dao/user-dao.js';
 
 export const profile = catchAsync(async (req, res) => {
     const currentUser = req.session['currentUser'];
@@ -12,35 +12,28 @@ export const profile = catchAsync(async (req, res) => {
     res.json(currentUser);
 });
 
-export const updateUserGeneral = catchAsync(async (req, res) => {
-    const currentUser = req.session['currentUser'];
-    if (!currentUser) {
-        throw new ErrorHandler('User not found', 400);
-    }
-    if (currentUser._id !== req.params.id) {
-        throw new ErrorHandler(
-            'Access denied. You can only update your own account!',
-            400
-        );
-    }
-    const updatedUser = await UserDao.updateUser(req.params.id, {
-        userName: req.body.userName,
-        email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phoneNumber: req.body.phoneNumber,
-        avatar: req.body.avatar,
-        city: req.body.avatar,
-        region: req.body.region,
-        streetAddress: req.body.streetAddress,
-        postalCode: req.body.postalCode,
-    });
-    if (!updatedUser) {
-        throw new ErrorHandler('User not found or not updated', 404);
-    }
-    const { password, ...rest } = updatedUser.toObject(); // Exclude sensitive data
-    res.status(200).json(rest);
-});
+export const updateUserGeneral = [
+    checkUserAccess,
+    catchAsync(async (req, res) => {
+        const updatedUser = await UserDao.updateUser(req.params.id, {
+            userName: req.body.userName,
+            email: req.body.email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            phoneNumber: req.body.phoneNumber,
+            avatar: req.body.avatar,
+            city: req.body.avatar,
+            region: req.body.region,
+            streetAddress: req.body.streetAddress,
+            postalCode: req.body.postalCode,
+        });
+        if (!updatedUser) {
+            throw new ErrorHandler('User not found or not updated', 404);
+        }
+        const { password, ...rest } = updatedUser.toObject(); // Exclude sensitive data
+        res.status(200).json(rest);
+    }),
+];
 
 export const updateUserPassword = catchAsync(async (req, res) => {
     const { newPassword } = req.body;
@@ -67,17 +60,54 @@ export const updateUserPassword = catchAsync(async (req, res) => {
     });
 });
 
-export const deleteUser = catchAsync(async (req, res, next) => {
-    const currentUser = req.session['currentUser'];
-    if (!currentUser) {
-        throw new ErrorHandler('User not found', 400);
-    }
-    if (currentUser._id !== req.params.id) {
-        throw new ErrorHandler(
-            'Access denied. You can only update your own account!',
-            400
+export const deleteUser = [
+    checkUserAccess,
+    catchAsync(async (req, res, next) => {
+        await UserDao.deleteUser(req.params.id);
+        res.status(200).json('User has been deleted!');
+    }),
+];
+
+export const addLikedInternalListing = [
+    checkUserAccess,
+    catchAsync(async (req, res, next) => {
+        const user = await UserDao.addLikedInternalListing(
+            req.params.id,
+            req.body.listingId
         );
-    }
-    await UserDao.deleteUser(currentUser._id);
-    res.status(200).json('User has been deleted!');
-});
+        res.status(200).json(user); // updated user
+    }),
+];
+
+export const removeLikedInternalListing = [
+    checkUserAccess,
+    catchAsync(async (req, res, next) => {
+        const user = await UserDao.removeLikedInternalListing(
+            req.params.id,
+            req.params.listingId
+        );
+        res.status(200).json(user); // return the updated user
+    }),
+];
+
+export const addLikedExternalListing = [
+    checkUserAccess,
+    catchAsync(async (req, res, next) => {
+        const user = await UserDao.addLikedExternalListing(
+            req.params.id,
+            req.body.propertyID
+        );
+        res.status(200).json(user); // return the updated user
+    }),
+];
+
+export const removeLikedExternalListing = [
+    checkUserAccess,
+    catchAsync(async (req, res, next) => {
+        const user = await UserDao.removeLikedExternalListing(
+            req.params.id,
+            req.params.propertyID
+        );
+        res.status(200).json(user); // return the updated user
+    }),
+];

@@ -23,7 +23,7 @@ const comparePassword = async (plainPassword, hashedPassword) => {
     }
 };
 
-export const authenticateAndUpdateRequest = catchAsync(async (req, res, next) => {
+export const authenticateAndUpdateRequest = catchAsync(async (req, res) => {
     const currentUser = req.session['currentUser'];
 
     if (!currentUser) {
@@ -46,7 +46,19 @@ export const authenticateAndUpdateRequest = catchAsync(async (req, res, next) =>
     if (!isOldPasswordMatch) {
         return next(new ErrorHandler('Your old password is incorrect', 401));
     }
-
-    // If everything is fine, move to the next middleware/controller
-    next();
 });
+
+// middleware to check user's access
+export const checkUserAccess = (req, res, next) => {
+    const currentUser = req.session['currentUser'];
+    if (!currentUser) {
+        throw new ErrorHandler('User not found', 400);
+    }
+    if (currentUser._id !== req.params.id) {
+        throw new ErrorHandler(
+            'Access denied. You can only update your own account!',
+            400
+        );
+    }
+    next();
+};

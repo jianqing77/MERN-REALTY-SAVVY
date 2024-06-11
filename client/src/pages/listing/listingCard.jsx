@@ -11,6 +11,7 @@ import {
 
 const ListingCard = ({ listing }) => {
     const {
+        id,
         title,
         price,
         propertyType,
@@ -62,7 +63,7 @@ const ListingCard = ({ listing }) => {
                     <i className="fa fa-ellipsis-h" aria-hidden="true"></i>
                 </a>
                 <div>
-                    <HeartIcon />
+                    <HeartIcon listingId={id} type="external" />
                 </div>
             </div>
         </div>

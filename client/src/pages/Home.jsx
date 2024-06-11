@@ -11,6 +11,7 @@ import {
     fetchSalesThunk,
 } from '../services/apartmentAPI/apartment-api-thunk.js';
 import { resetFetchState } from '../reducers/apartmentAPI-reducer.js';
+import { fetchUserProfileThunk } from '../services/user/user-thunk.js';
 
 const Home = () => {
     const [category, setCategory] = useState('for-rent'); // Default category
@@ -19,6 +20,13 @@ const Home = () => {
 
     const navigate = useNavigate(); // to navigate to result page
     const dispatch = useDispatch();
+
+    // update the profile attributes in user reducer
+    useEffect(() => {
+        dispatch(fetchUserProfileThunk());
+    }, [dispatch]);
+    // const profile = useSelector((state) => state.user.profile);
+    // console.log('current profile: ' + JSON.stringify(profile));
 
     const locationChangeHandler = (event) => {
         setLocation(event.target.value);
