@@ -67,12 +67,13 @@ export function formatPropertyType(type) {
         condos: 'Condo',
         co_op: 'Co-op',
         cond_op: 'Cond-op',
-        townhome: 'Town home',
+        townhomes: 'Town home',
         single_family: 'Single-Family',
         multi_family: 'Multi-Family',
         mobile_mfd: 'Mobile/Mfd',
         farm_ranch: 'Farm Ranch',
         land: 'Land',
+        apartment: 'Apartment',
     };
 
     return typeMap[type] || type; // Return original type if no match found
