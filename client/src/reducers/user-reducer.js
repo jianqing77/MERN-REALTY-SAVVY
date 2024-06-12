@@ -8,6 +8,7 @@ import {
     addLikedExternalListingThunk,
     removeLikedExternalListingThunk,
     fetchUserProfileThunk,
+    fetchLikedExternalListingsThunk,
 } from '../services/user/user-thunk.js';
 import { useDispatch } from 'react-redux';
 import {
@@ -15,6 +16,7 @@ import {
     signOutThunk,
     authGoogleThunk,
 } from '../services/auth/auth-thunk.js';
+import { fetchAPIListingByIdThunk } from '../services/apartmentAPI/apartment-api-thunk.js';
 
 const userSlice = createSlice({
     name: 'user',
@@ -23,6 +25,7 @@ const userSlice = createSlice({
         error: null,
         message: null,
         profile: {},
+        likedExternalListings: [],
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -143,6 +146,19 @@ const userSlice = createSlice({
             state.loading = false;
             state.error = action.error.message;
         });
+        builder.addCase(fetchLikedExternalListingsThunk.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(fetchLikedExternalListingsThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action.payload.message;
+            state.likedExternalListings = action.payload.likedExternalListingsDetails;
+        });
+        builder.addCase(fetchLikedExternalListingsThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
     },
+    //
 });
 export default userSlice.reducer;

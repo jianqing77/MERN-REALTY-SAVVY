@@ -87,3 +87,13 @@ export const removeLikedExternalListingThunk = createAsyncThunk(
         return updatedUser; // Pass to the reducer as action.payload
     }
 );
+
+export const fetchLikedExternalListingsThunk = createAsyncThunk(
+    '/user/likedExternalListing',
+    async ({ userId }) => {
+        const likedExternalListings = await UserService.fetchLikedExternalListings(
+            userId
+        );
+        return likedExternalListings;
+    }
+);

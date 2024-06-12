@@ -124,3 +124,34 @@ export const removeLikedExternalListing = async (userId, propertyID) => {
         throw error;
     }
 };
+
+// Fetch details of all properties a user has liked
+export const fetchLikedExternalListings = async (userId) => {
+    try {
+        // First, get the list of liked external listings
+        const likedPropertiesResponse = await api.get(
+            `${USER_URL}/${userId}/likedExternalListings`
+        );
+        const likedExternalListings = likedPropertiesResponse.data.likedExternalListings;
+
+        // Use Promise.all to fetch details for each property concurrently
+        const propertyDetailsPromises = likedExternalListings.map((listing) =>
+            axios.get(`${SERVER_API_URL}/apartments/property/${listing.propertyID}`)
+        );
+
+        // Resolve all promises and collect the property details
+        const propertyDetailsResponses = await Promise.all(propertyDetailsPromises);
+        const propertyDetails = propertyDetailsResponses.map((response) => response.data);
+
+        // Return the collected property details
+        return {
+            likedExternalListingsDetails: propertyDetails,
+            message: 'Property details fetched successfully!',
+        };
+    } catch (error) {
+        console.error('Error fetching liked properties details:', error);
+        throw new Error(
+            error.response?.data?.message || 'Failed to fetch liked properties details'
+        );
+    }
+};

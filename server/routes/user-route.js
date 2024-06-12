@@ -42,4 +42,7 @@ router.delete(
     UserController.removeLikedExternalListing
 );
 
+router.get('/:id/likedExternalListings', UserController.fetchLikedExternalListings);
+router.get('/:id/likedInternalListings', UserController.fetchLikedInternalListings);
+
 export default router;

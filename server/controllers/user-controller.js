@@ -111,3 +111,29 @@ export const removeLikedExternalListing = [
         res.status(200).json(user); // return the updated user
     }),
 ];
+
+export const fetchLikedExternalListings = catchAsync(async (req, res) => {
+    const currentUser = req.session['currentUser'];
+    if (!currentUser) {
+        throw new ErrorHandler('User not found', 400);
+    }
+
+    const likedExternalListings = currentUser.likedExternalListings || [];
+
+    res.json({
+        likedExternalListings,
+    });
+});
+
+export const fetchLikedInternalListings = catchAsync(async (req, res) => {
+    const currentUser = req.session['currentUser'];
+    if (!currentUser) {
+        throw new ErrorHandler('User not found', 400);
+    }
+
+    const likedInternalListings = currentUser.likedInternalListings || [];
+
+    res.json({
+        likedInternalListings,
+    });
+});
