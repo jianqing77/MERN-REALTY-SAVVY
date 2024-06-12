@@ -71,44 +71,49 @@ export const deleteUser = [
 export const addLikedInternalListing = [
     checkUserAccess,
     catchAsync(async (req, res, next) => {
-        const user = await UserDao.addLikedInternalListing(
+        const updatedUser = await UserDao.addLikedInternalListing(
             req.params.id,
             req.body.listingId
         );
-        res.status(200).json(user); // updated user
+        req.session['currentUser'] = updatedUser;
+        res.status(200).json(updatedUser); // updated user
     }),
 ];
 
 export const removeLikedInternalListing = [
     checkUserAccess,
     catchAsync(async (req, res, next) => {
-        const user = await UserDao.removeLikedInternalListing(
+        const updatedUser = await UserDao.removeLikedInternalListing(
             req.params.id,
             req.params.listingId
         );
-        res.status(200).json(user); // return the updated user
+        req.session['currentUser'] = updatedUser;
+
+        res.status(200).json(updatedUser); // return the updated user
     }),
 ];
 
 export const addLikedExternalListing = [
     checkUserAccess,
     catchAsync(async (req, res, next) => {
-        const user = await UserDao.addLikedExternalListing(
+        const updatedUser = await UserDao.addLikedExternalListing(
             req.params.id,
             req.body.propertyID
         );
-        res.status(200).json(user); // return the updated user
+        req.session['currentUser'] = updatedUser;
+        res.status(200).json(updatedUser); // return the updated user
     }),
 ];
 
 export const removeLikedExternalListing = [
     checkUserAccess,
     catchAsync(async (req, res, next) => {
-        const user = await UserDao.removeLikedExternalListing(
+        const updatedUser = await UserDao.removeLikedExternalListing(
             req.params.id,
             req.params.propertyID
         );
-        res.status(200).json(user); // return the updated user
+        req.session['currentUser'] = updatedUser;
+        res.status(200).json(updatedUser); // return the updated user
     }),
 ];
 
@@ -117,11 +122,14 @@ export const fetchLikedExternalListings = catchAsync(async (req, res) => {
     if (!currentUser) {
         throw new ErrorHandler('User not found', 400);
     }
-
     const likedExternalListings = currentUser.likedExternalListings || [];
+    const activeLikedListings = likedExternalListings.filter(
+        (listing) => listing.isLiked
+    );
+    // console.log('active: ' + JSON.stringify(activeLikedListings));
 
     res.json({
-        likedExternalListings,
+        likedExternalListings: activeLikedListings,
     });
 });
 

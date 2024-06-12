@@ -10,17 +10,17 @@ function classNames(...classes) {
 
 export default function Favorites() {
     const dispatch = useDispatch();
-    const { currentUser } = useSelector((state) => state.auth);
-    const { likedExternalListings } = useSelector((state) => state.user);
+    // const { currentUser } = useSelector((state) => state.auth);
+    const { profile, likedExternalListings } = useSelector((state) => state.user);
 
-    console.log(JSON.stringify(currentUser));
+    console.log(JSON.stringify(profile));
     useEffect(() => {
-        if (currentUser && currentUser._id) {
-            dispatch(fetchLikedExternalListingsThunk({ userId: currentUser._id }));
+        if (profile && profile._id) {
+            dispatch(fetchLikedExternalListingsThunk({ userId: profile._id }));
         }
-    }, [currentUser, dispatch]);
+    }, [profile, dispatch]);
 
-    console.log('likedExternalListings: ' + JSON.stringify(likedExternalListings));
+    // console.log('likedExternalListings: ' + JSON.stringify(likedExternalListings));
 
     return (
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
