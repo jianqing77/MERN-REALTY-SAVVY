@@ -207,7 +207,7 @@ export default function CreateNewListing() {
 
     const formChangeHandler = (e) => {
         const { name, value } = e.target;
-        console.log('form change handler is called. Name: ' + name + 'Value: ' + value);
+        // console.log('form change handler is called. Name: ' + name + 'Value: ' + value);
         setFormData((prevState) => ({
             ...prevState,
             [name]: value,
@@ -249,6 +249,10 @@ export default function CreateNewListing() {
     const submitHandler = (e) => {
         e.preventDefault();
 
+        // Normalize the price/sqft to remove commas
+        const normalizedPrice = formData.price.replace(/,/g, '');
+        const normalizedSqft = formData.sqft.replace(/,/g, '');
+
         // Check if any of the required fields are empty
         const errors = validateForm();
         if (Object.keys(errors).length > 0) {
@@ -269,6 +273,7 @@ export default function CreateNewListing() {
 
         const listingData = {
             ...formData,
+            price: normalizedPrice,
             listingType: formData.listingType,
             availableDate: formattedDate,
             location: {
@@ -280,7 +285,7 @@ export default function CreateNewListing() {
             features: {
                 bedrooms: formData.bedrooms,
                 bathrooms: formData.bathrooms,
-                sqft: formData.sqft,
+                sqft: normalizedSqft,
             },
             contactInfo: {
                 agentCompany: formData.agentCompany,
@@ -422,16 +427,6 @@ export default function CreateNewListing() {
                             </label>
                             <div className="mt-2">
                                 <div className="relative max-w-sm">
-                                    {/* <div className="absolute inset-y-0 start0 flex items-center pl-3 pointer-events-none ">
-                                        <svg
-                                            className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                            aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                        </svg>
-                                    </div> */}
                                     <input
                                         ref={datePickerRef}
                                         type="date"
