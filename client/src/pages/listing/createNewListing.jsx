@@ -105,18 +105,6 @@ export default function CreateNewListing() {
         setImgFiles((prevFiles) => [...prevFiles, ...newFiles.map((f) => f.file)]);
     };
 
-    // const updateFileUploadStatus = (file, isUploading) => {
-    //     setImagePreviews((currentPreviews) =>
-    //         currentPreviews.map((preview) => {
-    //             if (preview.file === file) {
-    //                 return { ...preview, isUploading };
-    //             } else {
-    //                 return preview;
-    //             }
-    //         })
-    //     );
-    // };
-
     const handleImageFileUpload = (imgFiles) => {
         const storage = getStorage(FirebaseApp);
         // console.log('image files:', imgFiles); // Log without JSON.stringify for better clarity
@@ -885,31 +873,6 @@ export default function CreateNewListing() {
                                     // onChange={generalInfoChangeHandler}
                                 />
                             </div>
-                            {/* <label
-                                htmlFor="phoneNumber"
-                                className="block text-sm font-medium leading-6 ">
-                                Phone Number
-                            </label>
-                            <div className="relative mt-2 rounded-md shadow-sm">
-                                <div className="absolute inset-y-0 left-0 flex items-center">
-                                    <label htmlFor="country" className="sr-only border-0">
-                                        Country
-                                    </label>
-                                    <select
-                                        id="country"
-                                        name="country"
-                                        autoComplete="country"
-                                        className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-1 text-gray-900 focus:ring-2 focus:ring-inset focus:ring-primary-200 sm:text-sm">
-                                        <option>US</option>
-                                    </select>
-                                </div>
-                                <input
-                                    type="text"
-                                    name="phoneNumber"
-                                    id="phoneNumber"
-                                    className="block w-full rounded-md border-0 py-1.5 pl-16 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
-                                />
-                            </div> */}
                         </div>
                         {/* email */}
                         <div className="sm:col-span-4">
