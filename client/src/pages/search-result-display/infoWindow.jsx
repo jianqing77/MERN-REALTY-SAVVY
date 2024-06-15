@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { InfoWindow } from '@react-google-maps/api';
-import { formatPrice, formatSquareFeet } from './formatUtils';
+import { formatPrice, formatSquareFeet } from '../../utils/formatUtils';
 import HeartIcon from '../../components/HeartIcon';
 
 const InfoWindowComponent = ({ selected, onClose }) => {

@@ -11,7 +11,7 @@ import NavBar from './components/Navigation.jsx';
 import Footer from './components/Footer.jsx';
 import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
-import ResultPage from './pages/listing/results.jsx';
+import ResultPage from './pages/search-result-display/results.jsx';
 import { LoadScript } from '@react-google-maps/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

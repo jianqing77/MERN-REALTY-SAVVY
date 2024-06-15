@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import svgMarker from '../../assets/map-marker.svg';
-import { formatPrice, formatSquareFeet } from './formatUtils.jsx';
+import { formatPrice, formatSquareFeet } from '../../utils/formatUtils.jsx';
 import InfoWindowComponent from './infoWindow.jsx';
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 

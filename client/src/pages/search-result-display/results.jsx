@@ -11,12 +11,12 @@ import { setCurrentPage } from '../../reducers/apartmentAPI-reducer.js';
 import MapComponent from './mapCluster.jsx';
 import DropdownMultiple from '../../components/DropDownMultiple.jsx';
 import DropdownSingle from '../../components/DropDownSingle.jsx';
-import { formatRange, formatPets } from './formatUtils.jsx';
+import { formatRange, formatPets } from '../../utils/formatUtils.jsx';
 import DropdownRange from '../../components/DropDownRange.jsx';
 import Pagination from '../../components/Pagination.jsx';
-import SearchBarLocation from './searchBarLocation.jsx';
-import SearchBarRentals from './searchBarRentals.jsx';
-import SearchBarSales from './searchBarSales.jsx';
+import SearchBarLocation from '../search-bar/searchBarLocation.jsx';
+import SearchBarRentals from '../search-bar/searchBarRentals.jsx';
+import SearchBarSales from '../search-bar/searchBarSales.jsx';
 
 const ResultPage = () => {
     const searchLocation = useLocation();

@@ -7,7 +7,7 @@ import {
     formatPropertyType,
     formatListingType,
     getAbbreviation,
-} from './formatUtils';
+} from '../../utils/formatUtils';
 
 const ListingCard = ({ listing }) => {
     const {

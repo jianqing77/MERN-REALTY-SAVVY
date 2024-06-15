@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAPIListingByIdThunk } from '../../services/apartmentAPI/apartment-api-thunk';
 import { fetchLikedExternalListingsThunk } from '../../services/user/user-thunk';
-import { formatPrice } from '../listing/formatUtils';
+import { formatPrice } from '../../utils/formatUtils';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');

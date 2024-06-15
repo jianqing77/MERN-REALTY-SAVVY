@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { findListingByCurrentUserThunk } from '../../services/internal-listing/internal-listing-thunk';
-import { formatPrice } from '../listing/formatUtils';
+import { formatPrice } from '../../utils/formatUtils.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
