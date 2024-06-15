@@ -1,38 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { PhotoIcon } from '@heroicons/react/24/solid';
+import { CalendarIcon, PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import Datepicker from 'tailwind-datepicker-react';
 import { createListingThunk } from '../../services/internal-listing/internal-listing-thunk';
 import { useDispatch } from 'react-redux';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import FirebaseApp from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
-import useFormData from './useFormData.jsx';
-import useImageHandler from './useImageHandler.jsx';
 
 export default function CreateNewListing() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-
-    // Image Handling
-    const imageFileRef = useRef(null);
-    const {
-        imgFiles,
-        imagePreviews,
-        fileCountError,
-        maxFileCount,
-        fileChangeHandler,
-        handleImageFileUpload,
-        removeImageHandler,
-        clearErrorMessage,
-    } = useImageHandler();
-
-    // form data handling
-    const {
-        formData,
-        setFormData,
-        formErrors,
-        setFormErrors,
-        formChangeHandler,
-        validateForm,
-    } = useFormData();
 
     // Data Picker
     const datePickerRef = useRef(null);
@@ -44,6 +21,214 @@ export default function CreateNewListing() {
             });
         }
     }, []);
+
+    // Image Handling
+    const imageFileRef = useRef(null);
+    const [imgFiles, setImgFiles] = useState([]); // To handle multiple files
+    const [imagePreviews, setImagePreviews] = useState([]);
+
+    const maxFileSize = 1024 * 1024 * 3; // 3MB
+    const maxFileCount = 15;
+
+    // Handle image counts
+    const [fileCountError, setFileCountError] = useState('');
+    useEffect(() => {
+        if (fileCountError) {
+            const timer = setTimeout(() => {
+                setFileCountError('');
+            }, 3000); // Clear the error message after 3 seconds
+
+            return () => clearTimeout(timer); // Clear the timer if the component unmounts or the error changes
+        }
+    }, [fileCountError]);
+
+    const removeImageHandler = (index) => {
+        const filteredPreviews = imagePreviews.filter((_, idx) => idx !== index);
+        setImagePreviews(filteredPreviews);
+        const filteredFiles = imgFiles.filter((_, idx) => idx !== index);
+        setImgFiles(filteredFiles);
+
+        // Clean up the URL to prevent memory leaks
+        URL.revokeObjectURL(imagePreviews[index].url);
+    };
+
+    // Handler image error message time out
+    const clearErrorMessage = (file) => {
+        setImagePreviews((currentPreviews) =>
+            currentPreviews.map((preview) => {
+                if (preview.file === file) {
+                    return { ...preview, message: '' }; // Clear the message
+                }
+                return preview;
+            })
+        );
+    };
+
+    const fileChangeHandler = (event) => {
+        const newFiles = Array.from(event.target.files);
+        const totalFileCount = imgFiles.length + newFiles.length;
+
+        if (totalFileCount > maxFileCount) {
+            setFileCountError(`You can only upload up to ${maxFileCount} images.`);
+            return; // Prevent further execution if the limit is exceeded
+        } else {
+            setFileCountError(''); // Clear error message if under limit
+        }
+
+        const updatedPreviews = newFiles.map((file) => {
+            if (
+                file.size > maxFileSize ||
+                (file.type !== 'image/jpeg' && file.type !== 'image/png')
+            ) {
+                setTimeout(() => {
+                    clearErrorMessage(file);
+                }, 3000); // Clear the error message after 3 seconds
+
+                return {
+                    file,
+                    status: 'error',
+                    message: `${file.name} has invalid format or size`,
+                };
+            } else {
+                // console.log('file in the fileChangeHandler: ' + file);
+                return {
+                    url: URL.createObjectURL(file),
+                    file,
+                    status: 'pending',
+                    progress: 0,
+                    isUploading: false,
+                };
+            }
+        });
+        // Update state with the new files, adding to the existing files
+        setImagePreviews((prev) => [...prev, ...updatedPreviews]);
+        setImgFiles((prevFiles) => [...prevFiles, ...newFiles.map((f) => f.file)]);
+    };
+
+    const handleImageFileUpload = (imgFiles) => {
+        const storage = getStorage(FirebaseApp);
+        // console.log('image files:', imgFiles); // Log without JSON.stringify for better clarity
+        imgFiles.forEach((imgFileObj, index) => {
+            if (!imgFileObj.file) {
+                return; // Skip this iteration if no file object is present
+            }
+            // updateFileUploadStatus(imgFileObj.file, true); // Set isUploading to true
+            const imgFile = imgFileObj.file; // Access the actual file object
+            const imgFileName = `${new Date().getTime()}_${imgFile.name}`;
+
+            const storageRef = ref(storage, imgFileName);
+            const uploadTask = uploadBytesResumable(storageRef, imgFile);
+
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    // Update progress in the state for each file
+                    setImagePreviews((prev) =>
+                        prev.map((item, idx) =>
+                            idx === index
+                                ? { ...item, progress, status: 'uploading' }
+                                : item
+                        )
+                    );
+                },
+                (error) => {
+                    setImagePreviews((prev) =>
+                        prev.map((item, idx) =>
+                            idx === index
+                                ? { ...item, status: 'error', message: 'Upload failed' }
+                                : item
+                        )
+                    );
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        // Update success status and add URL in the state for each file
+                        setImagePreviews((prev) =>
+                            prev.map((item, idx) =>
+                                idx === index
+                                    ? {
+                                          ...item,
+                                          status: 'success',
+                                          message: 'Upload successful',
+                                          url: downloadURL,
+                                      }
+                                    : item
+                            )
+                        );
+                    });
+                }
+            );
+        });
+    };
+
+    useEffect(() => {
+        return () => {
+            imagePreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+        };
+    }, [imagePreviews]);
+
+    const [formData, setFormData] = useState({
+        title: '',
+        listingType: 'Lease',
+        description: '',
+        availableDate: '',
+        price: '',
+        propertyType: 'Apartment',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        bedrooms: '',
+        bathrooms: '',
+        sqft: '',
+        agentCompany: '',
+        agentName: '',
+        agentPhone: '',
+        imageUrls: [],
+        refUrl: '',
+        email: '',
+    });
+    const [formErrors, setFormErrors] = useState({});
+    const dispatch = useDispatch();
+
+    const formChangeHandler = (e) => {
+        const { name, value } = e.target;
+        // console.log('form change handler is called. Name: ' + name + 'Value: ' + value);
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const validateForm = () => {
+        const errors = {};
+        const requiredFields = {
+            title: formData.title,
+            listingType: formData.listingType,
+            price: formData.price,
+            propertyType: formData.propertyType,
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zipCode: formData.zipCode,
+            bedrooms: formData.bedrooms,
+            bathrooms: formData.bathrooms,
+            agentCompany: formData.agentCompany,
+            agentName: formData.agentName,
+            email: formData.email,
+        };
+
+        // Check each field and add to errors if empty
+        for (const key in requiredFields) {
+            if (!requiredFields[key]) {
+                errors[key] = 'This field is required';
+            }
+        }
+
+        return errors;
+    };
 
     const cancelHandler = () => {
         navigate('/profile/listings');
