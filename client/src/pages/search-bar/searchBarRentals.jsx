@@ -61,6 +61,7 @@ const SearchBarRentals = ({
                 options={['Dog', 'Cat', 'No Pets Allowed']}
                 buttonLabel="Pet"
                 onSelectionChange={onPetsChange}
+                buttonClassName="text-base"
             />
             <button
                 className="bg-dark-200 text-white text-base rounded-lg px-4 py-2"

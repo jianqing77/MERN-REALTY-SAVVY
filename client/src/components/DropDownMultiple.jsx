@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-function DropdownMultiple({ options, buttonLabel, onSelectionChange }) {
+function DropdownMultiple({ options, buttonLabel, onSelectionChange, buttonClassName }) {
     const [isOpen, setIsOpen] = useState(false);
     const [checkedState, setCheckedState] = useState(
         new Array(options.length).fill(false)
@@ -56,7 +56,7 @@ function DropdownMultiple({ options, buttonLabel, onSelectionChange }) {
         <div ref={dropdownRef} className="mt-1">
             <button
                 onClick={toggleDropdown}
-                className="text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg text-base px-5 py-2 text-center inline-flex items-center"
+                className={`text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg text-base px-5 py-2 text-center inline-flex items-center ${buttonClassName}`}
                 type="button"
                 aria-haspopup="true"
                 aria-expanded={isOpen}>
@@ -104,6 +104,7 @@ DropdownMultiple.propTypes = {
     options: PropTypes.arrayOf(PropTypes.string).isRequired,
     buttonLabel: PropTypes.string.isRequired,
     onSelectionChange: PropTypes.func.isRequired,
+    buttonClassName: PropTypes.string,
 };
 
 export default DropdownMultiple;

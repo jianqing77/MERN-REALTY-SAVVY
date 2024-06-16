@@ -1,6 +1,17 @@
 import PropTypes from 'prop-types';
+import DropdownMultiple from '../../components/DropDownMultiple';
+import { useState } from 'react';
 
 export default function LeaseForm({ formData, formChangeHandler }) {
+    const petOptions = ['Dog', 'Cat', 'No Pets Allowed'];
+    const petChangeHandler = (selectedOptions) => {
+        // Update the formData with the new pet policy
+        formChangeHandler({
+            ...formData,
+            petPolicy: selectedOptions,
+        });
+    };
+
     return (
         <div>
             <label
@@ -9,13 +20,19 @@ export default function LeaseForm({ formData, formChangeHandler }) {
                 Pet Policy
             </label>
             <div className="mt-2">
-                <input
+                {/* <input
                     type="text"
                     name="petPolicy"
                     id="petPolicy"
                     value={formData.petPolicy}
                     onChange={formChangeHandler}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                /> */}
+                <DropdownMultiple
+                    options={petOptions}
+                    buttonLabel="Select Pets"
+                    onSelectionChange={petChangeHandler}
+                    buttonClassName="text-sm"
                 />
             </div>
         </div>
