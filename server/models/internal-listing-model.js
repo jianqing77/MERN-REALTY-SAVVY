@@ -55,6 +55,12 @@ const ListingSchema = new Schema(
             imageUrls: [{ type: String }],
             refUrl: { type: String, required: false },
         },
+        homeAge: { type: String, required: false },
+        petPolicy: {
+            type: [String],
+            enum: ['Dogs', 'Cats'],
+            required: false,
+        },
         metadata: {
             views: { type: Number, default: 0 },
             favorites: { type: Number, default: 0 },

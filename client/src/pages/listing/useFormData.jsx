@@ -18,6 +18,8 @@ export default function useFormData() {
         agentCompany: '',
         agentName: '',
         agentPhone: '',
+        homeAge: '',
+        petPolicy: [],
         imageUrls: [],
         refUrl: '',
         email: '',

@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useFormData from './useFormData.jsx';
 import useImageHandler from './useImageHandler.jsx';
+import LeaseForm from './lease-form.jsx';
+import SellForm from './sell-form.jsx';
 
 export default function CreateNewListing() {
     const navigate = useNavigate();
@@ -21,7 +23,7 @@ export default function CreateNewListing() {
         removeImageHandler,
     } = useImageHandler();
 
-    // form data handling
+    // Form Data Handling
     const { formData, formErrors, setFormErrors, formChangeHandler, validateForm } =
         useFormData();
 
@@ -35,6 +37,26 @@ export default function CreateNewListing() {
             });
         }
     }, []);
+
+    // Select which form component to render based on listingType
+    const ListingFormComponent = () => {
+        console.log('listing type: ' + formData.listingType);
+        switch (formData.listingType) {
+            case 'Lease':
+                return (
+                    <LeaseForm
+                        formData={formData}
+                        formChangeHandler={formChangeHandler}
+                    />
+                );
+            case 'Sell':
+                return (
+                    <SellForm formData={formData} formChangeHandler={formChangeHandler} />
+                );
+            default:
+                return <div>Please select a listing type.</div>;
+        }
+    };
 
     const cancelHandler = () => {
         navigate('/profile/listings');
@@ -110,6 +132,37 @@ export default function CreateNewListing() {
                         Create New Listings
                     </h2>
                 </div>
+                {/* listing type: first choice*/}
+                <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
+                    <div>
+                        <h2 className="text-base font-semibold leading-7 text-gray-900">
+                            Listing Type
+                        </h2>
+                        <p className="mt-1 text-sm leading-6 text-gray-600">
+                            Please provide the listing type.
+                        </p>
+                    </div>
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="listingType"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Listing Type
+                            </label>
+                            <div className="mt-2">
+                                <select
+                                    id="listingType"
+                                    name="listingType"
+                                    value={formData.listingType}
+                                    onChange={formChangeHandler}
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
+                                    <option>Lease</option>
+                                    <option>Sell</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {/* General Information*/}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                     <div>
@@ -168,25 +221,6 @@ export default function CreateNewListing() {
                                     value={formData.description}
                                     onChange={formChangeHandler}
                                 />
-                            </div>
-                        </div>
-                        {/* listing type */}
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="listingType"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Listing Type
-                            </label>
-                            <div className="mt-2">
-                                <select
-                                    id="listingType"
-                                    name="listingType"
-                                    value={formData.listingType}
-                                    onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
-                                    <option>Lease</option>
-                                    <option>Sell</option>
-                                </select>
                             </div>
                         </div>
                         {/* Building Type */}
@@ -577,6 +611,9 @@ export default function CreateNewListing() {
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
                                 />
                             </div>
+                        </div>
+                        <div className="sm:col-span-3">
+                            <ListingFormComponent />
                         </div>
                     </div>
                 </div>
