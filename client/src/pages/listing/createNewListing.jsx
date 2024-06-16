@@ -14,25 +14,16 @@ export default function CreateNewListing() {
     // Image Handling
     const imageFileRef = useRef(null);
     const {
-        imgFiles,
         imagePreviews,
         fileCountError,
-        maxFileCount,
         fileChangeHandler,
         handleImageFileUpload,
         removeImageHandler,
-        clearErrorMessage,
     } = useImageHandler();
 
     // form data handling
-    const {
-        formData,
-        setFormData,
-        formErrors,
-        setFormErrors,
-        formChangeHandler,
-        validateForm,
-    } = useFormData();
+    const { formData, formErrors, setFormErrors, formChangeHandler, validateForm } =
+        useFormData();
 
     // Data Picker
     const datePickerRef = useRef(null);
@@ -243,7 +234,6 @@ export default function CreateNewListing() {
                                 </div>
                             </div>
                         </div>
-
                         {/* Price */}
                         <div className="sm:col-span-3">
                             <label
@@ -273,7 +263,7 @@ export default function CreateNewListing() {
                                 </p>
                             </div>
                         </div>
-                        {/* photos */}
+                        {/* Photos */}
                         <div className="col-span-full">
                             <label
                                 htmlFor="property-photos"
@@ -515,7 +505,6 @@ export default function CreateNewListing() {
                             Please provide the features of the properties
                         </p>
                     </div>
-
                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
                         {/* bedrooms */}
                         <div className="sm:col-span-3">

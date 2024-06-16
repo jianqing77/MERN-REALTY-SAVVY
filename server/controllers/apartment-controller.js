@@ -58,7 +58,7 @@ const mapApiDataToListingSchema = (listing) => {
                 ? `${listing.location.address.line}, ${listing.location.address.city}`
                 : 'N/A',
         listingType: listing.status,
-        listingDate: listing.list_date,
+        availableDate: listing.list_date,
         price: price,
         propertyType: listing.description && listing.description.type,
         location: {

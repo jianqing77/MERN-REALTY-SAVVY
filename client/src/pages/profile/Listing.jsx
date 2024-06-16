@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { findListingByCurrentUserThunk } from '../../services/internal-listing/internal-listing-thunk';
-import { formatPrice } from '../../utils/formatUtils.jsx';
+import { formatDate, formatPrice } from '../../utils/formatUtils.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -140,15 +140,7 @@ export default function Listings() {
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-center'
                                                 )}>
-                                                {listing.createdAt
-                                                    ? new Date(
-                                                          listing.createdAt
-                                                      ).toLocaleDateString('en-US', {
-                                                          year: 'numeric',
-                                                          month: '2-digit',
-                                                          day: '2-digit',
-                                                      })
-                                                    : 'No Date'}
+                                                {formatDate(listing.createdAt)}
                                             </td>
                                             <td
                                                 className={classNames(

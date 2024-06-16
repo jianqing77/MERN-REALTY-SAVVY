@@ -95,3 +95,18 @@ export function getAbbreviation(stateName) {
     );
     return state ? state.abbreviation : null;
 }
+
+export function formatDate(dateString) {
+    if (!dateString) return 'No Date';
+
+    const date = new Date(dateString);
+    const formattedDate = date
+        .toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        })
+        .replace(/\//g, '-'); // Replace slashes with hyphens
+
+    return formattedDate;
+}

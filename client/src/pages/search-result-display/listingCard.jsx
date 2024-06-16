@@ -7,6 +7,7 @@ import {
     formatPropertyType,
     formatListingType,
     getAbbreviation,
+    formatDate,
 } from '../../utils/formatUtils';
 
 const ListingCard = ({ listing }) => {
@@ -19,6 +20,7 @@ const ListingCard = ({ listing }) => {
         location,
         media,
         listingType,
+        availableDate,
         contactInfo,
     } = listing;
 
@@ -33,6 +35,9 @@ const ListingCard = ({ listing }) => {
                 <div className="pe-1">
                     <div className="text-xl font-bold mb-1">{formatPrice(price)}</div>
                     <p className="text-base text-gray-600">
+                        Date Available: {formatDate(availableDate)}
+                    </p>
+                    <p className="text-base text-gray-600">
                         Beds: {features.bedrooms} | Baths: {features.bathrooms} |{' '}
                         {formatSquareFeet(features.squareFootage)} sqft
                     </p>
@@ -42,16 +47,17 @@ const ListingCard = ({ listing }) => {
                     </p>
                     <p className="text-base text-gray-600">
                         {formatPropertyType(propertyType)}{' '}
-                        {formatListingType(listingType)}
+                        {formatListingType(listingType)} |{' '}
+                        {displayAgentInfo ? (
+                            <span className="text-base text-gray-500 uppercase">
+                                {contactInfo.agentCompany} | {contactInfo.agentName}
+                            </span>
+                        ) : (
+                            <span className="text-base text-gray-500">
+                                {contactInfo.agentName}
+                            </span>
+                        )}
                     </p>
-                    {displayAgentInfo ? (
-                        <p className="text-xs text-gray-500 uppercase">
-                            {contactInfo.agentCompany} | {contactInfo.agentName}
-                        </p>
-                    ) : (
-                        <p className="text-xs text-gray-500">{contactInfo.agentName}</p>
-                    )}
-                    {/* <p>{media.refUrl}</p> */}
                 </div>
             </div>
             <div className="col-span-1 flex items-top justify-around">
@@ -77,7 +83,7 @@ ListingCard.propTypes = {
         title: PropTypes.string.isRequired,
         listingType: PropTypes.string.isRequired,
         description: PropTypes.string,
-        listingDate: PropTypes.string,
+        availableDate: PropTypes.string,
         price: PropTypes.string.isRequired,
         propertyType: PropTypes.string.isRequired,
         location: PropTypes.shape({
@@ -90,7 +96,6 @@ ListingCard.propTypes = {
             bedrooms: PropTypes.string.isRequired,
             bathrooms: PropTypes.string.isRequired,
             squareFootage: PropTypes.string.isRequired,
-            lotSize: PropTypes.string,
         }).isRequired,
         contactInfo: PropTypes.shape({
             agentCompany: PropTypes.string,
