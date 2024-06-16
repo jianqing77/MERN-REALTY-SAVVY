@@ -612,9 +612,10 @@ export default function CreateNewListing() {
                                 />
                             </div>
                         </div>
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-2">
                             <ListingFormComponent />
                         </div>
+                        {/* <ListingFormComponent /> */}
                     </div>
                 </div>
                 {/* Contact Info */}
