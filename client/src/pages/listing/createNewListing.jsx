@@ -7,11 +7,21 @@ import { useNavigate } from 'react-router-dom';
 import useFormData from './useFormData.jsx';
 import useImageHandler from './useImageHandler.jsx';
 import LeaseForm from './lease-form.jsx';
-import SellForm from './sell-form.jsx';
+import SaleForm from './sale-form.jsx';
+import DropdownSingle from '../../components/DropDownSingle.jsx';
 
 export default function CreateNewListing() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const categoryOptions = [
+        { label: 'Lease', value: 'for-rent' },
+        { label: 'Sale', value: 'for-sale' },
+    ];
+
+    const categoryChangeHandler = (value) => {
+        formChangeHandler({ target: { name: 'listingType', value } });
+    };
 
     // Image Handling
     const imageFileRef = useRef(null);
@@ -40,18 +50,17 @@ export default function CreateNewListing() {
 
     // Select which form component to render based on listingType
     const ListingFormComponent = () => {
-        console.log('listing type: ' + formData.listingType);
         switch (formData.listingType) {
-            case 'Lease':
+            case 'for-rent':
                 return (
                     <LeaseForm
                         formData={formData}
                         formChangeHandler={formChangeHandler}
                     />
                 );
-            case 'Sell':
+            case 'for-sale':
                 return (
-                    <SellForm formData={formData} formChangeHandler={formChangeHandler} />
+                    <SaleForm formData={formData} formChangeHandler={formChangeHandler} />
                 );
             default:
                 return <div>Please select a listing type.</div>;
@@ -64,6 +73,7 @@ export default function CreateNewListing() {
 
     const submitHandler = (e) => {
         e.preventDefault();
+        console.log('in submit handler:' + formData.petPolicy);
 
         // Normalize the price/sqft to remove commas
         const normalizedPrice = formData.price.replace(/,/g, '');
@@ -92,6 +102,7 @@ export default function CreateNewListing() {
             price: normalizedPrice,
             listingType: formData.listingType,
             availableDate: formattedDate,
+            petPolicy: formData.petPolicy,
             location: {
                 address: formData.address,
                 city: formData.city,
@@ -149,17 +160,24 @@ export default function CreateNewListing() {
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Listing Type
                             </label>
-                            <div className="mt-2">
+                            {/* <div className="mt-2">
                                 <select
                                     id="listingType"
                                     name="listingType"
                                     value={formData.listingType}
                                     onChange={formChangeHandler}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
-                                    <option>Lease</option>
-                                    <option>Sell</option>
+                                    <option>for-rent</option>
+                                    <option>for-sale</option>
                                 </select>
-                            </div>
+                            </div> */}
+                            <DropdownSingle
+                                label="listingType"
+                                initialValue="for-rent"
+                                options={categoryOptions}
+                                onSelectionChange={categoryChangeHandler}
+                                labelClassName="text-sm"
+                            />
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-function DropdownSingle({ label, initialValue, options, onSelectionChange }) {
+function DropDownSingle({
+    label,
+    initialValue,
+    options,
+    onSelectionChange,
+    labelClassName,
+}) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [selectedOption, setSelectedOption] = useState(
         options.find((option) => option.value === initialValue) || options[0]
     );
+
     const dropdownRef = useRef(null);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
@@ -39,7 +46,7 @@ function DropdownSingle({ label, initialValue, options, onSelectionChange }) {
         <div ref={dropdownRef} className="mt-1">
             <button
                 onClick={toggleDropdown}
-                className="text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg text-base px-5 py-2 text-center inline-flex items-center"
+                className={`text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg ${labelClassName} px-5 py-2 text-center inline-flex items-center`}
                 type="button"
                 aria-haspopup="true"
                 aria-expanded={isOpen}>
@@ -92,7 +99,7 @@ function DropdownSingle({ label, initialValue, options, onSelectionChange }) {
 }
 
 // Define prop types
-DropdownSingle.propTypes = {
+DropDownSingle.propTypes = {
     label: PropTypes.string.isRequired,
     initialValue: PropTypes.string,
     options: PropTypes.arrayOf(
@@ -102,6 +109,7 @@ DropdownSingle.propTypes = {
         })
     ).isRequired,
     onSelectionChange: PropTypes.func.isRequired,
+    labelClassName: PropTypes.string,
 };
 
-export default DropdownSingle;
+export default DropDownSingle;

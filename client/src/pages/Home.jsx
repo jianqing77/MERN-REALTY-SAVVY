@@ -38,7 +38,7 @@ const Home = () => {
 
     const searchHandler = async (event) => {
         event.preventDefault();
-        const action = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
+        const action = category === 'for-sell' ? fetchSalesThunk : fetchRentalsThunk;
         dispatch(action({ location: location, currentPage: 1 }));
     };
 

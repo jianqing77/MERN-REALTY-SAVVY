@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
 import DropdownMultiple from '../../components/DropDownMultiple';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function LeaseForm({ formData, formChangeHandler }) {
-    const petOptions = ['Dog', 'Cat', 'No Pets Allowed'];
+    const petOptions = ['Dogs', 'Cats', 'No Pets Allowed'];
+
     const petChangeHandler = (selectedOptions) => {
-        // Update the formData with the new pet policy
         formChangeHandler({
-            ...formData,
-            petPolicy: selectedOptions,
+            target: {
+                name: 'petPolicy',
+                value: selectedOptions,
+            },
         });
     };
 

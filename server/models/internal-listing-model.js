@@ -12,7 +12,7 @@ const ListingSchema = new Schema(
         },
         listingType: {
             type: String,
-            enum: ['Lease', 'Sell'],
+            enum: ['for-rent', 'for-sale'],
             required: true,
         },
         description: { type: String, required: false },
@@ -55,10 +55,10 @@ const ListingSchema = new Schema(
             imageUrls: [{ type: String }],
             refUrl: { type: String, required: false },
         },
-        homeAge: { type: String, required: false },
+        homeAge: { type: Number, required: false },
         petPolicy: {
             type: [String],
-            enum: ['Dogs', 'Cats'],
+            enum: ['Dogs', 'Cats', 'No Pets Allowed'],
             required: false,
         },
         metadata: {

@@ -3,7 +3,7 @@ import { useState } from 'react';
 export default function useFormData() {
     const [formData, setFormData] = useState({
         title: '',
-        listingType: 'Lease', // default
+        listingType: 'for-rent', // default
         description: '',
         availableDate: '',
         price: '',
@@ -29,10 +29,17 @@ export default function useFormData() {
 
     const formChangeHandler = (e) => {
         const { name, value } = e.target;
+
+        let adjustedValue = value;
+        if (name === 'homeAge') {
+            adjustedValue = value === '' ? undefined : Number(value);
+        }
+
         setFormData((prevState) => ({
             ...prevState,
             [name]: value,
         }));
+        console.log('Name: ' + name + ' Value: ' + value);
     };
 
     const validateForm = () => {

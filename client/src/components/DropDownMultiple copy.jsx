@@ -6,19 +6,11 @@ function DropdownMultiple({ options, buttonLabel, onSelectionChange, buttonClass
     const [checkedState, setCheckedState] = useState(
         new Array(options.length).fill(false)
     );
-    useEffect(() => {
-        console.log('checkedState updated:', checkedState);
-    }, [checkedState]);
+    const [tempCheckedState, setTempCheckedState] = useState(
+        new Array(options.length).fill(false)
+    );
+
     const dropdownRef = useRef(null);
-
-    // specifically handle pets options
-    const dogIndex = options.indexOf('Dog');
-    const catIndex = options.indexOf('Cat');
-    const noPetsIndex = options.indexOf('No Pets Allowed');
-
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -26,6 +18,7 @@ function DropdownMultiple({ options, buttonLabel, onSelectionChange, buttonClass
                 setIsOpen(false);
             }
         }
+
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -33,32 +26,35 @@ function DropdownMultiple({ options, buttonLabel, onSelectionChange, buttonClass
     }, []);
 
     const handleCheckboxChange = (position) => {
-        let updatedCheckedState = [...checkedState];
+        const updatedTempCheckedState = [...tempCheckedState];
+        updatedTempCheckedState[position] = !updatedTempCheckedState[position];
 
-        if (position === noPetsIndex) {
-            // If "No Pets Allowed" is clicked, either check it and uncheck others, or uncheck it
-            if (!checkedState[noPetsIndex]) {
-                updatedCheckedState = updatedCheckedState.map(
-                    (_, index) => index === noPetsIndex
-                );
-            } else {
-                updatedCheckedState[noPetsIndex] = false;
+        // Special rules for "No Pets Allowed"
+        if (position === options.indexOf('No Pets Allowed')) {
+            if (updatedTempCheckedState[position]) {
+                updatedTempCheckedState.fill(false);
+                updatedTempCheckedState[position] = true;
             }
         } else {
-            // If any other option is clicked, ensure "No Pets Allowed" is unchecked
-            updatedCheckedState[position] = !updatedCheckedState[position];
-            if (updatedCheckedState[dogIndex] || updatedCheckedState[catIndex]) {
-                updatedCheckedState[noPetsIndex] = false;
-            }
+            updatedTempCheckedState[options.indexOf('No Pets Allowed')] = false;
         }
 
-        setCheckedState(updatedCheckedState);
-        // onSelectionChange(options.filter((_, index) => updatedCheckedState[index]));
+        setTempCheckedState(updatedTempCheckedState);
     };
 
     const applySelection = () => {
-        onSelectionChange(options.filter((_, index) => checkedState[index]));
+        setCheckedState(tempCheckedState);
+        console.log('checked state after clicking apply: ' + checkedState);
+        onSelectionChange(options.filter((_, index) => tempCheckedState[index]));
         setIsOpen(false); // Close the dropdown
+    };
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+        if (!isOpen) {
+            // Reinitialize tempCheckedState from checkedState when opening
+            setTempCheckedState([...checkedState]);
+        }
     };
 
     return (

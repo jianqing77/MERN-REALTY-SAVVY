@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DropdownSingle from '../../components/DropDownSingle.jsx';
+import DropDownSingle from '../../components/DropDownSingle.jsx';
 import DropdownMultiple from '../../components/DropDownMultiple.jsx';
 import DropdownRange from '../../components/DropDownRange.jsx';
 
@@ -39,26 +39,29 @@ const SearchBarRentals = ({
 
     return (
         <div className="flex items-center justify-between px-2 rounded-lg mx-auto mt-4">
-            <DropdownSingle
+            <DropDownSingle
                 label="Category"
                 initialValue={initialCategory}
                 options={categoryOptions}
                 onSelectionChange={onCategoryChange}
+                labelClassName="text-base"
             />
             <DropdownRange buttonLabel="Price" onRangeChange={onPriceRangeChange} />
             <DropdownRange buttonLabel="Size" onRangeChange={onSizeRangeChange} />
-            <DropdownSingle
+            <DropDownSingle
                 label="Bedrooms"
                 options={bedroomsOptions}
                 onSelectionChange={onBedroomsChange}
+                labelClassName="text-base"
             />
-            <DropdownSingle
+            <DropDownSingle
                 label="Bathrooms"
                 options={bathroomsOptions}
                 onSelectionChange={onBathroomsChange}
+                labelClassName="text-base"
             />
             <DropdownMultiple
-                options={['Dog', 'Cat', 'No Pets Allowed']}
+                options={['Dogs', 'Cats', 'No Pets Allowed']}
                 buttonLabel="Pet"
                 onSelectionChange={onPetsChange}
                 buttonClassName="text-base"

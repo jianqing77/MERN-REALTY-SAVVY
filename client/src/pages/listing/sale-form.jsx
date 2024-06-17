@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export default function SellForm({ formData, formChangeHandler }) {
+export default function SaleForm({ formData, formChangeHandler }) {
     return (
         <div>
             <label
@@ -23,7 +23,7 @@ export default function SellForm({ formData, formChangeHandler }) {
     );
 }
 
-SellForm.propTypes = {
+SaleForm.propTypes = {
     formData: PropTypes.shape({
         homeAge: PropTypes.number,
     }).isRequired,
