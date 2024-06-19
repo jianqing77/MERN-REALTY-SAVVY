@@ -18,7 +18,17 @@ export const findListingById = catchAsync(async (req, res) => {
 });
 
 export const findRentalListings = catchAsync(async (req, res) => {
-    const { location, petPolicy, minPrice, maxPrice } = req.query;
+    const {
+        location,
+        minPrice,
+        maxPrice,
+        minSize,
+        maxSize,
+        minBeds,
+        minBaths,
+        petPolicy,
+    } = req.query;
+    console.log('petPolicy in the controller: ' + JSON.stringify(petPolicy));
 
     if (!location) {
         return res.status(400).json({
@@ -27,10 +37,14 @@ export const findRentalListings = catchAsync(async (req, res) => {
         });
     }
     const priceRange = { min: minPrice, max: maxPrice };
+    const sizeRange = { min: minSize, max: maxSize };
     const listings = await InternalListingDAO.findRentalListings(
         location,
-        petPolicy,
-        priceRange
+        priceRange,
+        sizeRange,
+        minBeds,
+        minBaths,
+        petPolicy
     );
 
     res.status(200).json({
@@ -54,7 +68,6 @@ export const findSaleListings = catchAsync(async (req, res) => {
         minBaths,
     } = req.query;
 
-    console.log();
     const priceRange = { min: minPrice, max: maxPrice };
     const sizeRange = { min: minSize, max: maxSize };
     const homeAgeRange = { min: minHomeAge, max: maxHomeAge };

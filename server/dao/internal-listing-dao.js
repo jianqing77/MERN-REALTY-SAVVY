@@ -66,7 +66,13 @@ function isEmpty(value) {
 }
 
 function buildPetQuery(petPolicy) {
-    return petPolicy ? { $in: petPolicy.split(',') } : undefined;
+    console.log('petPolicy: ' + JSON.stringify(petPolicy));
+    if (typeof petPolicy === 'string') {
+        return { $in: petPolicy.split(',').map((item) => item.trim()) };
+    } else {
+        console.error('Invalid type for petPolicy:', typeof petPolicy);
+        return undefined;
+    }
 }
 
 function buildPriceQuery(priceRange) {
@@ -78,35 +84,28 @@ function buildPriceQuery(priceRange) {
 
 function buildSizeQuery(sizeRange) {
     const query = {};
-    if (sizeRange.min) query.$gte = sizeRange.min;
-    if (sizeRange.max) query.$lte = sizeRange.max;
-    return { sqft: query };
+    if (sizeRange.min) query['features.sqft'] = { $gte: sizeRange.min };
+    if (sizeRange.max)
+        query['features.sqft'] = { ...query['features.sqft'], $lte: sizeRange.max };
+    return query;
 }
 
 function buildMinBedQuery(minValue) {
     const query = {};
-    if (minValue) query.$gte = minValue;
-    return { bedrooms: query };
+    if (minValue) query['features.bedrooms'] = { $gte: minValue };
+    return query;
 }
 
 function buildMinBathQuery(minValue) {
     const query = {};
-    console.log(
-        'buildMinBathQuery was called, the param was: ' + JSON.stringify(minValue)
-    );
-    if (minValue) query.$gte = minValue;
-    console.log('the query end up to be: ' + JSON.stringify(query));
-    return { bathrooms: query };
+    if (minValue) query['features.bathrooms'] = { $gte: minValue };
+    return query;
 }
 
 function buildHomeAgeQuery(homeAgeRange) {
     const query = {};
-    console.log(
-        'buildHomeAgeQuery was called, the param was: ' + JSON.stringify(homeAgeRange)
-    );
     if (homeAgeRange.min) query.$gte = homeAgeRange.min;
     if (homeAgeRange.max) query.$lte = homeAgeRange.max;
-    console.log('the query end up to be: ' + JSON.stringify(query));
     return { homeAge: query };
 }
 
@@ -138,11 +137,21 @@ const InternalListingDao = {
             throw new ErrorHandler('Error reading listing', 500);
         }
     },
-    findRentalListings: async (locationQuery, petPolicy, priceRange) => {
+    findRentalListings: async (
+        locationQuery,
+        priceRange,
+        sizeRange,
+        minBeds,
+        minBaths,
+        petPolicy
+    ) => {
         const filters = {
             listingType: 'for-rent',
-            ...(petPolicy && { petPolicy: buildPetQuery(petPolicy) }),
             ...buildPriceQuery(priceRange),
+            ...buildSizeQuery(sizeRange),
+            ...buildMinBedQuery(minBeds),
+            ...buildMinBathQuery(minBaths),
+            ...(petPolicy && { petPolicy: buildPetQuery(petPolicy) }),
         };
         return searchListingsByQuery(locationQuery, filters);
     },
