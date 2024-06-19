@@ -76,8 +76,9 @@ export const findSaleListings = catchAsync(async (req, res) => {
 
 export const findListingByCurrentUser = catchAsync(async (req, res) => {
     const userId = req.session['currentUser']['_id'];
-    console.log('user id founded in the listing controller:  ' + userId);
+    // console.log('user id founded in the listing controller:  ' + userId);
     const foundedListing = await InternalListingDAO.findListingsByUserId(userId);
+    // console.log('foundedListing found: ' + foundedListing);
     res.status(200).json(foundedListing);
 });
 

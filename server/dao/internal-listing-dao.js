@@ -168,9 +168,13 @@ const InternalListingDao = {
     findListingsByUserId: async (userId) => {
         try {
             const listings = await InternalListingModel.find({ createdBy: userId });
-            if (!listings.length) {
-                throw new ErrorHandler('No listings found for this user', 404);
-            }
+            // return {
+            //     success: true,
+            //     message: listings.length
+            //         ? 'Listings found'
+            //         : 'No listings found for this user',
+            //     data: listings,
+            // };
             return listings;
         } catch (error) {
             throw new ErrorHandler('Error fetching listings by user ID', 500);
