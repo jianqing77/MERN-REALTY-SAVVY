@@ -136,6 +136,7 @@ export const getLocationId = async (req, res, next) => {
             response.data.data.autocomplete.length > 0
         ) {
             req.locationId = response.data.data.autocomplete[0].id; // set location ID in request
+            // console.log('location id in the controller autocomplete: ' + req.locationId);
             next(); // Proceed to next middleware (getRentalListings)
         } else {
             res.status(404).send('No valid location found');
@@ -151,7 +152,7 @@ export const getRentalListings = async (req, res) => {
         locationId,
         query: { page = 1, prices, homeSize, bedrooms, bathrooms, pets },
     } = req;
-
+    // console.log('location id in the controller: ' + locationId);
     const params = {
         location: locationId,
         resultsPerPage: 20,

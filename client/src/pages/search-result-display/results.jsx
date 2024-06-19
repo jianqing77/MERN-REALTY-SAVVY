@@ -17,6 +17,7 @@ import Pagination from '../../components/Pagination.jsx';
 import SearchBarLocation from '../search-bar/searchBarLocation.jsx';
 import SearchBarRentals from '../search-bar/searchBarRentals.jsx';
 import SearchBarSales from '../search-bar/searchBarSales.jsx';
+import { APILoader, PlacePicker } from '@googlemaps/extended-component-library/react';
 
 const ResultPage = () => {
     const searchLocation = useLocation();

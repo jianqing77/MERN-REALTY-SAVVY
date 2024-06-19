@@ -1,6 +1,81 @@
 import InternalListingModel from '../models/internal-listing-model.js';
 import ErrorHandler from '../utils/ErrorHandler.js'; // Update with the actual path
 
+async function searchListingsByQuery(locationQuery, filters) {
+    try {
+        // Define the location-based search criteria
+        const locationConditions = {
+            $or: [
+                { 'location.address': { $regex: locationQuery, $options: 'i' } },
+                { 'location.city': { $regex: locationQuery, $options: 'i' } },
+                { 'location.state': { $regex: locationQuery, $options: 'i' } },
+                { 'location.zipCode': { $regex: locationQuery, $options: 'i' } },
+            ],
+        };
+
+        // Clean filters by removing empty objects
+        const cleanedFilters = removeEmptyFilters(filters);
+
+        console.log('Cleaned filters in the DAO:', JSON.stringify(cleanedFilters));
+
+        // Initialize the search query with location conditions
+        let searchQuery = {};
+
+        // Check if cleaned filters are provided and are not empty
+        if (Object.keys(cleanedFilters).length) {
+            // Use $and to require both location match and cleaned filters match
+            searchQuery.$and = [locationConditions, cleanedFilters];
+        } else {
+            // If no cleaned filters are provided, just use the location conditions
+            searchQuery = locationConditions;
+        }
+
+        // Execute the search in the database
+        const listings = await InternalListingModel.find(searchQuery);
+        return listings;
+    } catch (error) {
+        throw new ErrorHandler(`Error fetching listings with specific filters`, 500);
+    }
+}
+
+// Helper function to remove empty filters
+function removeEmptyFilters(filters) {
+    const cleanedFilters = {};
+    for (const key in filters) {
+        if (filters.hasOwnProperty(key) && !isEmpty(filters[key])) {
+            cleanedFilters[key] = filters[key];
+        }
+    }
+    console.log('Cleaned filters:', JSON.stringify(cleanedFilters)); // Additional logging for clarity
+    return cleanedFilters;
+}
+
+// Function to check if an object is empty
+function isEmpty(value) {
+    if (value == null) return true; // Handles null and undefined
+    if (typeof value === 'object') {
+        if (Array.isArray(value)) return value.length === 0; // Checks if an array is empty
+        return (
+            Object.keys(value).length === 0 || // Checks if an object has no own properties
+            (value.hasOwnProperty('$in') &&
+                Array.isArray(value.$in) &&
+                value.$in.length === 0)
+        ); // Specific check for $in with empty array
+    }
+    return false; // Non-object and non-null values are not considered empty
+}
+
+function petQuery(petPolicy) {
+    return petPolicy ? { $in: petPolicy.split(',') } : undefined;
+}
+
+function buildPriceQuery(priceRange) {
+    const query = {};
+    if (priceRange.min) query.$gte = priceRange.min;
+    if (priceRange.max) query.$lte = priceRange.max;
+    return { price: query };
+}
+
 const InternalListingDao = {
     findAllListing: async () => {
         try {
@@ -28,6 +103,25 @@ const InternalListingDao = {
         } catch (error) {
             throw new ErrorHandler('Error reading listing', 500);
         }
+    },
+    findRentalListings: async (locationQuery, petPolicy, priceRange) => {
+        const filters = {
+            listingType: 'for-rent',
+            ...(petPolicy && { petPolicy: petQuery(petPolicy) }),
+            ...buildPriceQuery(priceRange),
+        };
+        console.log(
+            'filters before passing to searchListingsByQuery: ' + JSON.stringify(filters)
+        );
+        return searchListingsByQuery(locationQuery, filters);
+    },
+    findSaleListings: async (locationQuery, homeAge, priceRange) => {
+        const filters = {
+            listingType: 'for-sale',
+            homeAge: { $gte: homeAge.min, $lte: homeAge.max },
+            ...buildPriceQuery(priceRange),
+        };
+        return searchListingsByQuery(locationQuery, filters);
     },
     findListingsByUserId: async (userId) => {
         try {

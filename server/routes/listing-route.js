@@ -18,10 +18,16 @@ const validateListing = [
     },
 ];
 
+// Specific routes: the router operates on a first-match principle
+router.get('/rental', ListingController.findRentalListings);
+router.get('/sale', ListingController.findSaleListings);
+
+// Parameterized routes
+router.get('/:id', ListingController.findListingById); // Retrieve a single listing by ID
+
+// Other routes
 // Route with validation
 router.get('/', ListingController.findListingByCurrentUser); // Retrieve all listings
-router.get('/:id', ListingController.findListingById); // Retrieve a single listing by ID
-// router.get('/current-user', ListingController.findListingByCurrentUser); // Retrieve a single listing by ID
 router.post('/', validateListing, ListingController.createListing); // Create a new listing
 router.put('/:id', validateListing, ListingController.updateListing); // Update an existing listing by ID
 router.delete('/:id', ListingController.deleteListing); // Delete an existing listing by ID
