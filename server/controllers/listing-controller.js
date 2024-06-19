@@ -42,14 +42,29 @@ export const findRentalListings = catchAsync(async (req, res) => {
 
 //  function to find sale listings with optional filters
 export const findSaleListings = catchAsync(async (req, res) => {
-    const { location, minHomeAge, maxHomeAge, minPrice, maxPrice } = req.query;
+    const {
+        location,
+        minPrice,
+        maxPrice,
+        minSize,
+        maxSize,
+        minHomeAge,
+        maxHomeAge,
+        minBeds,
+        minBaths,
+    } = req.query;
 
-    const homeAge = { min: minHomeAge, max: maxHomeAge };
     const priceRange = { min: minPrice, max: maxPrice };
+    const sizeRange = { min: minSize, max: maxSize };
+    const homeAgeRange = { min: minHomeAge, max: maxHomeAge };
+
     const listings = await InternalListingDAO.findSaleListings(
         location,
-        homeAge,
-        priceRange
+        priceRange,
+        sizeRange,
+        homeAgeRange,
+        minBeds,
+        minBaths
     );
 
     res.status(200).json({
@@ -58,30 +73,6 @@ export const findSaleListings = catchAsync(async (req, res) => {
         data: listings,
     });
 });
-
-// export const findListingByLocation = catchAsync(async (req, res) => {
-//     const { query } = req.query;
-
-//     if (!query) {
-//         return res.status(400).json({
-//             success: false,
-//             message: 'No search query provided',
-//         });
-//     }
-
-//     const listings = InternalListingDAO.findListingByLocation({
-//         address: query,
-//         city: query,
-//         state: query,
-//         zipCode: query,
-//     });
-
-//     res.status(200).json({
-//         success: true,
-//         results: listings.length,
-//         data: listings,
-//     });
-// });
 
 export const findListingByCurrentUser = catchAsync(async (req, res) => {
     const userId = req.session['currentUser']['_id'];

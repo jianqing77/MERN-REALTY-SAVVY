@@ -65,7 +65,7 @@ function isEmpty(value) {
     return false; // Non-object and non-null values are not considered empty
 }
 
-function petQuery(petPolicy) {
+function buildPetQuery(petPolicy) {
     return petPolicy ? { $in: petPolicy.split(',') } : undefined;
 }
 
@@ -74,6 +74,40 @@ function buildPriceQuery(priceRange) {
     if (priceRange.min) query.$gte = priceRange.min;
     if (priceRange.max) query.$lte = priceRange.max;
     return { price: query };
+}
+
+function buildSizeQuery(sizeRange) {
+    const query = {};
+    if (sizeRange.min) query.$gte = sizeRange.min;
+    if (sizeRange.max) query.$lte = sizeRange.max;
+    return { sqft: query };
+}
+
+function buildMinBedQuery(minValue) {
+    const query = {};
+    if (minValue) query.$gte = minValue;
+    return { bedrooms: query };
+}
+
+function buildMinBathQuery(minValue) {
+    const query = {};
+    console.log(
+        'buildMinBathQuery was called, the param was: ' + JSON.stringify(minValue)
+    );
+    if (minValue) query.$gte = minValue;
+    console.log('the query end up to be: ' + JSON.stringify(query));
+    return { bathrooms: query };
+}
+
+function buildHomeAgeQuery(homeAgeRange) {
+    const query = {};
+    console.log(
+        'buildHomeAgeQuery was called, the param was: ' + JSON.stringify(homeAgeRange)
+    );
+    if (homeAgeRange.min) query.$gte = homeAgeRange.min;
+    if (homeAgeRange.max) query.$lte = homeAgeRange.max;
+    console.log('the query end up to be: ' + JSON.stringify(query));
+    return { homeAge: query };
 }
 
 const InternalListingDao = {
@@ -107,20 +141,28 @@ const InternalListingDao = {
     findRentalListings: async (locationQuery, petPolicy, priceRange) => {
         const filters = {
             listingType: 'for-rent',
-            ...(petPolicy && { petPolicy: petQuery(petPolicy) }),
+            ...(petPolicy && { petPolicy: buildPetQuery(petPolicy) }),
             ...buildPriceQuery(priceRange),
         };
-        console.log(
-            'filters before passing to searchListingsByQuery: ' + JSON.stringify(filters)
-        );
         return searchListingsByQuery(locationQuery, filters);
     },
-    findSaleListings: async (locationQuery, homeAge, priceRange) => {
+    findSaleListings: async (
+        locationQuery,
+        priceRange,
+        sizeRange,
+        homeAgeRange,
+        minBeds,
+        minBaths
+    ) => {
         const filters = {
             listingType: 'for-sale',
-            homeAge: { $gte: homeAge.min, $lte: homeAge.max },
             ...buildPriceQuery(priceRange),
+            ...buildSizeQuery(sizeRange),
+            ...buildHomeAgeQuery(homeAgeRange),
+            ...buildMinBedQuery(minBeds),
+            ...buildMinBathQuery(minBaths),
         };
+
         return searchListingsByQuery(locationQuery, filters);
     },
     findListingsByUserId: async (userId) => {
