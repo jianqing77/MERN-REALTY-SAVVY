@@ -96,7 +96,7 @@ export default function Listings() {
                                 </thead>
                                 <tbody>
                                     {userListings.map((listing, idx) => (
-                                        <tr key={listing.id}>
+                                        <tr key={listing._id}>
                                             <td
                                                 className={classNames(
                                                     idx !== userListings.length - 1

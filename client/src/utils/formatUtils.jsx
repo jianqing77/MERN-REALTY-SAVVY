@@ -33,15 +33,18 @@ export function formatPrice(value) {
         maximumFractionDigits: 0,
     });
 
+    // Convert number to string if necessary
+    const stringValue = value.toString();
+
     // Check if the price is a range
-    if (value.includes('-')) {
-        const prices = value.split('-').map((price) => price.trim());
+    if (stringValue.includes('-')) {
+        const prices = stringValue.split('-').map((price) => price.trim());
         const formattedPrices = prices.map((price) => formatter.format(price));
         return formattedPrices.join(' - ');
     }
 
     // Handle single price
-    return formatter.format(value);
+    return formatter.format(stringValue);
 }
 
 export function formatSquareFeet(value) {

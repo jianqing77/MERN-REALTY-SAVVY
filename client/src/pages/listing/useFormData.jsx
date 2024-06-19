@@ -31,15 +31,21 @@ export default function useFormData() {
         const { name, value } = e.target;
 
         let adjustedValue = value;
-        if (name === 'homeAge') {
+        if (
+            name === 'homeAge' ||
+            name === 'bedrooms' ||
+            name === 'bathrooms' ||
+            name === 'price' ||
+            name === 'sqft'
+        ) {
             adjustedValue = value === '' ? undefined : Number(value);
         }
 
         setFormData((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: adjustedValue, // use the adjusted value
         }));
-        console.log('Name: ' + name + ' Value: ' + value);
+        console.log('Name: ' + name + ' Value: ' + adjustedValue);
     };
 
     const validateForm = () => {

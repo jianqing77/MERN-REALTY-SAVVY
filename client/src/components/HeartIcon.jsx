@@ -7,15 +7,18 @@ import {
     addLikedExternalListingThunk,
     removeLikedInternalListingThunk,
 } from '../services/user/user-thunk';
+import { useNavigate } from 'react-router-dom';
 
 function HeartIcon({ listingId, type }) {
     // console.log('listing ID in the UI: ' + listingId);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const { profile, loading } = useSelector((state) => state.user);
     const [isLiked, setIsLiked] = useState(false);
 
     useEffect(() => {
-        if (profile) {
+        if (profile._id) {
             const likedListings =
                 type === 'internal'
                     ? profile.likedInternalListings
@@ -29,8 +32,13 @@ function HeartIcon({ listingId, type }) {
     }, [profile, listingId, type]);
 
     const toggleHeart = async () => {
-        if (loading || !profile._id) return;
+        if (loading) return;
 
+        if (!profile || !profile._id) {
+            // Redirect to sign-in page if user is not logged in
+            navigate('/signin');
+            return;
+        }
         const userId = profile._id;
         const action = isLiked
             ? type === 'internal'

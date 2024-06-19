@@ -17,7 +17,7 @@ const ListingSchema = new Schema(
         },
         description: { type: String, required: false },
         availableDate: { type: Date, default: Date.now },
-        price: { type: String, required: true },
+        price: { type: Number, required: true },
         propertyType: {
             type: String,
             enum: [
@@ -41,9 +41,9 @@ const ListingSchema = new Schema(
             lng: { type: Number, required: false },
         },
         features: {
-            bedrooms: { type: String, required: true },
-            bathrooms: { type: String, required: true },
-            sqft: { type: String },
+            bedrooms: { type: Number, required: true },
+            bathrooms: { type: Number, required: true },
+            sqft: { type: Number, required: true },
         },
         contactInfo: {
             agentCompany: { type: String, required: true },

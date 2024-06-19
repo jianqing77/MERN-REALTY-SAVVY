@@ -6,8 +6,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useFormData from './useFormData.jsx';
 import useImageHandler from './useImageHandler.jsx';
-import LeaseForm from './lease-form.jsx';
-import SaleForm from './sale-form.jsx';
+import LeaseForm from './LeaseForm.jsx';
+import SaleForm from './SaleForm.jsx';
 import DropdownSingle from '../../components/DropDownSingle.jsx';
 
 export default function CreateNewListing() {
@@ -75,10 +75,6 @@ export default function CreateNewListing() {
         e.preventDefault();
         console.log('in submit handler:' + formData.petPolicy);
 
-        // Normalize the price/sqft to remove commas
-        const normalizedPrice = formData.price.replace(/,/g, '');
-        const normalizedSqft = formData.sqft.replace(/,/g, '');
-
         // Check if any of the required fields are empty
         const errors = validateForm();
         if (Object.keys(errors).length > 0) {
@@ -99,7 +95,7 @@ export default function CreateNewListing() {
 
         const listingData = {
             ...formData,
-            price: normalizedPrice,
+            price: formData.price,
             listingType: formData.listingType,
             availableDate: formattedDate,
             petPolicy: formData.petPolicy,
@@ -112,7 +108,7 @@ export default function CreateNewListing() {
             features: {
                 bedrooms: formData.bedrooms,
                 bathrooms: formData.bathrooms,
-                sqft: normalizedSqft,
+                sqft: formData.sqft,
             },
             contactInfo: {
                 agentCompany: formData.agentCompany,
@@ -296,7 +292,7 @@ export default function CreateNewListing() {
                             <div className="mt-2">
                                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                     <input
-                                        type="text"
+                                        type="number"
                                         name="price"
                                         id="price"
                                         value={formData.price}
@@ -567,7 +563,7 @@ export default function CreateNewListing() {
                             </label>
                             <div className="mt-2">
                                 <input
-                                    type="text"
+                                    type="number"
                                     name="bedrooms"
                                     id="bedrooms"
                                     value={formData.bedrooms}
@@ -594,7 +590,7 @@ export default function CreateNewListing() {
                             </label>
                             <div className="mt-2">
                                 <input
-                                    type="text"
+                                    type="number"
                                     name="bathrooms"
                                     id="bathrooms"
                                     value={formData.bathrooms}
@@ -621,7 +617,7 @@ export default function CreateNewListing() {
                             </label>
                             <div className="mt-2">
                                 <input
-                                    type="text"
+                                    type="number"
                                     name="sqft"
                                     id="sqft"
                                     value={formData.sqft}

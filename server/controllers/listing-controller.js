@@ -54,6 +54,7 @@ export const findSaleListings = catchAsync(async (req, res) => {
         minBaths,
     } = req.query;
 
+    console.log();
     const priceRange = { min: minPrice, max: maxPrice };
     const sizeRange = { min: minSize, max: maxSize };
     const homeAgeRange = { min: minHomeAge, max: maxHomeAge };

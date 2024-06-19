@@ -6,9 +6,9 @@ function DropdownMultiple({ options, buttonLabel, onSelectionChange, buttonClass
     const [checkedState, setCheckedState] = useState(
         new Array(options.length).fill(false)
     );
-    useEffect(() => {
-        console.log('checkedState updated:', checkedState);
-    }, [checkedState]);
+    // useEffect(() => {
+    //     console.log('checkedState updated:', checkedState);
+    // }, [checkedState]);
     const dropdownRef = useRef(null);
 
     // specifically handle pets options
