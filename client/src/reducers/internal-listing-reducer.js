@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
-    findAllListingsThunk,
     findListingByIdThunk,
     createListingThunk,
     updateListingThunk,
     deleteListingThunk,
     findListingByCurrentUserThunk,
+    findRentalListingsThunk,
+    findSaleListingsThunk,
 } from '../services/internal-listing/internal-listing-thunk.js';
 import { updateUserInAuth } from './auth-reducer.js';
 import { useDispatch } from 'react-redux';
@@ -16,25 +17,12 @@ const internalListingSlice = createSlice({
         listings: [], // array to store multiple listings. It starts as an empty array and gets populated through findAllListingsThunk
         currentListing: null, // hold the data of a single listing when fetched with findListingByIdThunk or when editing a listing.
         userListings: null, // hold the data of the corresponding user's created listings
+        foundListings: [], // hold the data of the corresponding filtered listings
         loading: false,
         error: null,
     },
     reducers: {},
     extraReducers: (builder) => {
-        // Find All Internal Listings
-        builder.addCase(findAllListingsThunk.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        });
-        builder.addCase(findAllListingsThunk.fulfilled, (state, action) => {
-            state.loading = false;
-            state.listings = action.payload.listings;
-            console.log(action.payload);
-        });
-        builder.addCase(findAllListingsThunk.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error.message;
-        });
         // findListingByIdThunk
         builder.addCase(findListingByIdThunk.pending, (state) => {
             state.loading = true;
@@ -46,6 +34,40 @@ const internalListingSlice = createSlice({
             // console.log(action.payload);
         });
         builder.addCase(findListingByIdThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        // findRentalListingsThunk
+        builder.addCase(findRentalListingsThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(findRentalListingsThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.foundListings = action.payload;
+            console.log(
+                'findRentalListingsThunk fulfilled, foundListings in the reducer: ' +
+                    JSON.stringify(state.foundListings)
+            );
+        });
+        builder.addCase(findRentalListingsThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        // findSaleListingsThunk
+        builder.addCase(findSaleListingsThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(findSaleListingsThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.foundListings = action.payload;
+            console.log(
+                'findSaleListingsThunk fulfilled, foundListings in the reducer: ' +
+                    JSON.stringify(state.foundListings)
+            );
+        });
+        builder.addCase(findSaleListingsThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
         });

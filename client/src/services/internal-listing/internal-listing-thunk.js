@@ -1,19 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import * as ListingService from './internal-listing-service.js';
 
-export const findAllListingsThunk = createAsyncThunk(
-    'internal-listing/findAll',
-    async (_, { rejectWithValue }) => {
-        try {
-            const listingsPayload = await ListingService.findAllListings();
-            return listingsPayload;
-        } catch (error) {
-            console.error('Error in thunk findAll listings:', error);
-            return rejectWithValue(error.message);
-        }
-    }
-);
-
 export const findListingByIdThunk = createAsyncThunk(
     'internal-listing/findById',
     async (listingId, { rejectWithValue }) => {
@@ -23,6 +10,36 @@ export const findListingByIdThunk = createAsyncThunk(
         } catch (error) {
             console.error('Error in thunk find listing by ID:', error);
             return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const findRentalListingsThunk = createAsyncThunk(
+    'internal-listing/findRentalListings',
+    async (filters, { rejectWithValue }) => {
+        try {
+            const foundRentalListingPayload = await ListingService.findRentalListings(
+                filters
+            );
+            return foundRentalListingPayload;
+        } catch (error) {
+            console.error('Error in thunk find rental listings:', error);
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
+export const findSaleListingsThunk = createAsyncThunk(
+    'internal-listing/findSaleListings',
+    async (filters, { rejectWithValue }) => {
+        try {
+            const foundSaleListingPayload = await ListingService.findSaleListings(
+                filters
+            );
+            return foundSaleListingPayload;
+        } catch (error) {
+            console.error('Error in thunk find sale listings:', error);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );

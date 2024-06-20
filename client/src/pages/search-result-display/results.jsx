@@ -9,15 +9,15 @@ import {
 import ListingCard from './listingCard.jsx';
 import { setCurrentPage } from '../../reducers/apartmentAPI-reducer.js';
 import MapComponent from './mapCluster.jsx';
-import DropdownMultiple from '../../components/DropDownMultiple.jsx';
-import DropdownSingle from '../../components/DropDownSingle.jsx';
-import { formatRange, formatPets } from '../../utils/formatUtils.jsx';
-import DropdownRange from '../../components/DropDownRange.jsx';
+import { formatRange, formatPets, formatPetsString } from '../../utils/formatUtils.jsx';
 import Pagination from '../../components/Pagination.jsx';
 import SearchBarLocation from '../search-bar/searchBarLocation.jsx';
 import SearchBarRentals from '../search-bar/searchBarRentals.jsx';
 import SearchBarSales from '../search-bar/searchBarSales.jsx';
-import { APILoader, PlacePicker } from '@googlemaps/extended-component-library/react';
+import {
+    findRentalListingsThunk,
+    findSaleListingsThunk,
+} from '../../services/internal-listing/internal-listing-thunk.js';
 
 const ResultPage = () => {
     const searchLocation = useLocation();
@@ -25,18 +25,34 @@ const ResultPage = () => {
 
     const [location, setLocation] = useState('');
     const [category, setCategory] = useState('for-sale');
+
     const [priceRange, setPriceRange] = useState('');
+    const [minPrice, setMinPrice] = useState(null);
+    const [maxPrice, setMaxPrice] = useState(null);
+
     const [sizeRange, setSizeRange] = useState('');
+    const [minSize, setMinSize] = useState(null);
+    const [maxSize, setMaxSize] = useState(null);
+
     const [homeAgeRange, setHomeAgeRange] = useState('');
+    const [minHomeAge, setMinHomeAge] = useState(null);
+    const [maxHomeAge, setMaxHomeAge] = useState(null);
+
     const [selectedBeds, setSelectedBeds] = useState('');
     const [selectedBaths, setSelectedBaths] = useState('');
+
     const [selectedPets, setSelectedPets] = useState([]);
+    // const [selectedPetsString, setSelectedPetsString] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { listings, totalRecords, currentPage, resultsPerPage } = useSelector(
         (state) => state.apartments
+    );
+
+    const foundListings = useSelector(
+        (state) => state['internal-listings'].foundListings
     );
 
     useEffect(() => {
@@ -60,7 +76,8 @@ const ResultPage = () => {
 
     const fetchPageData = (pageNum) => {
         let params = { location, page: pageNum };
-
+        let filters = { location };
+        // FOR SALE
         if (category === 'for-sale') {
             params = {
                 ...params,
@@ -70,9 +87,28 @@ const ResultPage = () => {
                 bedrooms: selectedBeds,
                 bathrooms: selectedBaths,
             };
+            console.log('category: for-sale');
+            console.log('params: ' + JSON.stringify(params));
+            dispatch(fetchSalesThunk(params)); // Dispatching the first thunk for sales
+
+            // define filters for the internal listings
+            filters = {
+                ...filters,
+                minPrice,
+                maxPrice,
+                minSize,
+                maxSize,
+                minHomeAge,
+                maxHomeAge,
+                minBeds: Number(selectedBeds),
+                minBaths: Number(selectedBaths),
+            };
+            console.log(
+                'filters for internal listings -- sale: ' + JSON.stringify(filters)
+            );
+            dispatch(findSaleListingsThunk(filters)); // Dispatching the second thunk for sales
         } else if (category === 'for-rent') {
-            // format the pets
-            const formattedPets = formatPets(selectedPets);
+            const formattedPets = formatPets(selectedPets); // Assuming formatPets is a function defined elsewhere
             params = {
                 ...params,
                 prices: priceRange,
@@ -81,11 +117,26 @@ const ResultPage = () => {
                 bathrooms: selectedBaths,
                 pets: formattedPets,
             };
+            console.log('category: for-rent');
+            console.log('params: ' + JSON.stringify(params));
+            dispatch(fetchRentalsThunk(params)); // Dispatching the first thunk for rentals
+            // for internal listings
+            filters = {
+                ...filters,
+                minPrice,
+                maxPrice,
+                minSize,
+                maxSize,
+                minBeds: Number(selectedBeds),
+                minBaths: Number(selectedBaths),
+                petPolicy: formatPetsString(selectedPets),
+            };
+            console.log(
+                'filters for internal listings -- rental: ' + JSON.stringify(filters)
+            );
+            dispatch(findRentalListingsThunk(filters)); // Dispatching the second thunk for rentals
         }
-        console.log('category: ' + category);
-        console.log('params: ' + JSON.stringify(params));
-        const action = category === 'for-sale' ? fetchSalesThunk : fetchRentalsThunk;
-        dispatch(action(params));
+
         navigate('/results', { state: { location, category } });
     };
 
@@ -111,19 +162,29 @@ const ResultPage = () => {
     const priceRangeChangeHandler = (range) => {
         const formattedPriceRange = formatRange(range); // Use the utility function to format the price range
         setPriceRange(formattedPriceRange); // Update the state with the new formatted price range
+        // internal listings
+        setMinPrice(Number(range.min));
+        setMaxPrice(Number(range.max));
     };
 
     const sizeRangeChangeHandler = (range) => {
         const formattedSizeRange = formatRange(range);
         setSizeRange(formattedSizeRange);
+        // internal listings
+        setMinSize(Number(range.min));
+        setMaxSize(Number(range.max));
     };
 
     const homeAgeRangeChangeHandler = (range) => {
         const formattedHomeAgeRange = formatRange(range);
-        setSizeRange(formattedHomeAgeRange);
+        setHomeAgeRange(formattedHomeAgeRange);
+        // internal listings
+        setMinHomeAge(Number(range.min));
+        setMaxHomeAge(Number(range.max));
     };
 
     const petChangeHandler = (selectedOptions) => {
+        // console.log('petChangeHandler:' + selectedOptions);
         setSelectedPets(selectedOptions);
     };
 

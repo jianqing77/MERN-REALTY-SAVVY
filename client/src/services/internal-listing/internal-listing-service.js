@@ -1,26 +1,9 @@
 import axios from 'axios';
+import { cleanFilters } from '../../utils/formatUtils';
 
 const SERVER_API_URL = import.meta.env.VITE_SERVER_API_URL;
 const LISTING_URL = `${SERVER_API_URL}/listing`; // configure axios to support cookies for passing credentials
 const api = axios.create({ withCredentials: true });
-
-export const findAllListings = async () => {
-    try {
-        const server_res = await api.get(LISTING_URL);
-        return {
-            success: true,
-            listings: server_res.data.data,
-            results: server_res.data.results,
-        };
-    } catch (error) {
-        console.error('Error fetching listings:', error);
-        return {
-            success: false,
-            listings: [],
-            error: error.response?.data || error.message,
-        };
-    }
-};
 
 export const findListingById = async (listingId) => {
     try {
@@ -30,6 +13,40 @@ export const findListingById = async (listingId) => {
     } catch (error) {
         console.error('Error fetching listing by ID:', error);
         throw error;
+    }
+};
+
+export const findRentalListings = async (filters) => {
+    try {
+        // Construct the query string based on filters provided
+        const queryParams = new URLSearchParams(cleanFilters(filters)).toString();
+        console.log(
+            'cleaned queryParams in the service for rental listings: ' + queryParams
+        );
+        const server_res = await api.get(`${LISTING_URL}/rental?${queryParams}`);
+        return server_res.data.data;
+    } catch (error) {
+        console.error('Error fetching rental listings:', error);
+        throw error;
+    }
+};
+
+export const findSaleListings = async (filters) => {
+    try {
+        const queryParams = new URLSearchParams(cleanFilters(filters)).toString();
+        console.log(
+            'cleaned queryParams in the service for sales listings: ' + queryParams
+        );
+
+        const server_res = await api.get(`${LISTING_URL}/sale?${queryParams}`);
+        return server_res.data.data;
+    } catch (error) {
+        console.error('Error fetching sale listings:', error);
+        return {
+            success: false,
+            listings: [],
+            error: error.response?.data || error.message,
+        };
     }
 };
 

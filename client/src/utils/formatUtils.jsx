@@ -1,14 +1,35 @@
 import states from 'states-us';
 
+export function cleanFilters(filters) {
+    const cleanObject = {};
+    Object.keys(filters).forEach((key) => {
+        // Check for null and possibly other falsy values you want to exclude
+        if (filters[key] !== null && filters[key] !== undefined && filters[key] !== '') {
+            cleanObject[key] = filters[key];
+        }
+    });
+    return cleanObject;
+}
+
 // ================================ RESULTS ================================
 const petMapping = {
-    Dog: 'dogs',
-    Cat: 'cats',
+    Dogs: 'dogs',
+    Cats: 'cats',
     'No Pets Allowed': 'no_pets_allowed',
+};
+
+const petMappingInternal = {
+    Dogs: 'Dogs',
+    Cats: 'Cats',
+    'No Pets Allowed': 'No Pets Allowed',
 };
 
 export function formatPets(pets) {
     return pets.map((pet) => petMapping[pet.trim()]).join(',');
+}
+
+export function formatPetsString(pets) {
+    return pets.map((pet) => petMappingInternal[pet.trim()]).join(',');
 }
 
 export function formatRange(range) {
