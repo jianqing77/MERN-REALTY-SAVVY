@@ -42,7 +42,6 @@ const ResultPage = () => {
     const [selectedBaths, setSelectedBaths] = useState('');
 
     const [selectedPets, setSelectedPets] = useState([]);
-    // const [selectedPetsString, setSelectedPetsString] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -87,10 +86,7 @@ const ResultPage = () => {
                 bedrooms: selectedBeds,
                 bathrooms: selectedBaths,
             };
-            console.log('category: for-sale');
-            console.log('params: ' + JSON.stringify(params));
             dispatch(fetchSalesThunk(params)); // Dispatching the first thunk for sales
-
             // define filters for the internal listings
             filters = {
                 ...filters,
@@ -103,9 +99,6 @@ const ResultPage = () => {
                 minBeds: Number(selectedBeds),
                 minBaths: Number(selectedBaths),
             };
-            console.log(
-                'filters for internal listings -- sale: ' + JSON.stringify(filters)
-            );
             dispatch(findSaleListingsThunk(filters)); // Dispatching the second thunk for sales
         } else if (category === 'for-rent') {
             const formattedPets = formatPets(selectedPets); // Assuming formatPets is a function defined elsewhere
@@ -117,8 +110,6 @@ const ResultPage = () => {
                 bathrooms: selectedBaths,
                 pets: formattedPets,
             };
-            console.log('category: for-rent');
-            console.log('params: ' + JSON.stringify(params));
             dispatch(fetchRentalsThunk(params)); // Dispatching the first thunk for rentals
             // for internal listings
             filters = {
@@ -131,9 +122,6 @@ const ResultPage = () => {
                 minBaths: Number(selectedBaths),
                 petPolicy: formatPetsString(selectedPets),
             };
-            console.log(
-                'filters for internal listings -- rental: ' + JSON.stringify(filters)
-            );
             dispatch(findRentalListingsThunk(filters)); // Dispatching the second thunk for rentals
         }
 

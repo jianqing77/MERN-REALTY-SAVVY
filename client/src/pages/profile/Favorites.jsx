@@ -16,6 +16,7 @@ export default function Favorites() {
     // console.log(JSON.stringify(profile));
 
     const { likedExternalListings } = useSelector((state) => state.user);
+
     useEffect(() => {
         if (currentUser && currentUser._id) {
             dispatch(fetchLikedExternalListingsThunk({ userId: currentUser._id }));

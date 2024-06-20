@@ -6,6 +6,8 @@ import WelcomePic from '../assets/auth-2.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLoadScript, Autocomplete } from '@react-google-maps/api';
 import ImageTiles from '../components/ImageTiles.jsx';
+import LocationInput from '../components/LocationInput.jsx';
+
 import {
     fetchRentalsThunk,
     fetchSalesThunk,
@@ -71,6 +73,7 @@ const Home = () => {
                 }}
             />
             <div className="absolute inset-0 bg-dark-200 bg-opacity-30 z-20"></div>
+            {/* <LocationInput /> */}
             <div
                 className="min-h-screen flex justify-center items-center"
                 style={{ zIndex: 30, position: 'relative' }}>

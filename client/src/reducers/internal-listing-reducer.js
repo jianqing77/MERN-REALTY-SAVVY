@@ -45,10 +45,10 @@ const internalListingSlice = createSlice({
         builder.addCase(findRentalListingsThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.foundListings = action.payload;
-            console.log(
-                'findRentalListingsThunk fulfilled, foundListings in the reducer: ' +
-                    JSON.stringify(state.foundListings)
-            );
+            // console.log(
+            //     'findRentalListingsThunk fulfilled, foundListings in the reducer: ' +
+            //         JSON.stringify(state.foundListings)
+            // );
         });
         builder.addCase(findRentalListingsThunk.rejected, (state, action) => {
             state.loading = false;
@@ -62,10 +62,10 @@ const internalListingSlice = createSlice({
         builder.addCase(findSaleListingsThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.foundListings = action.payload;
-            console.log(
-                'findSaleListingsThunk fulfilled, foundListings in the reducer: ' +
-                    JSON.stringify(state.foundListings)
-            );
+            // console.log(
+            //     'findSaleListingsThunk fulfilled, foundListings in the reducer: ' +
+            //         JSON.stringify(state.foundListings)
+            // );
         });
         builder.addCase(findSaleListingsThunk.rejected, (state, action) => {
             state.loading = false;

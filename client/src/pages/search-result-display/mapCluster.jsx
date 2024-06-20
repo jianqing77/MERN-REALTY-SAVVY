@@ -1,10 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import svgMarker from '../../assets/map-marker.svg';
-import { formatPrice, formatSquareFeet } from '../../utils/formatUtils.jsx';
 import InfoWindowComponent from './infoWindow.jsx';
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const containerStyle = {
     width: '100%', // Takes the full width of the parent container
@@ -39,7 +37,6 @@ const MapComponent = ({ listings }) => {
     }, [listings]);
 
     return (
-        // <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
         <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={11}>
             {listings.map(
                 (listing) =>
@@ -64,7 +61,6 @@ const MapComponent = ({ listings }) => {
                 />
             )}
         </GoogleMap>
-        // </LoadScript>
     );
 };
 

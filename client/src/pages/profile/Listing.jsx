@@ -86,11 +86,11 @@ export default function Listings() {
                                             className="sticky top-0 z-10 hidden border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell">
                                             Last Modified
                                         </th>
-
+                                        {/* Save space for the view details column */}
                                         <th
                                             scope="col"
                                             className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8">
-                                            <span className="sr-only">Edit</span>
+                                            <span className="sr-only"></span>
                                         </th>
                                     </tr>
                                 </thead>

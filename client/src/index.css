@@ -27,3 +27,16 @@
 .logo-brown {
     color: #938269;
 }
+
+.autocomplete-container {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    gap: 10px;
+}
+
+.autocomplete-result {
+    height: 1rem;
+    padding: 8px;
+}
