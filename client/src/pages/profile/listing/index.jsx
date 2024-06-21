@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { findListingByCurrentUserThunk } from '../../services/internal-listing/internal-listing-thunk';
-import { formatDate, formatPrice } from '../../utils/formatUtils.jsx';
+import { findListingByCurrentUserThunk } from '../../../services/internal-listing/internal-listing-thunk';
+import { formatDate, formatPrice } from '../../../utils/formatUtils.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -16,11 +16,10 @@ export default function Listings() {
         navigate('new');
     };
 
-    // const state = useSelector((state) => state);
-    // console.log(state);
+    const ViewDetailsHandler = () => {};
 
     const userListings = useSelector((state) => state['internal-listings'].userListings);
-    console.log('user listings: ' + userListings);
+    // console.log('user listings: ' + userListings);
     useEffect(() => {
         dispatch(findListingByCurrentUserThunk());
     }, [dispatch]);
@@ -33,7 +32,7 @@ export default function Listings() {
                         My Listings
                     </h1>
                     <p className="mt-2 text-sm text-gray-400">
-                        A list of all the listings you have posted.
+                        A list of all the listings you have created.
                     </p>
                 </div>
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -170,9 +169,6 @@ export default function Listings() {
                                                     href="#"
                                                     className="text-dark-100 hover:text-primary-200">
                                                     View Details
-                                                    <span className="sr-only">
-                                                        , {listing.title}
-                                                    </span>
                                                 </a>
                                             </td>
                                         </tr>

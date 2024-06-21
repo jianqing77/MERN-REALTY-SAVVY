@@ -11,8 +11,8 @@ import {
     HeartIcon,
     ListBulletIcon,
 } from '@heroicons/react/24/outline';
-import Listings from './Listing.jsx';
-import CreateNewListing from '../listing/createNewListing.jsx';
+import Listings from './listing/index.jsx';
+import CreateNewListing from './listing/CreateNewListing.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');

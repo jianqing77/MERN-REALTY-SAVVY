@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import FirebaseApp from '../../config/firebase';
+import FirebaseApp from '../../../config/firebase';
 
 export default function useImageHandler() {
     const [imgFiles, setImgFiles] = useState([]);

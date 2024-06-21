@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import Datepicker from 'tailwind-datepicker-react';
-import { createListingThunk } from '../../services/internal-listing/internal-listing-thunk';
+import { createListingThunk } from '../../../services/internal-listing/internal-listing-thunk.js';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useFormData from './useFormData.jsx';
 import useImageHandler from './useImageHandler.jsx';
 import LeaseForm from './LeaseForm.jsx';
 import SaleForm from './SaleForm.jsx';
-import DropdownSingle from '../../components/DropDownSingle.jsx';
+import DropdownSingle from '../../../components/DropDownSingle.jsx';
 
 export default function CreateNewListing() {
     const navigate = useNavigate();

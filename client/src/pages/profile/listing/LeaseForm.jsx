@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import DropdownMultiple from '../../components/DropDownMultiple';
+import DropdownMultiple from '../../../components/DropDownMultiple';
 import { useEffect, useState } from 'react';
 
 export default function LeaseForm({ formData, formChangeHandler }) {
