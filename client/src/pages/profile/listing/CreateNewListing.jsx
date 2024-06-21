@@ -10,7 +10,7 @@ import LeaseForm from './LeaseForm.jsx';
 import SaleForm from './SaleForm.jsx';
 import DropdownSingle from '../../../components/DropDownSingle.jsx';
 
-export default function CreateNewListing() {
+export default function CreateNewListingPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 

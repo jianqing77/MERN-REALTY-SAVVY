@@ -12,7 +12,8 @@ import {
     ListBulletIcon,
 } from '@heroicons/react/24/outline';
 import Listings from './listing/index.jsx';
-import CreateNewListing from './listing/CreateNewListing.jsx';
+import CreateNewListingPage from './listing/CreateNewListing.jsx';
+import ListingDetailsPage from './listing/ListingDetail.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -77,7 +78,11 @@ export default function Profile() {
                     <Route path="notifications" element={<Notifications />} />
                     {/* listings and new listing routes as siblings, not  nested route */}
                     <Route path="listings" element={<Listings />} />
-                    <Route path="listings/new" element={<CreateNewListing />} />
+                    <Route path="listings/new" element={<CreateNewListingPage />} />
+                    <Route
+                        path="listings/details/:listingId"
+                        element={<ListingDetailsPage />}
+                    />
                     <Route path="*" element={<General />} />
                     {/* Fallback route: matches any URL path that hasn't been matched by preceding routes */}
                 </Routes>

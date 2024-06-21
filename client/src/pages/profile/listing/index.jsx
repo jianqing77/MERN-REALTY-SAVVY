@@ -12,11 +12,13 @@ export default function Listings() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const CreateNewListingHandler = () => {
+    const addNewListingHandler = () => {
         navigate('new');
     };
 
-    const ViewDetailsHandler = () => {};
+    const viewDetailsHandler = (listingId) => {
+        navigate(`details/${listingId}`);
+    };
 
     const userListings = useSelector((state) => state['internal-listings'].userListings);
     // console.log('user listings: ' + userListings);
@@ -38,7 +40,7 @@ export default function Listings() {
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                     <button
                         type="button"
-                        onClick={CreateNewListingHandler}
+                        onClick={addNewListingHandler}
                         className="block rounded-md bg-dark-100 px-3 py-2 text-center text-sm font-semibold text-primary-100 shadow-sm hover:bg-yellow-500 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
                         Add New Listing
                     </button>
@@ -165,11 +167,14 @@ export default function Listings() {
                                                         : '',
                                                     'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8'
                                                 )}>
-                                                <a
-                                                    href="#"
+                                                {/* add () => to avoid immediate function call */}
+                                                <button
+                                                    onClick={() =>
+                                                        viewDetailsHandler(listing._id)
+                                                    }
                                                     className="text-dark-100 hover:text-primary-200">
                                                     View Details
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
