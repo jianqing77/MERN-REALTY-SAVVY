@@ -28,16 +28,16 @@ export default function Listings() {
 
     return (
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
-            <div className="sm:flex sm:items-center">
-                <div className="sm:flex-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="flex-auto">
                     <h1 className="text-base font-semibold leading-6 text-gray-900">
                         My Listings
                     </h1>
-                    <p className="mt-2 text-sm text-gray-400">
+                    <p className="mt-2 hidden text-sm text-gray-400 sm:block">
                         A list of all the listings you have created.
                     </p>
                 </div>
-                <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                <div className="mt-4 sm:ml-16">
                     <button
                         type="button"
                         onClick={addNewListingHandler}
@@ -64,7 +64,7 @@ export default function Listings() {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="sticky top-0 z-10 hidden border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell ">
+                                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
                                             Listing Type
                                         </th>
                                         <th
@@ -74,7 +74,7 @@ export default function Listings() {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+                                            className="sticky top-0 z-10 hidden border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell">
                                             Price
                                         </th>
                                         <th
@@ -84,7 +84,7 @@ export default function Listings() {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="sticky top-0 z-10 hidden border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell">
+                                            className="sticky top-0 z-10 hidden border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter lg:table-cell">
                                             Last Modified
                                         </th>
                                         {/* Save space for the view details column */}
@@ -112,7 +112,7 @@ export default function Listings() {
                                                     idx !== userListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
-                                                    'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
+                                                    'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
                                                 )}>
                                                 {listing.listingType}
                                             </td>
@@ -121,7 +121,7 @@ export default function Listings() {
                                                     idx !== userListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
-                                                    'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
+                                                    'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-center'
                                                 )}>
                                                 {listing.propertyType}
                                             </td>
@@ -130,7 +130,7 @@ export default function Listings() {
                                                     idx !== userListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
-                                                    'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
+                                                    'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-center'
                                                 )}>
                                                 {formatPrice(listing.price)}
                                             </td>
@@ -148,7 +148,7 @@ export default function Listings() {
                                                     idx !== userListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
-                                                    'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-center'
+                                                    'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
                                                 )}>
                                                 {listing.updatedAt
                                                     ? new Date(
