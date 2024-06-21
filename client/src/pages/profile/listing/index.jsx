@@ -26,6 +26,11 @@ export default function Listings() {
         dispatch(findListingByCurrentUserThunk());
     }, [dispatch]);
 
+    const listingTypeDescriptions = {
+        'for-rent': 'For Rent',
+        'for-sale': 'For Sale',
+    };
+
     return (
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-center">
@@ -114,7 +119,9 @@ export default function Listings() {
                                                         : '',
                                                     'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
                                                 )}>
-                                                {listing.listingType}
+                                                {listingTypeDescriptions[
+                                                    listing.listingType
+                                                ] || listing.listingType}
                                             </td>
                                             <td
                                                 className={classNames(
@@ -150,15 +157,7 @@ export default function Listings() {
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
                                                 )}>
-                                                {listing.updatedAt
-                                                    ? new Date(
-                                                          listing.updatedAt
-                                                      ).toLocaleDateString('en-US', {
-                                                          year: 'numeric',
-                                                          month: '2-digit',
-                                                          day: '2-digit',
-                                                      })
-                                                    : 'No Date'}
+                                                {formatDate(listing.updatedAt)}
                                             </td>
                                             <td
                                                 className={classNames(
