@@ -4,6 +4,7 @@ import * as ListingService from './internal-listing-service.js';
 export const findListingByIdThunk = createAsyncThunk(
     'internal-listing/findById',
     async (listingId, { rejectWithValue }) => {
+        console.log('findListingByIdThunk was called');
         try {
             const listingPayload = await ListingService.findListingById(listingId);
             return listingPayload;

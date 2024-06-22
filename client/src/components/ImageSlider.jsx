@@ -1,28 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { findListingById } from '../../../services/internal-listing/internal-listing-service';
-import { findListingByIdThunk } from '../../../services/internal-listing/internal-listing-thunk';
-import { formatDate, formatPrice, formatSquareFeet } from '../../../utils/formatUtils';
 
-export default function ListingDetailsPage() {
-    const { listingId } = useParams();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const currentListing = useSelector(
-        (state) => state['internal-listings'].currentListing
-    );
-
-    useEffect(() => {
-        if (listingId) {
-            dispatch(findListingByIdThunk(listingId));
-        }
-    }, [listingId, dispatch]);
-
-    // button to back to the listing list
-    const backToAllListingHandler = () => {
-        navigate('/profile/listings');
-    };
+export default function ImageSlider() {
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const imageUrls = currentListing.media.imageUrls;
@@ -61,7 +38,7 @@ export default function ListingDetailsPage() {
             <div className="mt-8 flow-root">
                 {/* Image Display */}
                 <div className="relative w-full">
-                    <div className="relative h-36 overflow-hidden rounded-lg md:h-72 mb-2">
+                    <div className="relative h-20 overflow-hidden rounded-lg md:h-36 mb-2">
                         {imageUrls.map((url, index) => (
                             <div
                                 key={index}
@@ -76,7 +53,6 @@ export default function ListingDetailsPage() {
                             </div>
                         ))}
                     </div>
-                    {/* Buttons for slider */}
                     <div className="absolute inset-0 flex items-center justify-between px-4">
                         <button
                             type="button"
@@ -126,34 +102,8 @@ export default function ListingDetailsPage() {
                         </button>
                     </div>
                 </div>
-                <p>Title: {currentListing.title}</p>
-                <p>Description: {currentListing.description}</p>
-                <p>Listing Type: {currentListing.propertyType}</p>
-                <p>
-                    {currentListing.listingType === 'for-rent'
-                        ? `Pet Policy: ${currentListing.petPolicy}`
-                        : `Home Age: ${currentListing.homeAge}`}
-                </p>
+                </div>
+                </div>
 
-                <p>Address: {currentListing.location.address}</p>
-                <p>City: {currentListing.location.city}</p>
-                <p>State: {currentListing.location.state}</p>
-                <p>Zip Code: {currentListing.location.zipCode}</p>
-                <p>Price: {formatPrice(currentListing.price)}</p>
-                <p>Bedrooms: {currentListing.features.bedrooms}</p>
-                <p>Bathrooms: {currentListing.features.bathrooms}</p>
-                <p>Created At: {formatDate(currentListing.createdAt)}</p>
-                <p>Last Update: {formatDate(currentListing.updatedAt)}</p>
-                <p>Agent Company: {currentListing.contactInfo.agentCompany}</p>
-                <p>Agent Name: {currentListing.contactInfo.agentName}</p>
-                <p>
-                    Agent Phone:{' '}
-                    {currentListing.contactInfo.agentPhone
-                        ? currentListing.contactInfo.agentPhone
-                        : 'Not Provided'}
-                </p>
-                <p>Agent Email:{currentListing.contactInfo.email}</p>
-            </div>
-        </div>
-    );
-}
+
+} 
