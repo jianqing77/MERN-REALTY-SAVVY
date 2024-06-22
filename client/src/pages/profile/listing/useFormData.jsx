@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-export default function useFormData() {
-    const [formData, setFormData] = useState({
+export default function useFormData(initialValues = {}) {
+    const defaultValues = {
         title: '',
         listingType: 'for-rent', // default
         description: '',
@@ -24,8 +24,9 @@ export default function useFormData() {
         imageUrls: [],
         refUrl: '',
         email: '',
-    });
+    };
 
+    const [formData, setFormData] = useState({ ...defaultValues, ...initialValues });
     const [formErrors, setFormErrors] = useState({});
 
     const formChangeHandler = (e) => {

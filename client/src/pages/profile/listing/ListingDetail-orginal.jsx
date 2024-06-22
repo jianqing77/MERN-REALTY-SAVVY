@@ -13,13 +13,12 @@ export default function ListingDetailsPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isEditing, setIsEditing] = useState(false);
-
     const currentListing = useSelector(
         (state) => state['internal-listings'].currentListing
     );
 
     const { listingId } = useParams();
+    // console.log('listing Id: ' + listingId);
 
     useEffect(() => {
         dispatch(findListingByIdThunk(listingId));
@@ -57,21 +56,13 @@ export default function ListingDetailsPage() {
                         A list of all the listings you have created.
                     </p>
                 </div>
-
-                <div className="mt-4 sm:ml-16 flex items-center space-x-4">
+                <div className="mt-4 sm:ml-16">
                     <button
                         type="button"
                         onClick={backToAllListingHandler}
-                        className="sm:w-32 block rounded-md bg-dark-100 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm font-semibold text-primary-100 shadow-sm hover:bg-yellow-500 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
-                        Back
+                        className="block rounded-md bg-dark-100 px-3 py-2 text-center text-sm font-semibold text-primary-100 shadow-sm hover:bg-yellow-500 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
+                        Back To All Listings
                     </button>
-                    {!isEditing && (
-                        <button
-                            onClick={() => setIsEditing(true)}
-                            className="sm:w-32 rounded-md bg-dark-100 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm font-semibold text-primary-100 shadow-sm hover:bg-yellow-500 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
-                            Edit
-                        </button>
-                    )}
                 </div>
             </div>
             <div className="mt-8 flow-root">
@@ -155,10 +146,10 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="title"
-                                className="block font-semibold leading-6 text-gray-900">
+                                className="block font-medium leading-6 text-gray-900">
                                 Property Title
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-">
                                 <p>{currentListing.title}</p>
                             </div>
                         </div>
@@ -166,7 +157,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="building-type"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Listing Type
                             </label>
                             <div className="mt-2">
@@ -177,7 +168,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="building-type"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Building Type
                             </label>
                             <div className="mt-2">
@@ -188,7 +179,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="availableDate"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Available Date
                             </label>
                             <div className="mt-2">
@@ -201,7 +192,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="price"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Price
                             </label>
                             <div className="mt-2">
@@ -212,7 +203,7 @@ export default function ListingDetailsPage() {
                         <div className="col-span-full">
                             <label
                                 htmlFor="description"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Description
                             </label>
                             <div className="mt-2">
@@ -235,7 +226,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="city"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 City
                             </label>
                             <div className="mt-2">
@@ -246,7 +237,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-4">
                             <label
                                 htmlFor="state"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 State
                             </label>
                             <div className="mt-2">
@@ -257,7 +248,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="address"
-                                className="block font-semibold leading-6 text-gray-900">
+                                className="block font-medium leading-6 text-gray-900">
                                 Street Address
                             </label>
                             <div className="mt-2">
@@ -267,7 +258,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="aptOrSuite"
-                                className="block font-semibold leading-6 text-gray-900">
+                                className="block font-medium leading-6 text-gray-900">
                                 Apt, Suite Number
                             </label>
                             <div className="mt-2">
@@ -280,7 +271,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="zipCode"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Zip Code
                             </label>
                             <div className="mt-2">
@@ -303,7 +294,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="bedrooms"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Bedrooms
                             </label>
                             <div className="mt-2">{currentListing.features.bedrooms}</div>
@@ -312,7 +303,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-4">
                             <label
                                 htmlFor="bathrooms"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Bathrooms
                             </label>
                             <div className="mt-2">
@@ -323,11 +314,13 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="sqft"
-                                className="block font-semibold leading-6 text-gray-900">
+                                className="block font-medium leading-6 text-gray-900">
                                 Square Footage
                             </label>
                             <div className="mt-2">
-                                <span>{currentListing.features.sqft} </span>
+                                <span>
+                                    {formatSquareFeet(currentListing.features.sqft)}{' '}
+                                </span>
                             </div>
                         </div>
                         {/* Specific Features */}
@@ -335,7 +328,7 @@ export default function ListingDetailsPage() {
                             <div className="sm:col-span-3">
                                 <label
                                     htmlFor="petPolicy"
-                                    className="block font-semibold leading-6 text-gray-900">
+                                    className="block font-medium leading-6 text-gray-900">
                                     Pets
                                 </label>
                                 <div className="mt-2">
@@ -370,7 +363,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="agentCompany"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Agent Company
                             </label>
                             <div className="mt-2">
@@ -381,7 +374,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="agentName"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Agent Name
                             </label>
                             <div className="mt-2">
@@ -392,7 +385,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="agentPhone"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Phone Number
                             </label>
                             <div className="mt-2">
@@ -405,7 +398,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="agentEmail"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Email
                             </label>
                             <div className="mt-2">
@@ -426,7 +419,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="createdAt"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Creation Date
                             </label>
                             <div className="mt-2">
@@ -436,7 +429,7 @@ export default function ListingDetailsPage() {
                         <div className="sm:col-span-3">
                             <label
                                 htmlFor="createdAt"
-                                className="block text-sm font-semibold leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-gray-900">
                                 Last Update
                             </label>
                             <div className="mt-2">
