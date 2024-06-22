@@ -101,6 +101,7 @@ export default function CreateNewListingPage() {
             petPolicy: formData.petPolicy,
             location: {
                 address: formData.address,
+                aptOrSuite: formData.aptOrSuite,
                 city: formData.city,
                 state: formData.state,
                 zipCode: formData.zipCode,
@@ -155,18 +156,8 @@ export default function CreateNewListingPage() {
                                 htmlFor="listingType"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Listing Type
+                                <span className="text-gray-900">*</span>
                             </label>
-                            {/* <div className="mt-2">
-                                <select
-                                    id="listingType"
-                                    name="listingType"
-                                    value={formData.listingType}
-                                    onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
-                                    <option>for-rent</option>
-                                    <option>for-sale</option>
-                                </select>
-                            </div> */}
                             <DropdownSingle
                                 label="listingType"
                                 initialValue="for-rent"
@@ -194,6 +185,7 @@ export default function CreateNewListingPage() {
                                 htmlFor="title"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Property Title
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -243,6 +235,7 @@ export default function CreateNewListingPage() {
                                 htmlFor="building-type"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Building Type
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <select
@@ -266,6 +259,7 @@ export default function CreateNewListingPage() {
                                 htmlFor="availableDate"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Available Date
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <div className="relative max-w-sm">
@@ -288,6 +282,7 @@ export default function CreateNewListingPage() {
                                 htmlFor="price"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 Price
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -435,6 +430,7 @@ export default function CreateNewListingPage() {
                                 htmlFor="city"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 City
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <input
@@ -463,6 +459,7 @@ export default function CreateNewListingPage() {
                                 htmlFor="state"
                                 className="block text-sm font-medium leading-6 text-gray-900">
                                 State
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <input
@@ -490,7 +487,8 @@ export default function CreateNewListingPage() {
                             <label
                                 htmlFor="zipCode"
                                 className="block text-sm font-medium leading-6 text-gray-900">
-                                ZipCode
+                                Zip Code
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <input
@@ -518,7 +516,8 @@ export default function CreateNewListingPage() {
                             <label
                                 htmlFor="address"
                                 className="block text-sm font-medium leading-6 text-gray-900">
-                                Street address
+                                Street Address
+                                <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
                                 <input
@@ -527,7 +526,7 @@ export default function CreateNewListingPage() {
                                     id="address"
                                     value={formData.address}
                                     onChange={formChangeHandler}
-                                    autoComplete="street-address"
+                                    autoComplete="address-line1"
                                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
                                         formErrors.address ? 'ring-2 ring-red-500' : ''
                                     }`}
@@ -540,6 +539,25 @@ export default function CreateNewListingPage() {
                                     </p>
                                 )}
                             </p>
+                        </div>
+                        {/* apt or suite */}
+                        <div className="col-span-full">
+                            <label
+                                htmlFor="aptOrSuite"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Apt, Suite Number (Optional)
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                    type="text"
+                                    name="aptOrSuite"
+                                    id="aptOrSuite"
+                                    value={formData.aptOrSuite}
+                                    onChange={formChangeHandler}
+                                    autoComplete="address-line2"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

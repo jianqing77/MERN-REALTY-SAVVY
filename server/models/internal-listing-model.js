@@ -16,7 +16,7 @@ const ListingSchema = new Schema(
             required: true,
         },
         description: { type: String, required: false },
-        availableDate: { type: Date, default: Date.now },
+        availableDate: { type: Date, default: Date.now, required: true },
         price: { type: Number, required: true },
         propertyType: {
             type: String,
@@ -32,6 +32,7 @@ const ListingSchema = new Schema(
         },
         location: {
             address: { type: String, required: true },
+            aptOrSuite: { type: String, required: false },
             city: { type: String, required: true },
             state: { type: String, required: true },
             zipCode: { type: String, required: true },

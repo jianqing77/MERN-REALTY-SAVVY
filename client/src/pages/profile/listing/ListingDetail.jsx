@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { findListingById } from '../../../services/internal-listing/internal-listing-service';
 import { findListingByIdThunk } from '../../../services/internal-listing/internal-listing-thunk';
 import { formatDate, formatPrice, formatSquareFeet } from '../../../utils/formatUtils';
 
 export default function ListingDetailsPage() {
     const { listingId } = useParams();
+    console.log('listing Id: ' + listingId);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(findListingByIdThunk(listingId));
+    }, [listingId, dispatch]);
+
     const currentListing = useSelector(
         (state) => state['internal-listings'].currentListing
     );
-
-    useEffect(() => {
-        if (listingId) {
-            dispatch(findListingByIdThunk(listingId));
-        }
-    }, [listingId, dispatch]);
 
     // button to back to the listing list
     const backToAllListingHandler = () => {
@@ -38,7 +37,7 @@ export default function ListingDetailsPage() {
     };
 
     return (
-        // <p>{listingId}</p>
+        // <p>Listing Id: {listingId}</p>
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="flex-auto">
@@ -126,20 +125,151 @@ export default function ListingDetailsPage() {
                         </button>
                     </div>
                 </div>
-                <p>Title: {currentListing.title}</p>
-                <p>Description: {currentListing.description}</p>
-                <p>Listing Type: {currentListing.propertyType}</p>
+
+                {/* Section 1: General Information */}
+                <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
+                    <div className="grid md:col-span-1">
+                        <h2 className="text-base font-semibold leading-7 text-gray-900">
+                            General Information
+                        </h2>
+                    </div>
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-9 md:col-span-2 text-sm">
+                        {/* Title */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="title"
+                                className="block font-medium leading-6 text-gray-900">
+                                Property Title
+                            </label>
+                            <div className="mt-">
+                                <p>{currentListing.title}</p>
+                            </div>
+                        </div>
+                        {/* Listing Type */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="building-type"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Listing Type
+                            </label>
+                            <div className="mt-2">
+                                <p>{currentListing.listingType}</p>
+                            </div>
+                        </div>
+                        {/* Building Type */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="building-type"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Building Type
+                            </label>
+                            <div className="mt-2">
+                                <p>{currentListing.propertyType}</p>
+                            </div>
+                        </div>
+                        {/* Available date */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="availableDate"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Available Date
+                            </label>
+                            <div className="mt-2">
+                                <div className="relative max-w-sm">
+                                    <p>{formatDate(currentListing.availableDate)}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Price */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="price"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Price
+                            </label>
+                            <div className="mt-2">
+                                <p>{formatPrice(currentListing.price)}</p>
+                            </div>
+                        </div>
+                        {/* description */}
+                        <div className="col-span-full">
+                            <label
+                                htmlFor="description"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Description
+                            </label>
+                            <div className="mt-2">
+                                <p>{currentListing.description}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* Section 2: Features */}
+                <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
+                    <div className="grid md:col-span-1">
+                        <h2 className="text-base font-semibold leading-7 text-gray-900">
+                            Location
+                        </h2>
+                    </div>
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-9 md:col-span-2 text-sm">
+                        {/* City */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="city"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                City
+                            </label>
+                            <div className="mt-2">
+                                <p> {currentListing.location.city}</p>
+                            </div>
+                        </div>
+                        {/* State*/}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="state"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                State
+                            </label>
+                            <div className="mt-2">
+                                <p> {currentListing.location.state}</p>
+                            </div>
+                        </div>
+                        {/* Address */}
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="address"
+                                className="block font-medium leading-6 text-gray-900">
+                                Street Address
+                            </label>
+                            <div className="mt-">
+                                <p>{currentListing.location.address}</p>
+                            </div>
+                        </div>
+
+                        {/* zip code */}
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="zipCode"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Zip Code
+                            </label>
+                            <div className="mt-2">
+                                <div className="relative max-w-sm">
+                                    <p> {currentListing.location.zipCode}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <p>
                     {currentListing.listingType === 'for-rent'
                         ? `Pet Policy: ${currentListing.petPolicy}`
                         : `Home Age: ${currentListing.homeAge}`}
                 </p>
 
-                <p>Address: {currentListing.location.address}</p>
                 <p>City: {currentListing.location.city}</p>
                 <p>State: {currentListing.location.state}</p>
                 <p>Zip Code: {currentListing.location.zipCode}</p>
-                <p>Price: {formatPrice(currentListing.price)}</p>
                 <p>Bedrooms: {currentListing.features.bedrooms}</p>
                 <p>Bathrooms: {currentListing.features.bathrooms}</p>
                 <p>Created At: {formatDate(currentListing.createdAt)}</p>

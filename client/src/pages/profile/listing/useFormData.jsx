@@ -9,6 +9,7 @@ export default function useFormData() {
         price: '',
         propertyType: 'Apartment', // default
         address: '',
+        aptOrSuite: '',
         city: '',
         state: '',
         zipCode: '',
