@@ -62,6 +62,7 @@ export default function useFormData() {
             zipCode: formData.zipCode,
             bedrooms: formData.bedrooms,
             bathrooms: formData.bathrooms,
+            sqft: formData.sqft,
             agentCompany: formData.agentCompany,
             agentName: formData.agentName,
             email: formData.email,

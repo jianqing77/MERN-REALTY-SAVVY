@@ -2,28 +2,37 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { findListingByIdThunk } from '../../../services/internal-listing/internal-listing-thunk';
-import { formatDate, formatPrice, formatSquareFeet } from '../../../utils/formatUtils';
+import {
+    formatDate,
+    formatPets,
+    formatPetsString,
+    formatPrice,
+    formatSquareFeet,
+} from '../../../utils/formatUtils';
 
 export default function ListingDetailsPage() {
-    const { listingId } = useParams();
-    console.log('listing Id: ' + listingId);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const currentListing = useSelector(
+        (state) => state['internal-listings'].currentListing
+    );
+
+    const { listingId } = useParams();
+    console.log('listing Id: ' + listingId);
 
     useEffect(() => {
         dispatch(findListingByIdThunk(listingId));
     }, [listingId, dispatch]);
 
-    const currentListing = useSelector(
-        (state) => state['internal-listings'].currentListing
-    );
-
+    if (!currentListing) {
+        return <div>Loading...</div>;
+    }
     // button to back to the listing list
     const backToAllListingHandler = () => {
         navigate('/profile/listings');
     };
 
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const imageUrls = currentListing.media.imageUrls;
 
     const nextImage = () => {
@@ -191,7 +200,7 @@ export default function ListingDetailsPage() {
                                 <p>{formatPrice(currentListing.price)}</p>
                             </div>
                         </div>
-                        {/* description */}
+                        {/* Description */}
                         <div className="col-span-full">
                             <label
                                 htmlFor="description"
@@ -199,12 +208,14 @@ export default function ListingDetailsPage() {
                                 Description
                             </label>
                             <div className="mt-2">
-                                <p>{currentListing.description}</p>
+                                {currentListing.description
+                                    ? currentListing.description
+                                    : 'Not Provided'}{' '}
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* Section 2: Features */}
+                {/* Section 2: Location */}
                 <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                     <div className="grid md:col-span-1">
                         <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -224,7 +235,7 @@ export default function ListingDetailsPage() {
                             </div>
                         </div>
                         {/* State*/}
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-4">
                             <label
                                 htmlFor="state"
                                 className="block text-sm font-medium leading-6 text-gray-900">
@@ -235,19 +246,30 @@ export default function ListingDetailsPage() {
                             </div>
                         </div>
                         {/* Address */}
-                        <div className="sm:col-span-4">
+                        <div className="sm:col-span-3">
                             <label
                                 htmlFor="address"
                                 className="block font-medium leading-6 text-gray-900">
                                 Street Address
                             </label>
-                            <div className="mt-">
-                                <p>{currentListing.location.address}</p>
+                            <div className="mt-2">
+                                <span>{currentListing.location.address} </span>
                             </div>
                         </div>
-
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="aptOrSuite"
+                                className="block font-medium leading-6 text-gray-900">
+                                Apt, Suite Number
+                            </label>
+                            <div className="mt-2">
+                                {currentListing.location.aptOrSuite
+                                    ? currentListing.location.aptOrSuite
+                                    : 'Not Provided'}{' '}
+                            </div>
+                        </div>
                         {/* zip code */}
-                        <div className="sm:col-span-4">
+                        <div className="sm:col-span-3">
                             <label
                                 htmlFor="zipCode"
                                 className="block text-sm font-medium leading-6 text-gray-900">
@@ -261,28 +283,160 @@ export default function ListingDetailsPage() {
                         </div>
                     </div>
                 </div>
-                <p>
-                    {currentListing.listingType === 'for-rent'
-                        ? `Pet Policy: ${currentListing.petPolicy}`
-                        : `Home Age: ${currentListing.homeAge}`}
-                </p>
+                {/* Section 3: Features */}
+                <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
+                    <div className="grid md:col-span-1">
+                        <h2 className="text-base font-semibold leading-7 text-gray-900">
+                            Features
+                        </h2>
+                    </div>
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-9 md:col-span-2 text-sm">
+                        {/* Bedrooms */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="bedrooms"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Bedrooms
+                            </label>
+                            <div className="mt-2">{currentListing.features.bedrooms}</div>
+                        </div>
+                        {/* State*/}
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="bathrooms"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Bathrooms
+                            </label>
+                            <div className="mt-2">
+                                <p> {currentListing.features.bathrooms}</p>
+                            </div>
+                        </div>
+                        {/*  Square Footage */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="sqft"
+                                className="block font-medium leading-6 text-gray-900">
+                                Square Footage
+                            </label>
+                            <div className="mt-2">
+                                <span>{currentListing.features.sqft} </span>
+                            </div>
+                        </div>
+                        {/* Specific Features */}
+                        {currentListing.listingType === 'for-rent' ? (
+                            <div className="sm:col-span-3">
+                                <label
+                                    htmlFor="petPolicy"
+                                    className="block font-medium leading-6 text-gray-900">
+                                    Pets
+                                </label>
+                                <div className="mt-2">
+                                    <span>
+                                        {formatPetsString(currentListing.petPolicy)}{' '}
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="sm:col-span-3">
+                                <label
+                                    htmlFor="homeAge"
+                                    className="block font-medium leading-6 text-gray-900">
+                                    Home Age{' '}
+                                </label>
+                                <div className="mt-2">
+                                    <span>{currentListing.homeAge} </span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                {/* Section 4: Agent Contact Info */}
+                <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
+                    <div className="grid md:col-span-1">
+                        <h2 className="text-base font-semibold leading-7 text-gray-900">
+                            Contact Information
+                        </h2>
+                    </div>
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-9 md:col-span-2 text-sm">
+                        {/* Agent Company */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="agentCompany"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Agent Company
+                            </label>
+                            <div className="mt-2">
+                                <p> {currentListing.contactInfo.agentCompany}</p>
+                            </div>
+                        </div>
+                        {/* Agent Name */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="agentName"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Agent Name
+                            </label>
+                            <div className="mt-2">
+                                <p> {currentListing.contactInfo.agentName}</p>
+                            </div>
+                        </div>
+                        {/* Agent Phone */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="agentPhone"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Phone Number
+                            </label>
+                            <div className="mt-2">
+                                {currentListing.contactInfo.agentPhone
+                                    ? currentListing.contactInfo.agentPhone
+                                    : 'Not Provided'}{' '}
+                            </div>
+                        </div>
+                        {/* Agent Email */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="agentEmail"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Email
+                            </label>
+                            <div className="mt-2">
+                                <p> {currentListing.contactInfo.email}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <p>City: {currentListing.location.city}</p>
-                <p>State: {currentListing.location.state}</p>
-                <p>Zip Code: {currentListing.location.zipCode}</p>
-                <p>Bedrooms: {currentListing.features.bedrooms}</p>
-                <p>Bathrooms: {currentListing.features.bathrooms}</p>
-                <p>Created At: {formatDate(currentListing.createdAt)}</p>
-                <p>Last Update: {formatDate(currentListing.updatedAt)}</p>
-                <p>Agent Company: {currentListing.contactInfo.agentCompany}</p>
-                <p>Agent Name: {currentListing.contactInfo.agentName}</p>
-                <p>
-                    Agent Phone:{' '}
-                    {currentListing.contactInfo.agentPhone
-                        ? currentListing.contactInfo.agentPhone
-                        : 'Not Provided'}
-                </p>
-                <p>Agent Email:{currentListing.contactInfo.email}</p>
+                <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
+                    <div className="grid md:col-span-1">
+                        <h2 className="text-base font-semibold leading-7 text-gray-900">
+                            Others
+                        </h2>
+                    </div>
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-9 md:col-span-2 text-sm">
+                        {/* Created At */}
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="createdAt"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Creation Date
+                            </label>
+                            <div className="mt-2">
+                                {formatDate(currentListing.createdAt)}
+                            </div>
+                        </div>
+                        <div className="sm:col-span-3">
+                            <label
+                                htmlFor="createdAt"
+                                className="block text-sm font-medium leading-6 text-gray-900">
+                                Last Update
+                            </label>
+                            <div className="mt-2">
+                                {formatDate(currentListing.updatedAt)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

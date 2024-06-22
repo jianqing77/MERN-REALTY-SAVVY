@@ -121,6 +121,7 @@ const InternalListingDao = {
     createListing: async (listingData) => {
         try {
             const listing = new InternalListingModel(listingData);
+            console.log('listing in the dao is ' + JSON.stringify(listing));
             return await listing.save();
         } catch (error) {
             throw new ErrorHandler('Error creating listing', 500);

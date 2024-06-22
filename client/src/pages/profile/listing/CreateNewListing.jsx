@@ -640,9 +640,18 @@ export default function CreateNewListingPage() {
                                     id="sqft"
                                     value={formData.sqft}
                                     onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6 ${
+                                        formErrors.sqft ? 'ring-2 ring-red-500' : ''
+                                    }`}
                                 />
                             </div>
+                            <p>
+                                {formErrors.sqft && (
+                                    <p className="text-red-500 text-xs mt-1 ml-1">
+                                        {formErrors.sqft}
+                                    </p>
+                                )}
+                            </p>
                         </div>
                         <div className="sm:col-span-2">
                             <ListingFormComponent />
