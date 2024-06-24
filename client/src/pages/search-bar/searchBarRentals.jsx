@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DropDownSingle from '../../components/DropDownSingle.jsx';
 import DropdownMultiple from '../../components/DropDownMultiple.jsx';
-import DropdownRange from '../../components/DropDownRange.jsx';
+import DropDownRange from '../../components/DropDownRange.jsx';
 
 const SearchBarRentals = ({
     initialCategory,
@@ -46,8 +46,8 @@ const SearchBarRentals = ({
                 onSelectionChange={onCategoryChange}
                 labelClassName="text-base"
             />
-            <DropdownRange buttonLabel="Price" onRangeChange={onPriceRangeChange} />
-            <DropdownRange buttonLabel="Size" onRangeChange={onSizeRangeChange} />
+            <DropDownRange buttonLabel="Price" onRangeChange={onPriceRangeChange} />
+            <DropDownRange buttonLabel="Size" onRangeChange={onSizeRangeChange} />
             <DropDownSingle
                 label="Bedrooms"
                 options={bedroomsOptions}

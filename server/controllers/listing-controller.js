@@ -115,8 +115,8 @@ export const createListing = catchAsync(async (req, res) => {
 export const updateListing = catchAsync(async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
     const updateData = req.body;
-    console.log('ID:', id);
-    console.log('Update Data:', updateData);
+    // console.log('ID:', id);
+    // console.log('Update Data:', updateData);
     const updatedListing = await InternalListingDAO.updateListing(id, updateData);
     res.status(201).json(updatedListing);
 });

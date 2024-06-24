@@ -2,7 +2,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { findListingByCurrentUserThunk } from '../../../services/internal-listing/internal-listing-thunk';
-import { formatDate, formatPrice } from '../../../utils/formatUtils.jsx';
+import {
+    formatDate,
+    formatListingType,
+    formatListingTypeInternal,
+    formatPrice,
+    formatPropertyTypeInternal,
+} from '../../../utils/formatUtils.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -25,11 +31,6 @@ export default function Listings() {
     useEffect(() => {
         dispatch(findListingByCurrentUserThunk());
     }, [dispatch]);
-
-    const listingTypeDescriptions = {
-        'for-rent': 'For Rent',
-        'for-sale': 'For Sale',
-    };
 
     return (
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
@@ -119,9 +120,9 @@ export default function Listings() {
                                                         : '',
                                                     'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
                                                 )}>
-                                                {listingTypeDescriptions[
+                                                {formatListingTypeInternal(
                                                     listing.listingType
-                                                ] || listing.listingType}
+                                                )}
                                             </td>
                                             <td
                                                 className={classNames(
@@ -130,7 +131,9 @@ export default function Listings() {
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-center'
                                                 )}>
-                                                {listing.propertyType}
+                                                {formatPropertyTypeInternal(
+                                                    listing.propertyType
+                                                )}
                                             </td>
                                             <td
                                                 className={classNames(

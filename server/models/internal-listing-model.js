@@ -21,12 +21,12 @@ const ListingSchema = new Schema(
         propertyType: {
             type: String,
             enum: [
-                'Single-family Home',
-                'Multi-family Home',
-                'Condo',
-                'Townhouse',
-                'Apartment',
-                'Other',
+                'single-family-home',
+                'multi-family-home',
+                'condo',
+                'townhouse',
+                'apartment',
+                'other',
             ],
             required: true,
         },

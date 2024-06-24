@@ -103,6 +103,22 @@ export function formatPropertyType(type) {
     return typeMap[type] || type; // Return original type if no match found
 }
 
+export function formatPropertyTypeInternal(type) {
+    const typeMap = [
+        { label: 'Single-family Home', value: 'single-family-home' },
+        { label: 'Multi-family Home', value: 'multi-family-home' },
+        { label: 'Condo', value: 'condo' },
+        { label: 'Townhouse', value: 'townhouse' },
+        { label: 'Apartment', value: 'apartment' },
+        { label: 'Other', value: 'other' },
+    ];
+
+    const matchedType = typeMap.find((item) => item.value === type);
+
+    // Return the label if found, otherwise return 'Unknown'
+    return matchedType ? matchedType.label : 'Unknown';
+}
+
 export function formatListingType(type) {
     const typeMap = {
         for_sale: 'for sale',
@@ -110,6 +126,18 @@ export function formatListingType(type) {
     };
 
     return typeMap[type] || type; // Return original type if no match found
+}
+
+export function formatListingTypeInternal(type) {
+    const typeMap = [
+        { label: 'for-sale', value: 'For Sale' },
+        { label: 'for-rent', value: 'For Rent' },
+    ];
+
+    const matchedType = typeMap.find((item) => item.label === type);
+
+    // Return the label if found, otherwise return 'Unknown'
+    return matchedType ? matchedType.value : 'Unknown';
 }
 
 // Function to format the state to an abbreviation

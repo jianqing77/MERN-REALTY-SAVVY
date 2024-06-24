@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-function DropdownRange({ buttonLabel, onRangeChange }) {
+function DropDownRange({ buttonLabel, onRangeChange }) {
     const [isOpen, setIsOpen] = useState(false);
     const [minValue, setMinValue] = useState('');
     const [maxValue, setMaxValue] = useState('');
@@ -95,9 +95,9 @@ function DropdownRange({ buttonLabel, onRangeChange }) {
 }
 
 // Define prop types
-DropdownRange.propTypes = {
+DropDownRange.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
     onRangeChange: PropTypes.func,
 };
 
-export default DropdownRange;
+export default DropDownRange;

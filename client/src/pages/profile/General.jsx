@@ -66,7 +66,7 @@ export default function GeneralSettings() {
                     userUpdateData: formData,
                 })
             );
-            const user = unwrapResult(resultAction); // This will get the payload from the fulfilled action or throw an error if the promise is rejected
+            const user = unwrapResult(resultAction); // unwrapResult will get the payload from the fulfilled action or throw an error if the promise is rejected
             dispatch(updateUserInAuth(user.user));
         } catch (err) {
             alert(err);

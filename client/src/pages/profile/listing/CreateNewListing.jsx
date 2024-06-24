@@ -8,7 +8,8 @@ import useFormData from './useFormData.jsx';
 import useImageHandler from './useImageHandler.jsx';
 import LeaseForm from './LeaseForm.jsx';
 import SaleForm from './SaleForm.jsx';
-import DropdownSingle from '../../../components/DropDownSingle.jsx';
+import DropDownSingle from '../../../components/DropDownSingle.jsx';
+import SpecialFormComponent from './SpecialFormComponent.jsx';
 
 export default function CreateNewListingPage() {
     const navigate = useNavigate();
@@ -19,8 +20,21 @@ export default function CreateNewListingPage() {
         { label: 'Sale', value: 'for-sale' },
     ];
 
+    const propertyTypeOptions = [
+        { label: 'Single-family Home', value: 'single-family-home' },
+        { label: 'Multi-family Home', value: 'multi-family-home' },
+        { label: 'Condo', value: 'condo' },
+        { label: 'Townhouse', value: 'townhouse' },
+        { label: 'Apartment', value: 'apartment' },
+        { label: 'Other', value: 'other' },
+    ];
+
     const categoryChangeHandler = (value) => {
         formChangeHandler({ target: { name: 'listingType', value } });
+    };
+
+    const propertyTypeChangeHandler = (value) => {
+        formChangeHandler({ target: { name: 'propertyType', value } });
     };
 
     // Image Handling
@@ -49,23 +63,23 @@ export default function CreateNewListingPage() {
     }, []);
 
     // Select which form component to render based on listingType
-    const ListingFormComponent = () => {
-        switch (formData.listingType) {
-            case 'for-rent':
-                return (
-                    <LeaseForm
-                        formData={formData}
-                        formChangeHandler={formChangeHandler}
-                    />
-                );
-            case 'for-sale':
-                return (
-                    <SaleForm formData={formData} formChangeHandler={formChangeHandler} />
-                );
-            default:
-                return <div>Please select a listing type.</div>;
-        }
-    };
+    // const ListingFormComponent = () => {
+    //     switch (formData.listingType) {
+    //         case 'for-rent':
+    //             return (
+    //                 <LeaseForm
+    //                     formData={formData}
+    //                     formChangeHandler={formChangeHandler}
+    //                 />
+    //             );
+    //         case 'for-sale':
+    //             return (
+    //                 <SaleForm formData={formData} formChangeHandler={formChangeHandler} />
+    //             );
+    //         default:
+    //             return <div>Please select a listing type.</div>;
+    //     }
+    // };
 
     const cancelHandler = () => {
         navigate('/profile/listings');
@@ -158,7 +172,7 @@ export default function CreateNewListingPage() {
                                 Listing Type
                                 <span className="text-gray-900">*</span>
                             </label>
-                            <DropdownSingle
+                            <DropDownSingle
                                 label="listingType"
                                 initialValue="for-rent"
                                 options={categoryOptions}
@@ -238,19 +252,13 @@ export default function CreateNewListingPage() {
                                 <span className="text-gray-900">*</span>
                             </label>
                             <div className="mt-2">
-                                <select
-                                    id="building-type"
-                                    name="propertyType"
-                                    value={formData.propertyType}
-                                    onChange={formChangeHandler}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-200 sm:text-sm sm:leading-6">
-                                    <option>Single-family Home</option>
-                                    <option>Multi-family Home</option>
-                                    <option>Condo</option>
-                                    <option>Townhouse</option>
-                                    <option>Apartment</option>
-                                    <option>Other</option>
-                                </select>
+                                <DropDownSingle
+                                    label="Property Type"
+                                    initialValue={formData.propertyType}
+                                    options={propertyTypeOptions}
+                                    onSelectionChange={propertyTypeChangeHandler}
+                                    labelClassName="text-sm"
+                                />
                             </div>
                         </div>
                         {/* Available date */}
@@ -654,9 +662,11 @@ export default function CreateNewListingPage() {
                             </p>
                         </div>
                         <div className="sm:col-span-2">
-                            <ListingFormComponent />
+                            <SpecialFormComponent
+                                formData={formData}
+                                formChangeHandler={formChangeHandler}
+                            />
                         </div>
-                        {/* <ListingFormComponent /> */}
                     </div>
                 </div>
                 {/* Contact Info */}
