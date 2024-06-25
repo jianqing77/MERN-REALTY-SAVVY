@@ -55,12 +55,12 @@ export const findListingByCurrentUser = async () => {
         // console.log('findListingByCurrentUser is called in service');
         // const server_res = await api.get(`${LISTING_URL}/current-user`);
         const server_res = await api.get(LISTING_URL);
-        console.log(
-            'server response in service of findListingByCurrentUser: ' +
-                JSON.stringify(server_res)
-        );
+        // console.log(
+        //     'server response in service of findListingByCurrentUser: ' +
+        //         JSON.stringify(server_res)
+        // );
         const foundedListing = server_res.data;
-        console.log('Found listing by current user in the service:', foundedListing);
+        // console.log('Found listing by current user in the service:', foundedListing);
         return foundedListing;
     } catch (error) {
         console.error('Error fetching listing by user ID:', error);

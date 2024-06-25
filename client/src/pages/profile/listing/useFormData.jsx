@@ -7,7 +7,7 @@ export default function useFormData(initialValues = {}) {
         description: '',
         availableDate: '',
         price: '',
-        propertyType: 'Apartment', // default
+        propertyType: 'apartment', // default
         address: '',
         aptOrSuite: '',
         city: '',

@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { findListingByIdThunk } from '../../../services/internal-listing/internal-listing-thunk';
+import {
+    deleteListingThunk,
+    findListingByIdThunk,
+} from '../../../services/internal-listing/internal-listing-thunk';
 import {
     formatDate,
     formatListingTypeInternal,
@@ -11,11 +14,15 @@ import {
     formatPropertyTypeInternal,
     formatSquareFeet,
 } from '../../../utils/formatUtils';
+import { Button } from '@mui/material';
+import ConfirmDialog from '../../../components/DeleteConfirmDialog';
 
 export default function ShowListing({ listingId, onEdit }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [statusMessage, setStatusMessage] = useState('');
 
     const currentListing = useSelector(
         (state) => state['internal-listings'].currentListing
@@ -25,17 +32,18 @@ export default function ShowListing({ listingId, onEdit }) {
         dispatch(findListingByIdThunk(listingId));
     }, [listingId, dispatch]);
 
-    // check if currentListing was still loading before getting the img urls
+    // Check if currentListing was still loading before getting the img urls
     if (!currentListing) {
         return <div>Loading...</div>;
     }
     const imageUrls = currentListing.media.imageUrls;
 
-    // button to back to the listing list
+    // Button to back to the listing list
     const backToAllListingHandler = () => {
         navigate('/profile/listings');
     };
 
+    // Image Slider Buttons
     const nextImage = () => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
     };
@@ -44,6 +52,52 @@ export default function ShowListing({ listingId, onEdit }) {
         setCurrentImageIndex(
             (prevIndex) => (prevIndex - 1 + imageUrls.length) % imageUrls.length
         );
+    };
+
+    const deleteCancelHandler = () => {
+        setDeleteConfirmOpen(false);
+    };
+
+    const deleteConfirmHandler = async () => {
+        setDeleteConfirmOpen(false);
+        try {
+            const result = await dispatch(deleteListingThunk(listingId)).unwrap();
+            setStatusMessage('Listing deleted successfully');
+            setTimeout(() => {
+                navigate('/profile/listings');
+            }, 3000); // Wait for 3 seconds then navigate
+        } catch (error) {
+            setStatusMessage('Failed to delete listing');
+            setTimeout(() => {
+                navigate('/profile/listings');
+            }, 3000);
+        }
+    };
+
+    // Delete Listing Handler
+    const deleteListingHandler = () => {
+        // show confirmation dialog
+        const userConfirmed = window.confirm(
+            'Are you sure you want to delete this listing?'
+        );
+        if (userConfirmed) {
+            deleteListing();
+        }
+    };
+
+    const deleteListing = async () => {
+        try {
+            const result = await dispatch(deleteListingThunk(listingId)).unwrap();
+            setStatusMessage('Listing deleted successfully');
+            setTimeout(() => {
+                navigate('/profile/listings');
+            }, 3000); // Wait for 3 seconds then navigate
+        } catch (error) {
+            setStatusMessage('Failed to delete listing');
+            setTimeout(() => {
+                navigate('/profile/listings');
+            }, 3000);
+        }
     };
 
     return (
@@ -420,7 +474,7 @@ export default function ShowListing({ listingId, onEdit }) {
                         </div>
                     </div>
                 </div>
-
+                {/* Section 5: Creation Information */}
                 <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                     <div className="grid md:col-span-1">
                         <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -451,6 +505,25 @@ export default function ShowListing({ listingId, onEdit }) {
                         </div>
                     </div>
                 </div>
+                {/* Bottom Buttons */}
+                <div className="flex justify-center items-center ">
+                    <button
+                        type="button"
+                        onClick={() => setDeleteConfirmOpen(true)}
+                        className="my-12 w-40 rounded-md bg-dark-100 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                        Delete Listing
+                    </button>
+                    {statusMessage && (
+                        <div className="block mt-6 text-center font-semibold">
+                            {statusMessage}
+                        </div>
+                    )}
+                </div>
+                <ConfirmDialog
+                    open={deleteConfirmOpen}
+                    onClose={deleteCancelHandler}
+                    onConfirm={deleteConfirmHandler}
+                />
             </div>
         </div>
     );

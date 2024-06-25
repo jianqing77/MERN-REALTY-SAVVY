@@ -16,6 +16,12 @@ import { LoadScript } from '@react-google-maps/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import ReactDOM from 'react-dom';
+import React from 'react';
+
+window.React2 = React;
+console.log(window.React1 === window.React2);
+
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 function App() {

@@ -37,6 +37,7 @@ export default function EditListing({ listingId, onSave, onCancel }) {
     if (!currentListing) {
         return <div>Loading...</div>;
     }
+    const imageUrls = currentListing.media.imageUrls;
 
     const propertyTypeChangeHandler = (value) => {
         formChangeHandler({ target: { name: 'propertyType', value } });
@@ -61,21 +62,9 @@ export default function EditListing({ listingId, onSave, onCancel }) {
                         Please note the listing type is not changeable.
                     </p>
                 </div>
-
-                {/* <div className="mt-4 sm:ml-16 flex items-center space-x-4">
-            <button
-                type="button"
-                onClick={backToAllListingHandler}
-                className="sm:w-32 block rounded-md bg-dark-100 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm font-semibold text-primary-100 shadow-sm hover:bg-yellow-500 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
-                Back
-            </button>
-            <button
-                onClick={onEdit}
-                className="sm:w-32 rounded-md bg-dark-100 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm font-semibold text-primary-100 shadow-sm hover:bg-yellow-500 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-200">
-                Edit
-            </button>
-        </div> */}
             </div>
+            {/* Image Modification */}
+            <div></div>
             <div className="mt-8 flow-root">
                 {/* Section 1: General Information */}
                 <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
@@ -574,6 +563,7 @@ export default function EditListing({ listingId, onSave, onCancel }) {
                     </div>
                 </div>
             </div>
+            {/* Bottom Buttons */}
             <div className="mt-6 flex items-center justify-end gap-x-6">
                 <button
                     type="button"

@@ -124,6 +124,10 @@ const InternalListingDao = {
             console.log('listing in the dao is ' + JSON.stringify(listing));
             return await listing.save();
         } catch (error) {
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message,
+            });
             throw new ErrorHandler('Error creating listing', 500);
         }
     },

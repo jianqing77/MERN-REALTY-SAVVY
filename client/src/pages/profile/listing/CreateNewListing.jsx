@@ -21,11 +21,11 @@ export default function CreateNewListingPage() {
     ];
 
     const propertyTypeOptions = [
+        { label: 'Apartment', value: 'apartment' },
         { label: 'Single-family Home', value: 'single-family-home' },
         { label: 'Multi-family Home', value: 'multi-family-home' },
         { label: 'Condo', value: 'condo' },
         { label: 'Townhouse', value: 'townhouse' },
-        { label: 'Apartment', value: 'apartment' },
         { label: 'Other', value: 'other' },
     ];
 
@@ -61,25 +61,6 @@ export default function CreateNewListingPage() {
             });
         }
     }, []);
-
-    // Select which form component to render based on listingType
-    // const ListingFormComponent = () => {
-    //     switch (formData.listingType) {
-    //         case 'for-rent':
-    //             return (
-    //                 <LeaseForm
-    //                     formData={formData}
-    //                     formChangeHandler={formChangeHandler}
-    //                 />
-    //             );
-    //         case 'for-sale':
-    //             return (
-    //                 <SaleForm formData={formData} formChangeHandler={formChangeHandler} />
-    //             );
-    //         default:
-    //             return <div>Please select a listing type.</div>;
-    //     }
-    // };
 
     const cancelHandler = () => {
         navigate('/profile/listings');
@@ -254,7 +235,7 @@ export default function CreateNewListingPage() {
                             <div className="mt-2">
                                 <DropDownSingle
                                     label="Property Type"
-                                    initialValue={formData.propertyType}
+                                    initialValue="apartment"
                                     options={propertyTypeOptions}
                                     onSelectionChange={propertyTypeChangeHandler}
                                     labelClassName="text-sm"
