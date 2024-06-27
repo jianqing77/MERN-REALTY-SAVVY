@@ -2,13 +2,29 @@ import { useEffect, useState } from 'react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import FirebaseApp from '../../../config/firebase';
 
-export default function useImageHandler() {
+export default function useImageHandler(initialImageUrls = []) {
     const [imgFiles, setImgFiles] = useState([]);
-    const [imagePreviews, setImagePreviews] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState(
+        initialImageUrls.map((url) => ({
+            url,
+            status: 'success', // Initially mark them as successfully loaded.
+            isUploading: false,
+        }))
+    );
     const [fileCountError, setFileCountError] = useState('');
 
     const maxFileSize = 1024 * 1024 * 3; // 3MB
     const maxFileCount = 15;
+
+    useEffect(() => {
+        setImagePreviews(
+            initialImageUrls.map((url) => ({
+                url,
+                status: 'success',
+                isUploading: false,
+            }))
+        );
+    }, [initialImageUrls]);
 
     // Check the file count to less than the max file number
     useEffect(() => {

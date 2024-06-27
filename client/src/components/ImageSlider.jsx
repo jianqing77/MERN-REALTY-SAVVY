@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
-export default function ImageSlider(currentListing) {
+export default function ImageSlider({ currentListing }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const imageUrls = currentListing.media.imageUrls;
 
@@ -16,7 +17,7 @@ export default function ImageSlider(currentListing) {
 
     return (
         <div className="relative w-full">
-            <div className="relative h-20 overflow-hidden rounded-lg md:h-36 mb-2">
+            <div className="relative h-36 overflow-hidden rounded-lg md:h-72 mb-2">
                 {imageUrls.map((url, index) => (
                     <div
                         key={index}
@@ -82,3 +83,11 @@ export default function ImageSlider(currentListing) {
         </div>
     );
 }
+
+ImageSlider.propTypes = {
+    currentListing: PropTypes.shape({
+        media: PropTypes.shape({
+            imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+        }).isRequired,
+    }).isRequired,
+};
