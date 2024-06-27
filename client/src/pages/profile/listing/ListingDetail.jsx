@@ -19,6 +19,7 @@ export default function ListingDetailsPage() {
     const [isEditing, setIsEditing] = useState(false);
 
     const saveBtnHandler = async (formData) => {
+        console.log('formData passed to saveBtnHandler: ' + JSON.stringify(formData));
         try {
             const resultAction = await dispatch(
                 updateListingThunk({

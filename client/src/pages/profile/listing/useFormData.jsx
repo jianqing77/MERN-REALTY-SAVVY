@@ -21,7 +21,6 @@ export default function useFormData(initialValues = {}) {
         agentPhone: '',
         homeAge: 0,
         petPolicy: [],
-        imageUrls: [],
         refUrl: '',
         email: '',
     };

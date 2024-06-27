@@ -13,15 +13,20 @@ import ImageSlider from '../../../components/ImageSlider';
 export default function EditListing({ listingId, onSave, onCancel }) {
     const dispatch = useDispatch();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isEditingImg, setIsEditingImg] = useState(false);
 
     const currentListing = useSelector(
         (state) => state['internal-listings'].currentListing
     );
 
     // Form Data Handling -- Always call hooks at the top level
-    const { formData, formErrors, setFormErrors, formChangeHandler, validateForm } =
-        useFormData(currentListing);
+    const {
+        formData,
+        setFormData,
+        formErrors,
+        setFormErrors,
+        formChangeHandler,
+        validateForm,
+    } = useFormData(currentListing);
 
     // Date Picker
     const datePickerRef = useRef(null);
@@ -45,28 +50,20 @@ export default function EditListing({ listingId, onSave, onCancel }) {
 
     // Image Display
     const imageUrls = currentListing.media.imageUrls;
-    const nextImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
-    };
 
-    const prevImage = () => {
-        setCurrentImageIndex(
-            (prevIndex) => (prevIndex - 1 + imageUrls.length) % imageUrls.length
-        );
-    };
-
-    const imageEditHandler = () => {
-        setIsEditingImg(true);
-    };
-
-    const imageSaveHandler = () => {
-        setIsEditingImg(false);
-        console.log('after clicking imageSaveHandler isEditingImg = ' + isEditingImg);
-    };
-
-    const imageCancelHandler = () => {
-        setIsEditingImg(false);
-        console.log('after clicking imageCancelHandler isEditingImg = ' + isEditingImg);
+    const imageSaveHandler = (updatedImgPreviews) => {
+        const updatedImgUrls = updatedImgPreviews
+            .filter((preview) => preview.status === 'success')
+            .map((preview) => preview.url);
+        // console.log('updatedImgUrls in imageSaveHandler: ' + JSON.stringify(imageUrls));
+        const updatedFormData = {
+            ...formData,
+            media: {
+                ...formData.media,
+                imageUrls: updatedImgUrls,
+            },
+        };
+        setFormData(updatedFormData);
     };
 
     const propertyTypeChangeHandler = (value) => {
@@ -96,30 +93,10 @@ export default function EditListing({ listingId, onSave, onCancel }) {
 
             <div className="mt-8 flow-root">
                 {/* Image Modification */}
-
                 <div className="relative w-full">
-                    {isEditingImg ? (
-                        <div className="md:h-72">
-                            <EditImage
-                                imageUrls={imageUrls}
-                                onImageSave={imageSaveHandler}
-                                onImageCancel={imageCancelHandler}
-                            />
-                        </div>
-                    ) : (
-                        <div>
-                            <ImageSlider currentListing={currentListing} />
-                            {/* Overlay and Edit Button */}
-                            <div className="absolute bottom-0 rounded-lg left-0 right-0 top-0 h-full w-full overflow-hidden inset-0 bg-black bg-opacity-100 flex items-center justify-center opacity-0 hover:opacity-60 transition-opacity duration-300">
-                                <button
-                                    type="button"
-                                    className="px-4 py-2 rounded-lg bg-dark-200 text-white hover:bg-dark-100 focus:outline-none"
-                                    onClick={imageEditHandler}>
-                                    Edit Images
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                    <div className="md:h-72">
+                        <EditImage imageUrls={imageUrls} onImageSave={imageSaveHandler} />
+                    </div>
                 </div>
                 {/* Section 1: General Information */}
                 <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">

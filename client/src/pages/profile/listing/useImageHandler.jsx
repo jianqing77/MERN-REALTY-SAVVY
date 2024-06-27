@@ -11,6 +11,9 @@ export default function useImageHandler(initialImageUrls = []) {
             isUploading: false,
         }))
     );
+
+    console.log('Before removal, the imagePreviews are ' + JSON.stringify(imagePreviews));
+
     const [fileCountError, setFileCountError] = useState('');
 
     const maxFileSize = 1024 * 1024 * 3; // 3MB
@@ -147,8 +150,8 @@ export default function useImageHandler(initialImageUrls = []) {
         setImagePreviews(filteredPreviews);
         const filteredFiles = imgFiles.filter((_, idx) => idx !== index);
         setImgFiles(filteredFiles);
-
         URL.revokeObjectURL(imagePreviews[index].url); // Clean up the URL to prevent memory leaks
+        // console.log('Now the imagePreviews are: ' + JSON.stringify(imagePreviews));
     };
 
     // Handler image error message time out
