@@ -2,13 +2,17 @@ import PropTypes from 'prop-types';
 import useFormData from './useFormData';
 import { useDispatch, useSelector } from 'react-redux';
 import { findListingByIdThunk } from '../../../services/internal-listing/internal-listing-thunk';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DropDownSingle from '../../../components/DropDownSingle';
 import Datepicker from 'tailwind-datepicker-react';
 import SpecialFormComponent from './SpecialFormComponent';
+import useImageHandler from './useImageHandler';
+import EditImage from './EditImage';
 
 export default function EditListing({ listingId, onSave, onCancel }) {
     const dispatch = useDispatch();
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isEditingImg, setIsEditingImg] = useState(false);
 
     const currentListing = useSelector(
         (state) => state['internal-listings'].currentListing
@@ -37,7 +41,32 @@ export default function EditListing({ listingId, onSave, onCancel }) {
     if (!currentListing) {
         return <div>Loading...</div>;
     }
+
+    // Image Display
     const imageUrls = currentListing.media.imageUrls;
+    const nextImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
+    };
+
+    const prevImage = () => {
+        setCurrentImageIndex(
+            (prevIndex) => (prevIndex - 1 + imageUrls.length) % imageUrls.length
+        );
+    };
+
+    const imageEditHandler = () => {
+        setIsEditingImg(true);
+    };
+
+    const imageSaveHandler = () => {
+        setIsEditingImg(false);
+        console.log('after clicking imageSaveHandler isEditingImg = ' + isEditingImg);
+    };
+
+    const imageCancelHandler = () => {
+        setIsEditingImg(false);
+        console.log('after clicking imageCancelHandler isEditingImg = ' + isEditingImg);
+    };
 
     const propertyTypeChangeHandler = (value) => {
         formChangeHandler({ target: { name: 'propertyType', value } });
@@ -63,9 +92,99 @@ export default function EditListing({ listingId, onSave, onCancel }) {
                     </p>
                 </div>
             </div>
-            {/* Image Modification */}
-            <div></div>
+
             <div className="mt-8 flow-root">
+                {/* Image Modification */}
+
+                <div className="relative w-full">
+                    {isEditingImg ? (
+                        <div className="md:h-72">
+                            <EditImage
+                                imageUrls={imageUrls}
+                                onImageSave={imageSaveHandler}
+                                onImageCancel={imageCancelHandler}
+                            />
+                        </div>
+                    ) : (
+                        <div>
+                            <div className="relative h-36 overflow-hidden rounded-lg md:h-72 mb-2">
+                                {imageUrls.map((url, index) => (
+                                    <div
+                                        key={index}
+                                        className={`relative w-full h-full transition duration-700 ease-in-out ${
+                                            index === currentImageIndex
+                                                ? 'block'
+                                                : 'hidden'
+                                        }`}>
+                                        <img
+                                            src={url}
+                                            className="block w-full h-full rounded-lg object-cover"
+                                            alt={`Slide ${index + 1}`}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            {/* Buttons for slider */}
+                            <div className="absolute inset-0 flex items-center justify-between px-4">
+                                <button
+                                    type="button"
+                                    className="z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
+                                    onClick={prevImage}
+                                    data-carousel-prev>
+                                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary-200  group-hover:bg-white/50 group-focus:ring-2 group-focus:ring-white  group-focus:outline-none">
+                                        <svg
+                                            className="w-3 h-3 text-white dark:text-gray-800"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 6 10">
+                                            <path
+                                                stroke="currentColor"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M5 1 1 5l4 4"
+                                            />
+                                        </svg>
+                                        <span className="sr-only">Previous</span>
+                                    </span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
+                                    onClick={nextImage}
+                                    data-carousel-next>
+                                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary-200  group-hover:bg-white/50 group-focus:ring-2 group-focus:ring-white  group-focus:outline-none">
+                                        <svg
+                                            className="w-3 h-3 text-white dark:text-gray-800"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 6 10">
+                                            <path
+                                                stroke="currentColor"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="m1 9 4-4-4-4"
+                                            />
+                                        </svg>
+                                        <span className="sr-only">Next</span>
+                                    </span>
+                                </button>
+                            </div>
+                            {/* Overlay and Edit Button */}
+                            <div className="absolute bottom-0 rounded-lg left-0 right-0 top-0 h-full w-full overflow-hidden inset-0 bg-black bg-opacity-100 flex items-center justify-center opacity-0 hover:opacity-60 transition-opacity duration-300">
+                                <button
+                                    type="button"
+                                    className="px-4 py-2 rounded-lg bg-dark-200 text-white hover:bg-dark-100 focus:outline-none"
+                                    onClick={imageEditHandler}>
+                                    Edit Images
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
                 {/* Section 1: General Information */}
                 <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                     <div className="grid md:col-span-1">

@@ -74,32 +74,6 @@ export default function ShowListing({ listingId, onEdit }) {
         }
     };
 
-    // Delete Listing Handler
-    const deleteListingHandler = () => {
-        // show confirmation dialog
-        const userConfirmed = window.confirm(
-            'Are you sure you want to delete this listing?'
-        );
-        if (userConfirmed) {
-            deleteListing();
-        }
-    };
-
-    const deleteListing = async () => {
-        try {
-            const result = await dispatch(deleteListingThunk(listingId)).unwrap();
-            setStatusMessage('Listing deleted successfully');
-            setTimeout(() => {
-                navigate('/profile/listings');
-            }, 3000); // Wait for 3 seconds then navigate
-        } catch (error) {
-            setStatusMessage('Failed to delete listing');
-            setTimeout(() => {
-                navigate('/profile/listings');
-            }, 3000);
-        }
-    };
-
     return (
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-center">

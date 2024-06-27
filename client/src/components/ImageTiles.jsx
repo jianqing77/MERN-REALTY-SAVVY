@@ -43,13 +43,7 @@ export default function ImageTiles() {
                 aria-hidden="true"
                 className="absolute inset-0 hidden sm:flex sm:flex-col bg-primary-500">
                 <div className="relative w-full flex-1">
-                    <div className="absolute inset-0 overflow-hidden">
-                        {/* <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-04-hero-full-width.jpg"
-                            alt=""
-                            className="h-full w-full object-cover object-center"
-                        /> */}
-                    </div>
+                    <div className="absolute inset-0 overflow-hidden"></div>
                     <div className="absolute inset-0 bg-primary-500 opacity-50" />
                 </div>
                 <div className="h-32 w-full bg-white md:h-40 lg:h-48" />
