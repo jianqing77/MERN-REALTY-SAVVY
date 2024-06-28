@@ -40,7 +40,7 @@ export default function CreateNewListingPage() {
     // Image Handling
     const imageFileRef = useRef(null);
     const {
-        imagePreviews,
+        images,
         fileCountError,
         fileChangeHandler,
         handleImageFileUpload,
@@ -84,9 +84,9 @@ export default function CreateNewListingPage() {
         const formattedDate = new Date(formData.availableDate);
 
         // Extract URLs from imagePreviews if the upload was successful
-        const imageUrls = imagePreviews
-            .filter((preview) => preview.status === 'success')
-            .map((preview) => preview.url);
+        const imageUrls = images
+            .filter((img) => img.status === 'success')
+            .map((img) => img.url);
 
         const listingData = {
             ...formData,
@@ -334,8 +334,8 @@ export default function CreateNewListingPage() {
                                 </div>
                                 {/* COLUMN RIGHT: Allow user to preview photos and manage their upload */}
                                 <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
-                                    {imagePreviews.length > 0 ? (
-                                        imagePreviews.map((preview, index) => (
+                                    {images.length > 0 ? (
+                                        images.map((preview, index) => (
                                             <div key={index} className="relative">
                                                 {preview.url &&
                                                 preview.status !== 'error' ? (
@@ -379,20 +379,10 @@ export default function CreateNewListingPage() {
                                             {fileCountError}
                                         </span>
                                     )}
-                                    {imagePreviews.some(
-                                        (p) => p.status === 'pending'
-                                    ) && (
+                                    {images.some((p) => p.status === 'pending') && (
                                         <button
                                             className="bg-dark-200 text-yellow-400 rounded-lg py-1 mt-2 mb-4"
-                                            onClick={() =>
-                                                handleImageFileUpload(
-                                                    imagePreviews.filter(
-                                                        (p) =>
-                                                            p.status === 'pending' &&
-                                                            p.file
-                                                    )
-                                                )
-                                            }>
+                                            onClick={handleImageFileUpload}>
                                             Upload
                                         </button>
                                     )}

@@ -3,16 +3,15 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import FirebaseApp from '../../../config/firebase';
 
 export default function useImageHandler(initialImageUrls = []) {
-    const [imgFiles, setImgFiles] = useState([]);
-    const [imagePreviews, setImagePreviews] = useState(
+    const [images, setImages] = useState(
         initialImageUrls.map((url) => ({
             url,
-            status: 'success', // Initially mark them as successfully loaded.
+            status: 'success',
             isUploading: false,
+            progress: 100,
+            file: null, // Initially, there is no file object because these are preloaded URLs
         }))
     );
-
-    console.log('Before removal, the imagePreviews are ' + JSON.stringify(imagePreviews));
 
     const [fileCountError, setFileCountError] = useState('');
 
@@ -20,53 +19,39 @@ export default function useImageHandler(initialImageUrls = []) {
     const maxFileCount = 15;
 
     useEffect(() => {
-        setImagePreviews(
-            initialImageUrls.map((url) => ({
-                url,
-                status: 'success',
-                isUploading: false,
-            }))
-        );
-    }, [initialImageUrls]);
-
-    // Check the file count to less than the max file number
-    useEffect(() => {
         if (fileCountError) {
             const timer = setTimeout(() => {
                 setFileCountError('');
-            }, 3000); // Clear the error message after 3 seconds
-
-            return () => clearTimeout(timer); // Clear the timer if the component unmounts or the error changes
+            }, 3000);
+            return () => clearTimeout(timer);
         }
     }, [fileCountError]);
 
-    // Cleanup function to revoke URLs when imagePreviews change or component unmounts
     useEffect(() => {
         return () => {
-            imagePreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+            images.forEach((image) => {
+                if (image.url && image.file) {
+                    URL.revokeObjectURL(image.url);
+                }
+            });
         };
-    }, [imagePreviews]);
+    }, [images]);
 
     const fileChangeHandler = (event) => {
         const newFiles = Array.from(event.target.files);
-        const totalFileCount = imgFiles.length + newFiles.length;
+        const totalFileCount = images.length + newFiles.length;
 
         if (totalFileCount > maxFileCount) {
             setFileCountError(`You can only upload up to ${maxFileCount} images.`);
-            return; // Prevent further execution if the limit is exceeded
-        } else {
-            setFileCountError(''); // Clear error message if under limit
+            return;
         }
 
-        const updatedPreviews = newFiles.map((file) => {
+        const updatedImages = newFiles.map((file) => {
             if (
                 file.size > maxFileSize ||
                 (file.type !== 'image/jpeg' && file.type !== 'image/png')
             ) {
-                setTimeout(() => {
-                    clearErrorMessage(file);
-                }, 3000); // Clear the error message after 3 seconds
-
+                setTimeout(() => clearErrorMessage(file), 3000);
                 return {
                     file,
                     status: 'error',
@@ -82,22 +67,19 @@ export default function useImageHandler(initialImageUrls = []) {
                 };
             }
         });
-        // Update state with the new files, adding to the existing files
-        setImagePreviews((prev) => [...prev, ...updatedPreviews]);
-        setImgFiles((prevFiles) => [...prevFiles, ...newFiles.map((f) => f.file)]);
+
+        setImages((prev) => [...prev, ...updatedImages]);
     };
 
-    const handleImageFileUpload = (imgFiles) => {
+    const handleImageFileUpload = () => {
         const storage = getStorage(FirebaseApp);
-        // console.log('image files:', imgFiles); // Log without JSON.stringify for better clarity
-        imgFiles.forEach((imgFileObj, index) => {
-            if (!imgFileObj.file) {
-                return; // Skip this iteration if no file object is present
+        images.forEach((img, index) => {
+            if (!img.file || img.status === 'success') {
+                return;
             }
-            // updateFileUploadStatus(imgFileObj.file, true); // Set isUploading to true
-            const imgFile = imgFileObj.file; // Access the actual file object
-            const imgFileName = `${new Date().getTime()}_${imgFile.name}`;
 
+            const imgFile = img.file;
+            const imgFileName = `${new Date().getTime()}_${imgFile.name}`;
             const storageRef = ref(storage, imgFileName);
             const uploadTask = uploadBytesResumable(storageRef, imgFile);
 
@@ -106,8 +88,7 @@ export default function useImageHandler(initialImageUrls = []) {
                 (snapshot) => {
                     const progress =
                         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    // Update progress in the state for each file
-                    setImagePreviews((prev) =>
+                    setImages((prev) =>
                         prev.map((item, idx) =>
                             idx === index
                                 ? { ...item, progress, status: 'uploading' }
@@ -116,7 +97,7 @@ export default function useImageHandler(initialImageUrls = []) {
                     );
                 },
                 (error) => {
-                    setImagePreviews((prev) =>
+                    setImages((prev) =>
                         prev.map((item, idx) =>
                             idx === index
                                 ? { ...item, status: 'error', message: 'Upload failed' }
@@ -126,8 +107,7 @@ export default function useImageHandler(initialImageUrls = []) {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        // Update success status and add URL in the state for each file
-                        setImagePreviews((prev) =>
+                        setImages((prev) =>
                             prev.map((item, idx) =>
                                 idx === index
                                     ? {
@@ -146,29 +126,26 @@ export default function useImageHandler(initialImageUrls = []) {
     };
 
     const removeImageHandler = (index) => {
-        const filteredPreviews = imagePreviews.filter((_, idx) => idx !== index);
-        setImagePreviews(filteredPreviews);
-        const filteredFiles = imgFiles.filter((_, idx) => idx !== index);
-        setImgFiles(filteredFiles);
-        URL.revokeObjectURL(imagePreviews[index].url); // Clean up the URL to prevent memory leaks
-        // console.log('Now the imagePreviews are: ' + JSON.stringify(imagePreviews));
+        const updatedImages = images.filter((_, idx) => idx !== index);
+        setImages(updatedImages);
+        if (images[index].url && images[index].file) {
+            URL.revokeObjectURL(images[index].url);
+        }
     };
 
-    // Handler image error message time out
     const clearErrorMessage = (file) => {
-        setImagePreviews((currentPreviews) =>
-            currentPreviews.map((preview) => {
-                if (preview.file === file) {
-                    return { ...preview, message: '' }; // Clear the message
+        setImages((currentImages) =>
+            currentImages.map((image) => {
+                if (image.file === file) {
+                    return { ...image, message: '' };
                 }
-                return preview;
+                return image;
             })
         );
     };
 
     return {
-        imgFiles,
-        imagePreviews,
+        images,
         fileCountError,
         maxFileCount,
         fileChangeHandler,

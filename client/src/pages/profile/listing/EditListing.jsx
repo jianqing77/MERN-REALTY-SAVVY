@@ -7,8 +7,8 @@ import DropDownSingle from '../../../components/DropDownSingle';
 import Datepicker from 'tailwind-datepicker-react';
 import SpecialFormComponent from './SpecialFormComponent';
 import useImageHandler from './useImageHandler';
-import EditImage from './EditImage';
 import ImageSlider from '../../../components/ImageSlider';
+import { PhotoIcon, XCircleIcon } from '@heroicons/react/24/solid';
 
 export default function EditListing({ listingId, onSave, onCancel }) {
     const dispatch = useDispatch();
@@ -27,6 +27,18 @@ export default function EditListing({ listingId, onSave, onCancel }) {
         formChangeHandler,
         validateForm,
     } = useFormData(currentListing);
+
+    // Image Handling
+    const imageUrls = currentListing ? currentListing.media.imageUrls : [];
+
+    const imageFileRef = useRef(null);
+    const {
+        images,
+        fileCountError,
+        fileChangeHandler,
+        handleImageFileUpload,
+        removeImageHandler,
+    } = useImageHandler(imageUrls);
 
     // Date Picker
     const datePickerRef = useRef(null);
@@ -48,14 +60,10 @@ export default function EditListing({ listingId, onSave, onCancel }) {
         return <div>Loading...</div>;
     }
 
-    // Image Display
-    const imageUrls = currentListing.media.imageUrls;
-
-    const imageSaveHandler = (updatedImgPreviews) => {
-        const updatedImgUrls = updatedImgPreviews
+    const saveBtnHandler = () => {
+        const updatedImgUrls = images
             .filter((preview) => preview.status === 'success')
             .map((preview) => preview.url);
-        // console.log('updatedImgUrls in imageSaveHandler: ' + JSON.stringify(imageUrls));
         const updatedFormData = {
             ...formData,
             media: {
@@ -64,6 +72,7 @@ export default function EditListing({ listingId, onSave, onCancel }) {
             },
         };
         setFormData(updatedFormData);
+        onSave(updatedFormData);
     };
 
     const propertyTypeChangeHandler = (value) => {
@@ -94,8 +103,88 @@ export default function EditListing({ listingId, onSave, onCancel }) {
             <div className="mt-8 flow-root">
                 {/* Image Modification */}
                 <div className="relative w-full">
-                    <div className="md:h-72">
-                        <EditImage imageUrls={imageUrls} onImageSave={imageSaveHandler} />
+                    <div className="md:h-72 grid grid-cols-3">
+                        <div className="col-span-1">
+                            <h2 className="text-base font-semibold leading-7 text-gray-900">
+                                Current Listing Images
+                            </h2>
+                        </div>
+                        <div className="flex flex-col items-left justify-start gap-y-4 col-span-2 ms-2">
+                            <div className="flex overflow-x-auto py-2 max-w-md min-w-full">
+                                {images.length > 0 ? (
+                                    images.map((preview, index) => (
+                                        <div
+                                            key={index}
+                                            className="relative mr-4 flex-shrink-0">
+                                            <img
+                                                src={preview.url}
+                                                className="block w-20 h-20 object-cover rounded-lg"
+                                                alt={`Image ${index + 1}`}
+                                            />
+                                            {preview.status !== 'error' && (
+                                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full cursor-pointer transition duration-150 ease-in-out transform hover:scale-110 flex justify-center items-center">
+                                                    <XCircleIcon
+                                                        className="w-12 h-12 text-red-500 hover:text-red-600"
+                                                        onClick={() =>
+                                                            removeImageHandler(index)
+                                                        }
+                                                        aria-label="Delete image"
+                                                    />
+                                                </div>
+                                            )}
+                                            {preview.progress > 0 &&
+                                                preview.status === 'uploading' && (
+                                                    <div
+                                                        style={{
+                                                            width: `${preview.progress}%`,
+                                                        }}
+                                                        className="bg-primary-200 h-1"></div>
+                                                )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div>No images chosen</div>
+                                )}
+                                {fileCountError && (
+                                    <span className="text-red-500">{fileCountError}</span>
+                                )}
+                            </div>
+                            {/* section below: upload new images */}
+                            <div className="flex justify-center rounded-lg border border-dashed border-gray-700 px-6 py-4">
+                                <div className="text-center w-full">
+                                    <PhotoIcon
+                                        className="mx-auto h-6 w-6 text-gray-300"
+                                        aria-hidden="true"
+                                    />
+                                    <div className="mt-3 flex justify-center items-center text-sm leading-6 text-gray-600">
+                                        <label
+                                            htmlFor="file-upload"
+                                            className="relative cursor-pointer rounded-md bg-white font-semibold text-primary-200 focus-within:outline-none  hover:text-indigo-500 inline-block w-full text-center">
+                                            <span>Add Image Files</span>
+                                            <input
+                                                id="file-upload"
+                                                ref={imageFileRef}
+                                                type="file"
+                                                className="sr-only"
+                                                accept="image/*"
+                                                multiple
+                                                onChange={fileChangeHandler}
+                                            />
+                                        </label>
+                                    </div>
+                                    <p className="text-xs leading-5 text-gray-600">
+                                        PNG, JPG, JPEG up to 3MB
+                                    </p>
+                                </div>
+                            </div>
+                            {images.some((p) => p.status === 'pending') && (
+                                <button
+                                    className="bg-dark-200 text-yellow-400 rounded-lg py-1 mt-2 mb-4"
+                                    onClick={handleImageFileUpload}>
+                                    Save
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
                 {/* Section 1: General Information */}
@@ -605,7 +694,7 @@ export default function EditListing({ listingId, onSave, onCancel }) {
                 </button>
                 <button
                     type="button"
-                    onClick={() => onSave(formData)}
+                    onClick={saveBtnHandler}
                     className="rounded-md bg-dark-100 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-dark-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                     Save
                 </button>
