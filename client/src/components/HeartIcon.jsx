@@ -10,7 +10,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 function HeartIcon({ listingId, type }) {
-    // console.log('listing ID in the UI: ' + listingId);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -26,8 +25,10 @@ function HeartIcon({ listingId, type }) {
             const listing = likedListings.find(
                 (item) => item['propertyID'] === listingId
             );
-            console.log('founded matched listing: ' + listing);
+
             setIsLiked(listing ? listing.isLiked : false);
+        } else {
+            console.log('no profile id');
         }
     }, [profile, listingId, type]);
 

@@ -1,15 +1,10 @@
-import PropTypes from 'prop-types';
-
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import EditListing from './EditListing';
 import ShowListing from './ShowListing';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-    findListingByIdThunk,
-    updateListingThunk,
-} from '../../../services/internal-listing/internal-listing-thunk';
+import { useDispatch } from 'react-redux';
+import { updateListingThunk } from '../../../services/internal-listing/internal-listing-thunk';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 export default function ListingDetailsPage() {
@@ -28,7 +23,6 @@ export default function ListingDetailsPage() {
                 })
             );
             const updateResult = unwrapResult(resultAction); // Handle the fulfilled action or throw an error
-            console.log('Update successful', updateResult);
             setIsEditing(false); // Close the editor after saving
         } catch (error) {
             console.error('Failed to update listing:', error);

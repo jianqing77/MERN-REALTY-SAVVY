@@ -121,8 +121,8 @@ export function formatPropertyTypeInternal(type) {
 
 export function formatListingType(type) {
     const typeMap = {
-        for_sale: 'for sale',
-        for_rent: 'for rent',
+        for_sale: 'For Sale',
+        for_rent: 'For Rent',
     };
 
     return typeMap[type] || type; // Return original type if no match found

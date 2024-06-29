@@ -2,7 +2,13 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAPIListingByIdThunk } from '../../services/apartmentAPI/apartment-api-thunk';
 import { fetchLikedExternalListingsThunk } from '../../services/user/user-thunk';
-import { formatPrice } from '../../utils/formatUtils';
+import {
+    formatDate,
+    formatListingType,
+    formatPrice,
+    formatPropertyType,
+} from '../../utils/formatUtils';
+import HeartIcon from '../../components/HeartIcon';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -10,12 +16,12 @@ function classNames(...classes) {
 
 export default function Favorites() {
     const dispatch = useDispatch();
-    // const { currentUser } = useSelector((state) => state.auth);
     const { currentUser } = useSelector((state) => state.auth);
-    // const { profile, likedExternalListings } = useSelector((state) => state.user);
-    // console.log(JSON.stringify(profile));
 
     const { likedExternalListings } = useSelector((state) => state.user);
+    const { likedInternalListings } = useSelector((state) => state.user);
+
+    console.log('likedExternalListings: ' + JSON.stringify(likedExternalListings));
 
     useEffect(() => {
         if (currentUser && currentUser._id) {
@@ -23,14 +29,12 @@ export default function Favorites() {
         }
     }, [currentUser, dispatch]);
 
-    // console.log('likedExternalListings: ' + JSON.stringify(likedExternalListings));
-
     return (
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
                     <h1 className="text-base font-semibold leading-6 text-gray-900">
-                        My Listings
+                        Favorite Listings
                     </h1>
                     <p className="mt-2 text-sm text-gray-400">
                         A list of all the listings you liked.
@@ -50,7 +54,7 @@ export default function Favorites() {
                                     <tr>
                                         <th
                                             scope="col"
-                                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 ">
+                                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 ">
                                             Title
                                         </th>
                                         <th
@@ -68,6 +72,15 @@ export default function Favorites() {
                                             className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
                                             Price
                                         </th>
+                                        <th
+                                            scope="col"
+                                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+                                            Available Date
+                                        </th>
+                                        {/* Save space for the view details column */}
+                                        <th
+                                            scope="col"
+                                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,7 +92,7 @@ export default function Favorites() {
                                                         likedExternalListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
-                                                    'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8 text-left'
+                                                    'whitespace-nowrap py-4 pl-4 pr-3 text-sm text-center font-medium text-gray-900 sm:pl-6 lg:pl-8'
                                                 )}>
                                                 {listing.title}
                                             </td>
@@ -91,7 +104,7 @@ export default function Favorites() {
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
                                                 )}>
-                                                {listing.listingType}
+                                                {formatListingType(listing.listingType)}
                                             </td>
                                             <td
                                                 className={classNames(
@@ -101,7 +114,7 @@ export default function Favorites() {
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
                                                 )}>
-                                                {listing.propertyType}
+                                                {formatPropertyType(listing.propertyType)}
                                             </td>
                                             <td
                                                 className={classNames(
@@ -113,22 +126,36 @@ export default function Favorites() {
                                                 )}>
                                                 {formatPrice(listing.price)}
                                             </td>
-
                                             <td
                                                 className={classNames(
                                                     idx !==
                                                         likedExternalListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
-                                                    'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8'
+                                                    'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
                                                 )}>
+                                                {formatDate(listing.availableDate)}
+                                            </td>
+                                            <td
+                                                className={classNames(
+                                                    idx !==
+                                                        likedExternalListings.length - 1
+                                                        ? 'border-b border-gray-200'
+                                                        : '',
+                                                    'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
+                                                )}>
+                                                <HeartIcon
+                                                    listingId={listing.id}
+                                                    type="external"
+                                                />
                                                 <a
-                                                    href="#"
-                                                    className="text-dark-100 hover:text-primary-200">
-                                                    View Details
-                                                    <span className="sr-only">
-                                                        , {listing.title}
-                                                    </span>
+                                                    href={listing.media.refUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    aria-label="Details">
+                                                    <i
+                                                        className="fa fa-ellipsis-h ms-5"
+                                                        aria-hidden="true"></i>
                                                 </a>
                                             </td>
                                         </tr>

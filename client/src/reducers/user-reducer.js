@@ -26,6 +26,7 @@ const userSlice = createSlice({
         message: null,
         profile: {},
         likedExternalListings: [],
+        likedInternalListings: [],
     },
     reducers: {},
     extraReducers: (builder) => {

@@ -26,7 +26,7 @@ const NavBar = () => {
             <div className="mx-4 lg:mx-8 grid grid-cols-12 py-2">
                 {/* Logo */}
                 <Link
-                    to="/profile"
+                    to="/"
                     className="col-span-3 flex flex-wrap items-center justify-center">
                     <img src={logoAvatar} alt="Logo" className="h-14" />
                 </Link>
