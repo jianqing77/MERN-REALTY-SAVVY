@@ -76,12 +76,14 @@ const UserSchema = new Schema(
                     ref: 'InternalListing',
                 },
                 isLiked: { type: Boolean, default: false },
+                likedAt: { type: Date, default: null },
             },
         ],
         likedExternalListings: [
             {
                 propertyID: String, // ID used in the public API
                 isLiked: { type: Boolean, default: false },
+                likedAt: { type: Date, default: null },
             },
         ],
     },

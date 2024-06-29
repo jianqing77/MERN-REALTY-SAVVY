@@ -79,6 +79,7 @@ const UserDAO = {
         } else {
             // If already present and not liked, update the isLiked to true
             user.likedInternalListings[index].isLiked = true;
+            user.likedInternalListings[index].likedAt = Date.now();
         }
         await user.save();
         return user;
@@ -94,6 +95,7 @@ const UserDAO = {
         if (index !== -1) {
             // Set isLiked to false instead of removing the item
             user.likedInternalListings[index].isLiked = false;
+            user.likedInternalListings[index].likedAt = null;
         }
         await user.save();
         return user;
@@ -111,6 +113,7 @@ const UserDAO = {
             user.likedExternalListings.push({ propertyID, isLiked: true });
         } else {
             user.likedExternalListings[index].isLiked = true;
+            user.likedExternalListings[index].likedAt = Date.now();
         }
         await user.save();
         console.log('ADDED new EXTERNAL listing');
@@ -127,6 +130,7 @@ const UserDAO = {
         );
         if (index !== -1) {
             user.likedExternalListings[index].isLiked = false;
+            user.likedExternalListings[index].likedAt = null;
         }
         await user.save();
         console.log('REMOVED a liked external listing');
