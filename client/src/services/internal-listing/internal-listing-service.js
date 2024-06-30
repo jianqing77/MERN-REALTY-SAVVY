@@ -24,6 +24,11 @@ export const findRentalListings = async (filters) => {
             'cleaned queryParams in the service for rental listings: ' + queryParams
         );
         const server_res = await api.get(`${LISTING_URL}/rental?${queryParams}`);
+        console.log(
+            'INTERNAL -- findRentalListings service has been called, returned data: ' +
+                JSON.stringify(server_res.data.data)
+        );
+
         return server_res.data.data;
     } catch (error) {
         console.error('Error fetching rental listings:', error);
@@ -37,8 +42,11 @@ export const findSaleListings = async (filters) => {
         console.log(
             'cleaned queryParams in the service for sales listings: ' + queryParams
         );
-
         const server_res = await api.get(`${LISTING_URL}/sale?${queryParams}`);
+        console.log(
+            'INTERNAL -- findSaleListings service has been called, returned data: ' +
+                JSON.stringify(server_res.data.data)
+        );
         return server_res.data.data;
     } catch (error) {
         console.error('Error fetching sale listings:', error);

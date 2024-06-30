@@ -15,8 +15,8 @@ import SearchBarLocation from '../search-bar/searchBarLocation.jsx';
 import SearchBarRentals from '../search-bar/searchBarRentals.jsx';
 import SearchBarSales from '../search-bar/searchBarSales.jsx';
 import {
-    findRentalListingsThunk,
-    findSaleListingsThunk,
+    findInternalRentalListingsThunk,
+    findInternalSaleListingsThunk,
 } from '../../services/internal-listing/internal-listing-thunk.js';
 
 const ResultPage = () => {
@@ -42,6 +42,7 @@ const ResultPage = () => {
     const [selectedBaths, setSelectedBaths] = useState('');
 
     const [selectedPets, setSelectedPets] = useState([]);
+    const [internalListingsToShow, setInternalListingsToShow] = useState([]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -58,7 +59,6 @@ const ResultPage = () => {
         if (state) {
             setLocation(state.location);
             setCategory(state.category);
-            console.log(state.category);
         }
     }, [state]);
 
@@ -73,58 +73,131 @@ const ResultPage = () => {
         }
     }, [listings, dispatch]);
 
-    const fetchPageData = (pageNum) => {
+    const fetchSalePublicListing = (pageNum) => {
         let params = { location, page: pageNum };
-        let filters = { location };
-        // FOR SALE
-        if (category === 'for-sale') {
-            params = {
-                ...params,
-                prices: priceRange,
-                homeSize: sizeRange,
-                homeAge: homeAgeRange,
-                bedrooms: selectedBeds,
-                bathrooms: selectedBaths,
-            };
-            dispatch(fetchSalesThunk(params)); // Dispatching the first thunk for sales
-            // define filters for the internal listings
-            filters = {
-                ...filters,
-                minPrice,
-                maxPrice,
-                minSize,
-                maxSize,
-                minHomeAge,
-                maxHomeAge,
-                minBeds: Number(selectedBeds),
-                minBaths: Number(selectedBaths),
-            };
-            dispatch(findSaleListingsThunk(filters)); // Dispatching the second thunk for sales
-        } else if (category === 'for-rent') {
-            const formattedPets = formatPets(selectedPets); // Assuming formatPets is a function defined elsewhere
-            params = {
-                ...params,
-                prices: priceRange,
-                homeSize: sizeRange,
-                bedrooms: selectedBeds,
-                bathrooms: selectedBaths,
-                pets: formattedPets,
-            };
-            dispatch(fetchRentalsThunk(params)); // Dispatching the first thunk for rentals
-            // for internal listings
-            filters = {
-                ...filters,
-                minPrice,
-                maxPrice,
-                minSize,
-                maxSize,
-                minBeds: Number(selectedBeds),
-                minBaths: Number(selectedBaths),
-                petPolicy: formatPetsString(selectedPets),
-            };
-            dispatch(findRentalListingsThunk(filters)); // Dispatching the second thunk for rentals
-        }
+        // filters for the public listings
+        params = {
+            ...params,
+            prices: priceRange,
+            homeSize: sizeRange,
+            homeAge: homeAgeRange,
+            bedrooms: selectedBeds,
+            bathrooms: selectedBaths,
+        };
+        dispatch(fetchSalesThunk(params)); // Dispatching the first thunk for sales
+    };
 
+    const fetchRentalPublicListing = (pageNum) => {
+        let params = { location, page: pageNum };
+        // for public listings
+        params = {
+            ...params,
+            prices: priceRange,
+            homeSize: sizeRange,
+            bedrooms: selectedBeds,
+            bathrooms: selectedBaths,
+            pets: formatPets(selectedPets),
+        };
+        dispatch(fetchRentalsThunk(params)); // Dispatching the first thunk for rentals
+    };
+
+    const fetchSaleInternalListing = async () => {
+        let filters = { location };
+        // filters for the internal listings
+        filters = {
+            ...filters,
+            minPrice,
+            maxPrice,
+            minSize,
+            maxSize,
+            minHomeAge,
+            maxHomeAge,
+            minBeds: Number(selectedBeds),
+            minBaths: Number(selectedBaths),
+        };
+        await dispatch(findInternalSaleListingsThunk(filters)); // Dispatching the second thunk for sales
+    };
+
+    const fetchRentalInternalListing = async () => {
+        let filters = { location };
+        filters = {
+            ...filters,
+            minPrice,
+            maxPrice,
+            minSize,
+            maxSize,
+            minBeds: Number(selectedBeds),
+            minBaths: Number(selectedBaths),
+            petPolicy: formatPetsString(selectedPets),
+        };
+        await dispatch(findInternalRentalListingsThunk(filters)); // Dispatching the second thunk for rentals
+    };
+    const fetchPageData = async (pageNum) => {
+        const totalPublicPages = Math.ceil(totalRecords / resultsPerPage);
+        console.log('totalPublicPages: ' + totalPublicPages);
+        if (category === 'for-sale') {
+            await fetchSalePublicListing(pageNum);
+            if (pageNum <= totalPublicPages) {
+                if (pageNum === totalPublicPages) {
+                    // Calculate remaining slots in the last page of public listings
+                    const remainingSlots =
+                        resultsPerPage - (totalRecords % resultsPerPage);
+                    console.log('remaining slots: ' + remainingSlots);
+                    if (remainingSlots > 0 && remainingSlots < resultsPerPage) {
+                        // Fetch internal listings to fill remaining slots
+                        await fetchSaleInternalListing();
+                        if (foundListings.length <= remainingSlots) {
+                            setInternalListingsToShow(
+                                foundListings.slice(0, remainingSlots)
+                            );
+                        }
+                    }
+                }
+            } else {
+                const offset =
+                    totalRecords % resultsPerPage === 0
+                        ? 0
+                        : resultsPerPage - (totalRecords % resultsPerPage);
+                const startIndex =
+                    (pageNum - totalPublicPages - 1) * resultsPerPage + offset;
+                const endIndex = startIndex + resultsPerPage;
+                setInternalListingsToShow(foundListings.slice(startIndex, endIndex));
+            }
+        } else if (category === 'for-rent') {
+            if (pageNum <= totalPublicPages) {
+                await fetchRentalPublicListing(pageNum);
+                if (pageNum <= totalPublicPages) {
+                    if (pageNum === totalPublicPages) {
+                        // Calculate remaining slots in the last page of public listings
+                        const remainingSlots =
+                            resultsPerPage - (totalRecords % resultsPerPage);
+                        if (remainingSlots > 0 && remainingSlots < resultsPerPage) {
+                            console.log('START FINDING INTERNAL: ' + remainingSlots);
+                            // Fetch internal listings to fill remaining slots
+                            await fetchRentalInternalListing();
+                            console.log(
+                                'foundListings: ' + JSON.stringify(foundListings)
+                            );
+                            if (foundListings.length <= remainingSlots) {
+                                console.log(
+                                    'FoundListings length is shorter than the remaining slots'
+                                );
+                                setInternalListingsToShow(foundListings);
+                            }
+                        }
+                    }
+                } else {
+                    const offset =
+                        totalRecords % resultsPerPage === 0
+                            ? 0
+                            : resultsPerPage - (totalRecords % resultsPerPage);
+                    const startIndex =
+                        (pageNum - totalPublicPages - 1) * resultsPerPage + offset;
+                    const endIndex = startIndex + resultsPerPage;
+                    setInternalListingsToShow(foundListings.slice(startIndex, endIndex));
+                }
+            }
+        }
         navigate('/results', { state: { location, category } });
     };
 
@@ -183,8 +256,14 @@ const ResultPage = () => {
 
     // ================== Pagination ==================
     const [page, setPage] = useState(currentPage || 1);
+
     // calculate total pages
-    const totalPages = Math.ceil(totalRecords / resultsPerPage);
+    const totalRecordsCombined = totalRecords + foundListings.length;
+
+    console.log('total records: ' + totalRecords);
+    console.log('internal records: ' + foundListings.length);
+    console.log('totalRecordsCombined: ' + totalRecordsCombined);
+    const totalPages = Math.ceil(totalRecordsCombined / resultsPerPage);
 
     const pageChangeHandler = (newPage) => {
         setPage(newPage);
@@ -238,6 +317,19 @@ const ResultPage = () => {
                         {listings.map((listing) => (
                             <ListingCard key={listing.id} listing={listing} />
                         ))}
+                        {foundListings &&
+                            foundListings.map((listing) => (
+                                <ListingCard
+                                    key={listing._id}
+                                    listing={{
+                                        ...listing,
+                                        price: listing.price.toString(),
+                                        bedrooms: String(listing.features.bedrooms),
+                                        bathrooms: String(listing.features.bathrooms),
+                                        sqft: String(listing.features.sqft),
+                                    }}
+                                />
+                            ))}
                     </ul>
                 </div>
                 <div>

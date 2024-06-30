@@ -11,12 +11,15 @@ import {
 } from '../../utils/formatUtils';
 
 const ListingCard = ({ listing }) => {
+    const listingId = listing._id || listing.id;
+    const sqft = listing.features.squareFootage || listing.sqft;
+    const bedrooms = listing.features.bedrooms || listing.bedrooms;
+    const bathrooms = listing.features.bathrooms || listing.bathrooms;
+
     const {
-        id,
         title,
         price,
         propertyType,
-        features,
         location,
         media,
         listingType,
@@ -38,8 +41,8 @@ const ListingCard = ({ listing }) => {
                         Date Available: {formatDate(availableDate)}
                     </p>
                     <p className="text-base text-gray-600">
-                        Beds: {features.bedrooms} | Baths: {features.bathrooms} |{' '}
-                        {formatSquareFeet(features.squareFootage)} sqft
+                        Beds: {bedrooms} | Baths: {bathrooms} | {formatSquareFeet(sqft)}{' '}
+                        sqft
                     </p>
                     <p className="text-base text-gray-600">
                         {location.address}, {location.city},{' '}
@@ -69,7 +72,7 @@ const ListingCard = ({ listing }) => {
                     <i className="fa fa-ellipsis-h" aria-hidden="true"></i>
                 </a>
                 <div>
-                    <HeartIcon listingId={id} type="external" />
+                    <HeartIcon listingId={listingId} type="external" />
                 </div>
             </div>
         </div>
@@ -79,7 +82,8 @@ const ListingCard = ({ listing }) => {
 // Update the prop types for ListingCard according to the new data structure
 ListingCard.propTypes = {
     listing: PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        _id: PropTypes.string,
+        id: PropTypes.string,
         title: PropTypes.string.isRequired,
         listingType: PropTypes.string.isRequired,
         description: PropTypes.string,
@@ -93,10 +97,13 @@ ListingCard.propTypes = {
             zipCode: PropTypes.string.isRequired,
         }).isRequired,
         features: PropTypes.shape({
-            bedrooms: PropTypes.string.isRequired,
-            bathrooms: PropTypes.string.isRequired,
-            squareFootage: PropTypes.string.isRequired,
-        }).isRequired,
+            bedrooms: PropTypes.string,
+            bathrooms: PropTypes.string,
+            squareFootage: PropTypes.string,
+        }),
+        bedrooms: PropTypes.string,
+        bathrooms: PropTypes.string,
+        sqft: PropTypes.string,
         contactInfo: PropTypes.shape({
             agentCompany: PropTypes.string,
             agentName: PropTypes.string,

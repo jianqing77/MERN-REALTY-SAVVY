@@ -15,12 +15,15 @@ export const findListingByIdThunk = createAsyncThunk(
     }
 );
 
-export const findRentalListingsThunk = createAsyncThunk(
+export const findInternalRentalListingsThunk = createAsyncThunk(
     'internal-listing/findRentalListings',
     async (filters, { rejectWithValue }) => {
         try {
             const foundRentalListingPayload = await ListingService.findRentalListings(
                 filters
+            );
+            console.log(
+                'findInternalSaleListingsThunk returned:  ' + foundRentalListingPayload
             );
             return foundRentalListingPayload;
         } catch (error) {
@@ -30,12 +33,15 @@ export const findRentalListingsThunk = createAsyncThunk(
     }
 );
 
-export const findSaleListingsThunk = createAsyncThunk(
+export const findInternalSaleListingsThunk = createAsyncThunk(
     'internal-listing/findSaleListings',
     async (filters, { rejectWithValue }) => {
         try {
             const foundSaleListingPayload = await ListingService.findSaleListings(
                 filters
+            );
+            console.log(
+                'findInternalSaleListingsThunk returned:  ' + foundSaleListingPayload
             );
             return foundSaleListingPayload;
         } catch (error) {

@@ -16,6 +16,10 @@ function Pagination({ page, totalPages, onPageChange }) {
         }
     };
 
+    const handleSelectChange = (e) => {
+        onPageChange(Number(e.target.value));
+    };
+
     return (
         <nav className="flex items-center justify-between border-t px-4 sm:px-0">
             <div className="flex w-0 flex-1 justify-end">
@@ -30,9 +34,18 @@ function Pagination({ page, totalPages, onPageChange }) {
                 </a>
             </div>
             <div className="hidden md:flex">
-                <span className="inline-flex items-center border-t-2 border-transparent px-6 pt-6 text-base font-medium text-dark-100">
-                    Page {page} of {totalPages}
-                </span>
+                {/* Dropdown for selecting page number */}
+                <select
+                    className="border-t-2 border-transparent px-2 pt-6 text-base font-medium text-dark-100 cursor-pointer"
+                    value={page}
+                    onChange={handleSelectChange}
+                    aria-label="Select page">
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <option key={index + 1} value={index + 1}>
+                            Page {index + 1}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div className="flex w-0 flex-1 justify-start">
                 <a

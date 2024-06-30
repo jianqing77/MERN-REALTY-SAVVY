@@ -5,8 +5,8 @@ import {
     updateListingThunk,
     deleteListingThunk,
     findListingByCurrentUserThunk,
-    findRentalListingsThunk,
-    findSaleListingsThunk,
+    findInternalRentalListingsThunk,
+    findInternalSaleListingsThunk,
 } from '../services/internal-listing/internal-listing-thunk.js';
 import { updateUserInAuth } from './auth-reducer.js';
 import { useDispatch } from 'react-redux';
@@ -38,28 +38,28 @@ const internalListingSlice = createSlice({
             state.error = action.error.message;
         });
         // findRentalListingsThunk
-        builder.addCase(findRentalListingsThunk.pending, (state) => {
+        builder.addCase(findInternalRentalListingsThunk.pending, (state) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(findRentalListingsThunk.fulfilled, (state, action) => {
+        builder.addCase(findInternalRentalListingsThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.foundListings = action.payload;
         });
-        builder.addCase(findRentalListingsThunk.rejected, (state, action) => {
+        builder.addCase(findInternalRentalListingsThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
         });
         // findSaleListingsThunk
-        builder.addCase(findSaleListingsThunk.pending, (state) => {
+        builder.addCase(findInternalSaleListingsThunk.pending, (state) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(findSaleListingsThunk.fulfilled, (state, action) => {
+        builder.addCase(findInternalSaleListingsThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.foundListings = action.payload;
         });
-        builder.addCase(findSaleListingsThunk.rejected, (state, action) => {
+        builder.addCase(findInternalSaleListingsThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
         });
