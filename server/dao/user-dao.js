@@ -66,38 +66,50 @@ const UserDAO = {
         return deletedUser;
     },
     addLikedInternalListing: async (uid, propertyID) => {
+        console.log('IN THE DAO -- addLikedInternalListing was called ');
+        console.log('propertyID id in addLikedInternalListing: ' + propertyID);
         const user = await UserModel.findById(uid);
         if (!user) {
             throw new ErrorHandler('User not found', 404);
         }
-        const index = user.likedInternalListings.findIndex((item) =>
-            item.listingId.equals(propertyID)
+        const index = user.likedInternalListings.findIndex(
+            (item) => item.propertyID === propertyID
         );
         if (index === -1) {
             // If listing is not already in the array, add it with isLiked true
-            user.likedInternalListings.push({ propertyID, isLiked: true });
+            user.likedInternalListings.push({
+                propertyID: propertyID,
+                isLiked: true,
+                likedAt: Date.now(),
+            });
         } else {
             // If already present and not liked, update the isLiked to true
             user.likedInternalListings[index].isLiked = true;
             user.likedInternalListings[index].likedAt = Date.now();
         }
         await user.save();
+        console.log('ADDED a liked internal listing');
+        console.log(JSON.stringify(user.likedInternalListings));
         return user;
     },
     removeLikedInternalListing: async (uid, propertyID) => {
+        // console.log('propertyID to be removed: ' + propertyID);
         const user = await UserModel.findById(uid);
         if (!user) {
             throw new ErrorHandler('User not found', 404);
         }
-        const index = user.likedInternalListings.findIndex((item) =>
-            item.listingId.equals(propertyID)
+        const index = user.likedInternalListings.findIndex(
+            (item) => item.propertyID.toString() === propertyID.toString()
         );
+        // console.log('Index in the removeLikedInternalListing: ' + index);
         if (index !== -1) {
-            // Set isLiked to false instead of removing the item
+            // Set isLiked to false instead of removing the item, reset the likedAt date to null
             user.likedInternalListings[index].isLiked = false;
             user.likedInternalListings[index].likedAt = null;
         }
         await user.save();
+        console.log('REMOVED a liked internal listing');
+        console.log(JSON.stringify(user.likedInternalListings));
         return user;
     },
     addLikedExternalListing: async (uid, propertyID) => {
@@ -110,7 +122,11 @@ const UserDAO = {
             (item) => item.propertyID === propertyID
         );
         if (index === -1) {
-            user.likedExternalListings.push({ propertyID, isLiked: true });
+            user.likedExternalListings.push({
+                propertyID,
+                isLiked: true,
+                likedAt: Date.now(),
+            });
         } else {
             user.likedExternalListings[index].isLiked = true;
             user.likedExternalListings[index].likedAt = Date.now();

@@ -9,6 +9,7 @@ import {
     removeLikedExternalListingThunk,
     fetchUserProfileThunk,
     fetchLikedExternalListingsThunk,
+    fetchLikedInternalListingsThunk,
 } from '../services/user/user-thunk.js';
 import { useDispatch } from 'react-redux';
 import {
@@ -156,6 +157,18 @@ const userSlice = createSlice({
             state.likedExternalListings = action.payload.likedExternalListingsDetails;
         });
         builder.addCase(fetchLikedExternalListingsThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        builder.addCase(fetchLikedInternalListingsThunk.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(fetchLikedInternalListingsThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action.payload.message;
+            state.likedInternalListings = action.payload.likedInternalListingsDetails;
+        });
+        builder.addCase(fetchLikedInternalListingsThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
         });

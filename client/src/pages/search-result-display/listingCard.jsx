@@ -10,7 +10,7 @@ import {
     formatDate,
 } from '../../utils/formatUtils';
 
-const ListingCard = ({ listing }) => {
+const ListingCard = ({ listing, type }) => {
     const listingId = listing._id || listing.id;
     const sqft = listing.features.squareFootage || listing.sqft;
     const bedrooms = listing.features.bedrooms || listing.bedrooms;
@@ -72,7 +72,7 @@ const ListingCard = ({ listing }) => {
                     <i className="fa fa-ellipsis-h" aria-hidden="true"></i>
                 </a>
                 <div>
-                    <HeartIcon listingId={listingId} type="external" />
+                    <HeartIcon listingId={listingId} type={type} />
                 </div>
             </div>
         </div>
@@ -119,6 +119,7 @@ ListingCard.propTypes = {
             longitude: PropTypes.number,
         }),
     }).isRequired,
+    type: PropTypes.string,
 };
 
 export default ListingCard;

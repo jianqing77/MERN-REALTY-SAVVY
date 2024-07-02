@@ -71,9 +71,10 @@ export const deleteUser = [
 export const addLikedInternalListing = [
     checkUserAccess,
     catchAsync(async (req, res, next) => {
+        console.log('IN THE CONTROLLER -- addLikedInternalListing was called');
         const updatedUser = await UserDao.addLikedInternalListing(
             req.params.id,
-            req.body.listingId
+            req.body.propertyID
         );
         req.session['currentUser'] = updatedUser;
         res.status(200).json(updatedUser); // updated user
@@ -139,9 +140,26 @@ export const fetchLikedInternalListings = catchAsync(async (req, res) => {
         throw new ErrorHandler('User not found', 400);
     }
 
+    console.log(
+        'In the fetchLikedInternalListings in the controller: ' +
+            JSON.stringify(currentUser)
+    );
     const likedInternalListings = currentUser.likedInternalListings || [];
 
+    console.log(
+        'In the likedInternalListings in the controller: ' +
+            JSON.stringify(likedInternalListings)
+    );
+
+    const activeLikedListings = likedInternalListings.filter(
+        (listing) => listing.isLiked
+    );
+
+    console.log(
+        'Filtered active liked internal listings: ' + JSON.stringify(activeLikedListings)
+    );
+
     res.json({
-        likedInternalListings,
+        likedInternalListings: activeLikedListings,
     });
 });

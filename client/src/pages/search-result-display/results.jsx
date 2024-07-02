@@ -245,7 +245,6 @@ const ResultPage = () => {
     };
 
     const petChangeHandler = (selectedOptions) => {
-        // console.log('petChangeHandler:' + selectedOptions);
         setSelectedPets(selectedOptions);
     };
 
@@ -260,13 +259,14 @@ const ResultPage = () => {
     // calculate total pages
     const totalRecordsCombined = totalRecords + foundListings.length;
 
-    console.log('total records: ' + totalRecords);
-    console.log('internal records: ' + foundListings.length);
-    console.log('totalRecordsCombined: ' + totalRecordsCombined);
+    // console.log('total records: ' + totalRecords);
+    // console.log('internal records: ' + foundListings.length);
+    // console.log('totalRecordsCombined: ' + totalRecordsCombined);
     const totalPages = Math.ceil(totalRecordsCombined / resultsPerPage);
 
     const pageChangeHandler = (newPage) => {
         setPage(newPage);
+        setInternalListingsToShow([]);
         dispatch(setCurrentPage(newPage));
         fetchPageData(newPage);
     };
@@ -315,19 +315,24 @@ const ResultPage = () => {
                 <div className="max-h-[90vh] overflow-y-auto mx-auto shadow-lg bg-white ms-3 mt-5">
                     <ul role="list" className="divide-y divide-gray-100">
                         {listings.map((listing) => (
-                            <ListingCard key={listing.id} listing={listing} />
+                            <ListingCard
+                                key={listing.id}
+                                listing={listing}
+                                type="external"
+                            />
                         ))}
-                        {foundListings &&
-                            foundListings.map((listing) => (
+                        {internalListingsToShow &&
+                            internalListingsToShow.map((listing) => (
                                 <ListingCard
                                     key={listing._id}
                                     listing={{
                                         ...listing,
                                         price: listing.price.toString(),
-                                        bedrooms: String(listing.features.bedrooms),
-                                        bathrooms: String(listing.features.bathrooms),
+                                        bedrooms: listing.features.bedrooms.toString(),
+                                        bathrooms: listing.features.bathrooms.toString(),
                                         sqft: String(listing.features.sqft),
                                     }}
+                                    type="internal"
                                 />
                             ))}
                     </ul>

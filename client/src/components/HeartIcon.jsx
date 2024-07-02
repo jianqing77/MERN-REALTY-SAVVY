@@ -10,6 +10,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 function HeartIcon({ listingId, type }) {
+    console.log('Listing ID:  ' + listingId);
+    console.log('type:  ' + type);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -50,6 +53,9 @@ function HeartIcon({ listingId, type }) {
             : addLikedExternalListingThunk;
 
         // Dispatch action and wait for it to finish
+        console.log(
+            'listingId to be passed to the addLikedInternalListingThunk: ' + listingId
+        );
         dispatch(action({ userId: userId, propertyID: listingId }));
 
         // Update state based on action success

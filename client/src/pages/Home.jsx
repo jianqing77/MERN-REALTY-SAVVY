@@ -17,15 +17,13 @@ const Home = () => {
     const [location, setLocation] = useState('');
     const { loading, error, dataFetched } = useSelector((state) => state.apartments);
 
-    const navigate = useNavigate(); // to navigate to result page
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     // update the profile attributes in user reducer
     useEffect(() => {
         dispatch(fetchUserProfileThunk());
     }, [dispatch]);
-    // const profile = useSelector((state) => state.user.profile);
-    // console.log('current profile: ' + JSON.stringify(profile));
 
     const locationChangeHandler = (event) => {
         setLocation(event.target.value);

@@ -30,8 +30,8 @@ export const updateUserGeneralThunk = createAsyncThunk(
 export const updateUserPasswordThunk = createAsyncThunk(
     '/user/update-password',
     async ({ userId, credentials }) => {
-        console.log(userId);
-        console.log('From the thunk:' + JSON.stringify(credentials));
+        // console.log(userId);
+        // console.log('From the thunk:' + JSON.stringify(credentials));
         const updateUserPasswordPayload = await UserService.updateUserPassword(
             userId,
             credentials
@@ -49,8 +49,9 @@ export const deleteUserThunk = createAsyncThunk('/user/delete', async ({ userId 
 // Add a liked internal listing for a specific user by ID
 export const addLikedInternalListingThunk = createAsyncThunk(
     '/user/likedInternalListing/add',
-    async ({ userId, listingId }) => {
-        const updatedUser = await UserService.addLikedInternalListing(userId, listingId);
+    async ({ userId, propertyID }) => {
+        console.log('IN THE USER THUNK -- addLikedInternalListingThunk was called');
+        const updatedUser = await UserService.addLikedInternalListing(userId, propertyID);
         return updatedUser; // Pass to the reducer as action.payload
     }
 );
@@ -58,10 +59,10 @@ export const addLikedInternalListingThunk = createAsyncThunk(
 // Remove a liked internal listing for a specific user by ID
 export const removeLikedInternalListingThunk = createAsyncThunk(
     '/user/likedInternalListing/remove',
-    async ({ userId, listingId }) => {
+    async ({ userId, propertyID }) => {
         const updatedUser = await UserService.removeLikedInternalListing(
             userId,
-            listingId
+            propertyID
         );
         return updatedUser; // Pass to the reducer as action.payload
     }
@@ -95,5 +96,19 @@ export const fetchLikedExternalListingsThunk = createAsyncThunk(
             userId
         );
         return likedExternalListings;
+    }
+);
+
+export const fetchLikedInternalListingsThunk = createAsyncThunk(
+    '/user/likedInternalListing',
+    async ({ userId }) => {
+        const likedExternalListingsPayload = await UserService.fetchLikedInternalListings(
+            userId
+        );
+        console.log(
+            'fetchLikedInternalListingsThunk was called',
+            likedExternalListingsPayload
+        );
+        return likedExternalListingsPayload;
     }
 );

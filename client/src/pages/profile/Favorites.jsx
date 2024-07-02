@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAPIListingByIdThunk } from '../../services/apartmentAPI/apartment-api-thunk';
-import { fetchLikedExternalListingsThunk } from '../../services/user/user-thunk';
+import {
+    fetchLikedExternalListingsThunk,
+    fetchLikedInternalListingsThunk,
+} from '../../services/user/user-thunk';
 import {
     formatDate,
     formatListingType,
@@ -21,11 +24,18 @@ export default function Favorites() {
     const { likedExternalListings } = useSelector((state) => state.user);
     const { likedInternalListings } = useSelector((state) => state.user);
 
-    console.log('likedExternalListings: ' + JSON.stringify(likedExternalListings));
+    console.log(
+        'FAVORITES -- likedExternalListings: ' + JSON.stringify(likedExternalListings)
+    );
+
+    console.log(
+        'FAVORITES -- likedInternalListings: ' + JSON.stringify(likedInternalListings)
+    );
 
     useEffect(() => {
         if (currentUser && currentUser._id) {
             dispatch(fetchLikedExternalListingsThunk({ userId: currentUser._id }));
+            dispatch(fetchLikedInternalListingsThunk({ userId: currentUser._id }));
         }
     }, [currentUser, dispatch]);
 
