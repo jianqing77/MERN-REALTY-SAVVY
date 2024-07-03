@@ -106,7 +106,7 @@ export const fetchLikedInternalListingsThunk = createAsyncThunk(
             userId
         );
         console.log(
-            'fetchLikedInternalListingsThunk was called',
+            'THUNK -- fetchLikedInternalListingsThunk was called',
             likedExternalListingsPayload
         );
         return likedExternalListingsPayload;

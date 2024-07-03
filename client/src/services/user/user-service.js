@@ -136,14 +136,18 @@ export const fetchLikedExternalListings = async (userId) => {
 
         // Use Promise.all to fetch details for each property concurrently
         const propertyDetailsPromises = likedExternalListings.map((listing) =>
-            axios.get(
-                `${SERVER_API_URL}/apartments/property/${listing.propertyID.toString()}`
-            )
+            axios
+                .get(
+                    `${SERVER_API_URL}/apartments/property/${listing.propertyID.toString()}`
+                )
+                .then((response) => ({
+                    ...response.data,
+                    likedAt: listing.likedAt, // Include the likedAt timestamp from the original listing
+                }))
         );
 
         // Resolve all promises and collect the property details
-        const propertyDetailsResponses = await Promise.all(propertyDetailsPromises);
-        const propertyDetails = propertyDetailsResponses.map((response) => response.data);
+        const propertyDetails = await Promise.all(propertyDetailsPromises);
 
         // Return the collected property details
         return {
@@ -170,13 +174,18 @@ export const fetchLikedInternalListings = async (userId) => {
         // console.log('SERVICE -- ' + JSON.stringify(likedInternalListings));
         // Use Promise.all to fetch details for each property concurrently
         const propertyDetailsPromises = likedInternalListings.map((listing) =>
-            axios.get(`${SERVER_API_URL}/listing/${listing.propertyID}`)
+            axios
+                .get(`${SERVER_API_URL}/listing/${listing.propertyID}`)
+                .then((response) => ({
+                    ...response.data,
+                    likedAt: listing.likedAt, // Include the likedAt timestamp from the original listing
+                }))
         );
 
         // Resolve all promises and collect the property details
-        const propertyDetailsResponses = await Promise.all(propertyDetailsPromises);
-        const propertyDetails = propertyDetailsResponses.map((response) => response.data);
+        const propertyDetails = await Promise.all(propertyDetailsPromises);
 
+        console.log(propertyDetails);
         // Return the collected property details
         return {
             likedInternalListingsDetails: propertyDetails,

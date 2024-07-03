@@ -14,6 +14,7 @@ import {
 import Listings from './listing/index.jsx';
 import CreateNewListingPage from './listing/CreateNewListing.jsx';
 import ListingDetailsPage from './listing/ListingDetail.jsx';
+import ShowFavoriteListing from '../../components/ShowFavoriteListing.jsx';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -75,6 +76,11 @@ export default function Profile() {
                     <Route index path="general" element={<General />} />
                     <Route path="security" element={<Security />} />
                     <Route path="favorites" element={<Favorites />} />
+                    <Route
+                        path="favorites/details/:listingId"
+                        element={<ShowFavoriteListing />}
+                    />
+
                     <Route path="notifications" element={<Notifications />} />
                     {/* listings and new listing routes as siblings, not  nested route */}
                     <Route path="listings" element={<Listings />} />

@@ -21,7 +21,6 @@ import ImageSlider from '../../../components/ImageSlider';
 export default function ShowListing({ listingId, onEdit }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
 
@@ -37,22 +36,10 @@ export default function ShowListing({ listingId, onEdit }) {
     if (!currentListing) {
         return <div>Loading...</div>;
     }
-    const imageUrls = currentListing.media.imageUrls;
 
     // Button to back to the listing list
     const backToAllListingHandler = () => {
         navigate('/profile/listings');
-    };
-
-    // Image Slider Buttons
-    const nextImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
-    };
-
-    const prevImage = () => {
-        setCurrentImageIndex(
-            (prevIndex) => (prevIndex - 1 + imageUrls.length) % imageUrls.length
-        );
     };
 
     const deleteCancelHandler = () => {

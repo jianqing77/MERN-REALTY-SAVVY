@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import { fetchAPIListingByIdThunk } from '../../services/apartmentAPI/apartment-api-thunk';
 import {
     fetchLikedExternalListingsThunk,
@@ -19,6 +21,8 @@ function classNames(...classes) {
 
 export default function Favorites() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const { currentUser } = useSelector((state) => state.auth);
 
     const { likedExternalListings } = useSelector((state) => state.user);
@@ -39,6 +43,28 @@ export default function Favorites() {
         }
     }, [currentUser, dispatch]);
 
+    const combinedListings = [...likedExternalListings, ...likedInternalListings]
+        .map((listing) => ({
+            ...listing,
+            id: String(listing._id || listing.id), // Use '_id' if available, otherwise use 'id'
+            category: listing._id ? 'internal' : 'external', // Add 'category' based on presence of '_id'
+            price: String(listing.price),
+            bedrooms: String(listing.features?.bedrooms || listing.features?.bedrooms),
+            bathrooms: String(listing.features?.bathrooms || listing.features?.bathrooms),
+            sqft: String(listing.features?.sqft || listing.features?.squareFootage),
+            likedAt: new Date(listing.likedAt),
+        }))
+        .sort((a, b) => b.likedat - a.likedat); // Sort by likedAt in descending order
+
+    const listingLinkHandler = (listing) => {
+        console.log('In the listingLinkHandler:' + JSON.stringify(listing));
+        if (listing.category === 'external') {
+            window.open(listing.media.refUrl, '_blank', 'noopener,noreferrer');
+        } else {
+            navigate(`/profile/favorites/details/${listing.id}`);
+        }
+    };
+
     return (
         <div className="max-w-9xl gap-x-8 gap-y-10 px-4 pt-16 pb-10 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
@@ -52,7 +78,7 @@ export default function Favorites() {
                 </div>
             </div>
             <div className="mt-8 flow-root">
-                {!likedExternalListings || likedExternalListings.length === 0 ? (
+                {!combinedListings || combinedListings.length === 0 ? (
                     <div className="text-center text-sm text-gray-500">
                         No Liked External Listings.
                     </div>
@@ -94,12 +120,11 @@ export default function Favorites() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {likedExternalListings.map((listing, idx) => (
+                                    {combinedListings.map((listing, idx) => (
                                         <tr key={listing.id}>
                                             <td
                                                 className={classNames(
-                                                    idx !==
-                                                        likedExternalListings.length - 1
+                                                    idx !== combinedListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
                                                     'whitespace-nowrap py-4 pl-4 pr-3 text-sm text-center font-medium text-gray-900 sm:pl-6 lg:pl-8'
@@ -108,8 +133,7 @@ export default function Favorites() {
                                             </td>
                                             <td
                                                 className={classNames(
-                                                    idx !==
-                                                        likedExternalListings.length - 1
+                                                    idx !== combinedListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
@@ -118,8 +142,7 @@ export default function Favorites() {
                                             </td>
                                             <td
                                                 className={classNames(
-                                                    idx !==
-                                                        likedExternalListings.length - 1
+                                                    idx !== combinedListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
@@ -128,8 +151,7 @@ export default function Favorites() {
                                             </td>
                                             <td
                                                 className={classNames(
-                                                    idx !==
-                                                        likedExternalListings.length - 1
+                                                    idx !== combinedListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
                                                     'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
@@ -138,8 +160,7 @@ export default function Favorites() {
                                             </td>
                                             <td
                                                 className={classNames(
-                                                    idx !==
-                                                        likedExternalListings.length - 1
+                                                    idx !== combinedListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
                                                     'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
@@ -148,25 +169,24 @@ export default function Favorites() {
                                             </td>
                                             <td
                                                 className={classNames(
-                                                    idx !==
-                                                        likedExternalListings.length - 1
+                                                    idx !== combinedListings.length - 1
                                                         ? 'border-b border-gray-200'
                                                         : '',
                                                     'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'
                                                 )}>
                                                 <HeartIcon
                                                     listingId={listing.id}
-                                                    type="external"
+                                                    type={listing.category}
                                                 />
-                                                <a
-                                                    href={listing.media.refUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
+                                                <button
+                                                    onClick={() =>
+                                                        listingLinkHandler(listing)
+                                                    }
                                                     aria-label="Details">
                                                     <i
                                                         className="fa fa-ellipsis-h ms-5"
                                                         aria-hidden="true"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
