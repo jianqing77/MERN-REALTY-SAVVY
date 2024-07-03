@@ -73,8 +73,9 @@ const UserDAO = {
             throw new ErrorHandler('User not found', 404);
         }
         const index = user.likedInternalListings.findIndex(
-            (item) => item.propertyID === propertyID
+            (item) => item.propertyID.toString() === propertyID.toString()
         );
+        console.log('index: ' + index);
         if (index === -1) {
             // If listing is not already in the array, add it with isLiked true
             user.likedInternalListings.push({

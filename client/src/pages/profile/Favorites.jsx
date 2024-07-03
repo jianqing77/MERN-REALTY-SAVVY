@@ -10,6 +10,7 @@ import {
 import {
     formatDate,
     formatListingType,
+    formatListingTypeInternal,
     formatPrice,
     formatPropertyType,
 } from '../../utils/formatUtils';
@@ -28,13 +29,13 @@ export default function Favorites() {
     const { likedExternalListings } = useSelector((state) => state.user);
     const { likedInternalListings } = useSelector((state) => state.user);
 
-    console.log(
-        'FAVORITES -- likedExternalListings: ' + JSON.stringify(likedExternalListings)
-    );
+    // console.log(
+    //     'FAVORITES -- likedExternalListings: ' + JSON.stringify(likedExternalListings)
+    // );
 
-    console.log(
-        'FAVORITES -- likedInternalListings: ' + JSON.stringify(likedInternalListings)
-    );
+    // console.log(
+    //     'FAVORITES -- likedInternalListings: ' + JSON.stringify(likedInternalListings)
+    // );
 
     useEffect(() => {
         if (currentUser && currentUser._id) {
@@ -138,7 +139,13 @@ export default function Favorites() {
                                                         : '',
                                                     'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell text-center'
                                                 )}>
-                                                {formatListingType(listing.listingType)}
+                                                {listing.category === 'internal'
+                                                    ? formatListingTypeInternal(
+                                                          listing.listingType
+                                                      )
+                                                    : formatListingType(
+                                                          listing.listingType
+                                                      )}
                                             </td>
                                             <td
                                                 className={classNames(
