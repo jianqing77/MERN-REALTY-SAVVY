@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import ResultPage from './pages/search-result-display/results.jsx';
 import { LoadScript } from '@react-google-maps/api';
+import ScrollToTop from './components/ScrollToTop.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -30,6 +31,7 @@ function App() {
             <PersistGate loading={null} persistor={persistor}>
                 <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
                     <BrowserRouter>
+                        <ScrollToTop />
                         <div className="flex flex-col min-h-screen">
                             <NavBar />
                             <main className="flex-grow overflow-auto">
