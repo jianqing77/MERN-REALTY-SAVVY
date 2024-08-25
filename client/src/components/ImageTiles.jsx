@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import pic1 from '../assets/auth-4.png';
 import pic2 from '../assets/auth-3.png';
 import pic3 from '../assets/auth-5.png';
@@ -8,21 +9,23 @@ import { Link } from 'react-router-dom';
 const collections = [
     {
         name: 'Rent a Home',
-        href: '#',
+        href: '/results',
         imageSrc: pic3,
         description:
-            'Experience hassle-free renting with our comprehensive online platform that streamlines everything from browsing listings to application and payment processes',
+            'Experience hassle-free renting with our comprehensive online platform that streamlines everything from browsing listings to application',
         btnText: 'Find rentals',
         imageAlt: 'Rental Hint Image',
+        category: 'for-rent',
     },
     {
         name: 'Buy a Home',
-        href: '#',
+        href: '/results',
         imageSrc: pic2,
         description:
             'Discover your dream home with our exclusive listings and immersive photo tours that showcase unique properties not available anywhere else',
         btnText: 'Browse homes',
         imageAlt: 'Buy Hint Image',
+        category: 'for-sale',
     },
     {
         name: 'List a Home',
@@ -32,10 +35,11 @@ const collections = [
             'Simplify the process of listing your property with our expert guidance and personalized services that ensure a smooth and successful transaction',
         btnText: 'Add your own',
         imageAlt: 'List own property Hint Image',
+        category: 'listings',
     },
 ];
 
-export default function ImageTiles() {
+export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
     return (
         <div className="relative">
             {/* Background image and overlap */}
@@ -113,11 +117,33 @@ export default function ImageTiles() {
                                             {collection.description}
                                         </div>
                                         <div className="mt-2 sm:mt-3 flex justify-center items-center">
-                                            <Link
+                                            <div className="mt-2 sm:mt-3 flex justify-center items-center">
+                                                {collection.category === 'listings' ? (
+                                                    <Link
+                                                        to={collection.href}
+                                                        className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
+                                                        {collection.btnText}
+                                                    </Link>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => {
+                                                            onCategoryChange({
+                                                                target: {
+                                                                    value: collection.category,
+                                                                },
+                                                            });
+                                                            scrollToTopOfHome();
+                                                        }}
+                                                        className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
+                                                        {collection.btnText}
+                                                    </button>
+                                                )}
+                                            </div>
+                                            {/* <Link
                                                 to={collection.href}
                                                 className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
                                                 {collection.btnText}
-                                            </Link>
+                                            </Link> */}
                                         </div>
                                     </div>
                                 </div>
@@ -129,3 +155,8 @@ export default function ImageTiles() {
         </div>
     );
 }
+
+ImageTiles.propTypes = {
+    onCategoryChange: PropTypes.func.isRequired,
+    scrollToTopOfHome: PropTypes.func,
+};

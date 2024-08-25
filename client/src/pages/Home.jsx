@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import WelcomePic from '../assets/auth-2.jpg';
 import { Link, useNavigate } from 'react-router-dom';
@@ -33,6 +33,20 @@ const Home = () => {
         setCategory(event.target.value);
     };
 
+    const topOfHomeRef = useRef(null);
+
+    const scrollToTopOfHome = () => {
+        if (topOfHomeRef.current) {
+            topOfHomeRef.current.scrollIntoView();
+            // topOfHomeRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+    useEffect(() => {
+        console.log('Component mounted, ref:', topOfHomeRef.current);
+        return () => {
+            console.log('Component unmounting');
+        };
+    }, []);
     const searchHandler = async (event) => {
         event.preventDefault();
         const action = category === 'for-sell' ? fetchSalesThunk : fetchRentalsThunk;
@@ -67,8 +81,9 @@ const Home = () => {
                     zIndex: 1,
                 }}
             />
-            <div className="absolute inset-0 bg-dark-200 bg-opacity-30 z-20"></div>
-            {/* <LocationInput /> */}
+            <div
+                ref={topOfHomeRef}
+                className="absolute inset-0 bg-dark-200 bg-opacity-30 z-20"></div>
             <div
                 className="min-h-screen flex justify-center items-center"
                 style={{ zIndex: 30, position: 'relative' }}>
@@ -105,7 +120,10 @@ const Home = () => {
                     </form>
                 </div>
             </div>
-            <ImageTiles />
+            <ImageTiles
+                onCategoryChange={categoryChangeHandler}
+                scrollToTopOfHome={scrollToTopOfHome}
+            />
         </div>
     );
 };

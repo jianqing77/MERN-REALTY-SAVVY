@@ -259,9 +259,6 @@ const ResultPage = () => {
     // calculate total pages
     const totalRecordsCombined = totalRecords + foundListings.length;
 
-    // console.log('total records: ' + totalRecords);
-    // console.log('internal records: ' + foundListings.length);
-    // console.log('totalRecordsCombined: ' + totalRecordsCombined);
     const totalPages = Math.ceil(totalRecordsCombined / resultsPerPage);
 
     const pageChangeHandler = (newPage) => {
