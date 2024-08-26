@@ -4,11 +4,15 @@ import { store, persistor } from './config/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import Home from './pages/Home';
 import About from './pages/About';
+import Terms from './pages/footer/Terms.jsx';
+import Privacy from './pages/footer/Privacy.jsx';
 import Profile from './pages/profile/index.jsx';
 import SignIn from './pages/auth/SignIn.jsx';
 import SignUp from './pages/auth/SignUp.jsx';
 import NavBar from './components/Navigation.jsx';
-import Footer from './components/Footer.jsx';
+// import Footer from './components/Footer.jsx';
+import Footer from './components/foot.jsx';
+
 import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import ResultPage from './pages/search-result-display/results.jsx';
@@ -41,6 +45,8 @@ function App() {
                                         path="/results"
                                         element={<ResultPage />}></Route>
                                     <Route path="/about" element={<About />}></Route>
+                                    <Route path="/terms" element={<Terms />}></Route>
+                                    <Route path="/privacy" element={<Privacy />}></Route>
                                     <Route path="/signin" element={<SignIn />}></Route>
                                     <Route path="/signup" element={<SignUp />}></Route>
                                     <Route element={<PrivateRoute />}>

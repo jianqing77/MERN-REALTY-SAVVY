@@ -12,12 +12,12 @@ const navigation = {
         { name: 'Guides', href: '#' },
     ],
     company: [
-        { name: 'About', href: '#' },
+        { name: 'About', href: '/about' },
         { name: 'FAQs', href: '#' },
     ],
     legal: [
-        { name: 'Terms & Conditions', href: '#' },
-        { name: 'Privacy', href: '#' },
+        { name: 'Terms & Conditions', href: '/terms' },
+        { name: 'Privacy', href: '/privacy' },
     ],
     social: [
         {
@@ -87,7 +87,7 @@ const navigation = {
 export default function Footer() {
     return (
         <footer className="bg-dark-100" aria-labelledby="footer-heading">
-            <div className="mx-auto max-w-7xl px-6 pb-8 pt-1 sm:pt-24 lg:px-8 lg:pt-32">
+            <div className="mx-auto max-w-7xl px-6 pb-8 pt-10 sm:pt-16 lg:px-8 lg:pt-24">
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                     <div className="space-y-8">
                         <img className="h-7" src={logoAvatar} alt="company logo" />

@@ -74,13 +74,13 @@ export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
                     <div className="flex items-center justify-center">
                         <img src={logoAvatar} alt="Logo" className="h-20 mb-10" />
                     </div>
-                    <h1 className="text-4xl font-bold tracking-tight text-dark-100 sm:text-3xl md:text-4xl">
+                    <h1 className="text-2xl font-bold tracking-tight text-dark-100 sm:text-3xl md:text-4xl">
                         Expertise Meets Innovation
                     </h1>
-                    <h1 className="my-4 text-4xl font-bold tracking-tight text-dark-100 sm:text-3xl md:text-4xl">
+                    <h1 className="my-4 text-2xl font-bold tracking-tight text-dark-100 sm:text-3xl md:text-4xl">
                         II
                     </h1>
-                    <h1 className="text-4xl font-bold tracking-tight text-dark-100 sm:text-3xl md:text-4xl">
+                    <h1 className="text-2xl font-bold tracking-tight text-dark-100 sm:text-3xl md:text-4xl">
                         Your Perfect New Home
                     </h1>
                 </div>
