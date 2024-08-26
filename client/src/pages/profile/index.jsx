@@ -25,7 +25,7 @@ const navigation = [
     { name: 'Security', href: 'security', icon: FingerPrintIcon },
     { name: 'Favorites', href: 'favorites', icon: HeartIcon },
     { name: 'Listings', href: 'listings', icon: ListBulletIcon },
-    { name: 'Notifications', href: 'notifications', icon: BellIcon },
+    // { name: 'Notifications', href: 'notifications', icon: BellIcon },
 ];
 
 export default function Profile() {
