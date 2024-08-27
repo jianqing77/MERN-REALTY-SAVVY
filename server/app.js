@@ -10,12 +10,15 @@ import listingRouter from './routes/listing-route.js';
 import apartmentRouter from './routes/apartment-route.js';
 import ErrorHandler from './utils/ErrorHandler.js';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+
 // config .env
 dotenv.config();
 
 const app = express();
 app.use(express.json()); // postman test purpose
 app.use(cookieParser()); // get the information from the cookie
+
 // =================================================================
 // ==================== Session & Cors =============================
 // =================================================================
@@ -60,6 +63,8 @@ mongoose
         console.log('Database connection error:', err);
     });
 
+// create dynamic directories name
+const __dirname = path.resolve();
 // =================================================================
 // ======================= Routes ==================================
 // =================================================================
@@ -91,6 +96,15 @@ app.use((err, req, res, next) => {
         message: message,
     });
 });
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.get(
+    '*',
+    (req,
+    (res) => {
+        res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+    })
+);
 
 // connect to port
 const port = process.env.PORT || 4000;
