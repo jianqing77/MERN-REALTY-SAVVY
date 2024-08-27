@@ -41,12 +41,7 @@ const Home = () => {
             // topOfHomeRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     };
-    useEffect(() => {
-        console.log('Component mounted, ref:', topOfHomeRef.current);
-        return () => {
-            console.log('Component unmounting');
-        };
-    }, []);
+
     const searchHandler = async (event) => {
         event.preventDefault();
         const action = category === 'for-sell' ? fetchSalesThunk : fetchRentalsThunk;
@@ -89,22 +84,22 @@ const Home = () => {
                 style={{ zIndex: 30, position: 'relative' }}>
                 <div className="container mx-auto bg-dark-100 rounded-lg p-14">
                     <form onSubmit={searchHandler}>
-                        <h1 className="text-center font-bold text-yellow-100 text-4xl">
+                        <h1 className="text-center font-bold text-yellow-100 text-2xl sm:text-4xl">
                             Discover Your New Home
                         </h1>
                         <p className="mx-auto font-normal text-sm my-6 text-yellow-100 text-center">
                             Enter the location you are interested in and select whether
                             you are looking for properties to buy or rent.
                         </p>
-                        <div className="sm:flex items-center bg-white rounded-lg overflow-hidden px-2 py-1 justify-between">
+                        <div className="flex flex-col sm:flex-row items-center bg-white rounded-lg overflow-hidden sm:px-2 py-2 justify-between">
                             <input
-                                className="text-base text-gray-400 flex-grow outline-none px-2 border-none focus:ring-0"
+                                className="border-none text-base text-gray-400 flex-grow flex-auto outline-none focus:ring-0"
                                 type="text"
-                                placeholder="Enter location (e.g., New York, Los Angeles)"
+                                placeholder="Enter location (e.g., New York)"
                                 value={location}
                                 onChange={locationChangeHandler}
                             />
-                            <div className="flex items-center px-2 rounded-lg space-x-4 mx-auto">
+                            <div className="flex items-center px-2 rounded-lg space-x-4 mx-auto mt-2 sm:mt-0">
                                 <select
                                     className="text-base text-gray-800 outline-none border-3 border-dark-100 px-4 py-2 rounded-lg focus:ring-primary-200 focus:ring-2 focus:border-none"
                                     value={category}

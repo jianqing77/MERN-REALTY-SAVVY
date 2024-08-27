@@ -30,40 +30,42 @@ const ListingCard = ({ listing, type }) => {
     const displayAgentInfo = listingType === 'for_sale';
 
     return (
-        <div className="grid grid-cols-10 rounded overflow-hidden shadow-lg bg-white py-2 border-0">
+        <div className="grid lg:grid-cols-10 rounded overflow-hidden shadow-lg bg-white py-2 border-0">
             <div
-                className="col-span-3 w-40 h-32 bg-cover bg-center rounded-xl ms-12"
+                className="col-span-10 lg:col-span-3 w-28 h-20 2xl:w-40 2xl:h-32 bg-cover bg-center rounded-xl lg:ms-12"
                 style={{ backgroundImage: `url(${media.imageUrls[0]})` }}></div>
-            <div className="col-span-6 ms-6">
+            <div className="col-span-9 lg:col-span-6 lg:ms-10 xl:ms-6">
                 <div className="pe-1">
-                    <div className="text-xl font-bold mb-1">{formatPrice(price)}</div>
-                    <p className="text-base text-gray-600">
+                    <div className="text-base 2xl:text-xl font-bold mb-1">
+                        {formatPrice(price)}
+                    </div>
+                    <p className="text-sm 2xl:text-base text-gray-600">
                         Date Available: {formatDate(availableDate)}
                     </p>
-                    <p className="text-base text-gray-600">
+                    <p className="text-sm 2xl:text-base text-gray-600">
                         Beds: {bedrooms} | Baths: {bathrooms} | {formatSquareFeet(sqft)}{' '}
                         sqft
                     </p>
-                    <p className="text-base text-gray-600">
+                    <p className="text-sm 2xl:text-base text-gray-600">
                         {location.address}, {location.city},{' '}
                         {getAbbreviation(location.state)}, {location.zipCode}
                     </p>
-                    <p className="text-base text-gray-600">
+                    <p className="text-xs text-gray-600">
                         {formatPropertyType(propertyType)}{' '}
                         {formatListingType(listingType)} |{' '}
                         {displayAgentInfo ? (
-                            <span className="text-base text-gray-500 uppercase">
+                            <span className="text-xs text-gray-500 uppercase">
                                 {contactInfo.agentCompany} | {contactInfo.agentName}
                             </span>
                         ) : (
-                            <span className="text-base text-gray-500">
+                            <span className="text-xs text-gray-500">
                                 {contactInfo.agentName}
                             </span>
                         )}
                     </p>
                 </div>
             </div>
-            <div className="col-span-1 flex items-top justify-around">
+            <div className="lg:col-span-1 flex items-top justify-around">
                 <a
                     href={media.refUrl}
                     target="_blank"

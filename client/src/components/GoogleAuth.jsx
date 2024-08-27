@@ -16,7 +16,7 @@ const GoogleAuth = ({ onGoogleAuth }) => {
             const provider = new GoogleAuthProvider();
             const auth = getAuth(FirebaseApp);
             const result = await signInWithPopup(auth, provider);
-            const credential = GoogleAuthProvider.credentialFromResult(result); // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result); // give a Google Access Token, then use it to access the Google API.
             const token = credential.accessToken; // The signed-in user info.
             const user = result.user;
             const userData = {

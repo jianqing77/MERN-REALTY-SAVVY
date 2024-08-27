@@ -45,7 +45,7 @@ export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
             {/* Background image and overlap */}
             <div
                 aria-hidden="true"
-                className="absolute inset-0 hidden sm:flex sm:flex-col bg-primary-500">
+                className="absolute inset-0 flex flex-col bg-primary-500">
                 <div className="relative w-full flex-1">
                     <div className="absolute inset-0 overflow-hidden"></div>
                     <div className="absolute inset-0 bg-primary-500 opacity-50" />
@@ -54,22 +54,6 @@ export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
             </div>
 
             <div className="relative mx-auto max-w-3xl px-4 pb-96 text-center sm:px-6 sm:pb-0 lg:px-8">
-                {/* Background image and overlap */}
-                <div
-                    aria-hidden="true"
-                    className="absolute inset-0 flex flex-col sm:hidden">
-                    <div className="relative w-full flex-1 bg-gray-800">
-                        <div className="absolute inset-0 overflow-hidden">
-                            <img
-                                src="https://tailwindui.com/img/ecommerce-images/home-page-04-hero-full-width.jpg"
-                                alt=""
-                                className="h-full w-full object-cover object-center"
-                            />
-                        </div>
-                        <div className="absolute inset-0 bg-gray-900 opacity-50" />
-                    </div>
-                    <div className="h-48 w-full bg-white" />
-                </div>
                 <div className="relative py-32">
                     <div className="flex items-center justify-center">
                         <img src={logoAvatar} alt="Logo" className="h-20 mb-10" />
@@ -89,11 +73,11 @@ export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
             <section
                 aria-labelledby="collection-heading"
                 className="relative -mt-96 sm:mt-0">
-                <div className="mx-auto grid max-w-md grid-cols-1 gap-y-6 px-4 sm:max-w-7xl sm:grid-cols-3 sm:gap-x-6 sm:gap-y-0 sm:px-6 lg:gap-x-8 lg:px-8 pb-20">
+                <div className="mx-auto grid max-w-md grid-cols-1 gap-y-6 px-4 md:max-w-7xl md:grid-cols-3 md:gap-x-6 md:gap-y-0 md:px-6 lg:gap-x-8 lg:px-8 pb-20">
                     {collections.map((collection) => (
                         <div
                             key={collection.name}
-                            className="group relative h-96 rounded-lg bg-dark-100 shadow-xl sm:aspect-h-5 sm:aspect-w-4 sm:h-auto">
+                            className="group relative h-96 rounded-lg bg-dark-100 shadow-xl md:aspect-h-5 md:aspect-w-4 md:h-auto">
                             <div>
                                 <div
                                     aria-hidden="true"
@@ -109,11 +93,11 @@ export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
                                 </div>
                                 <div className="absolute inset-0 flex items-center justify-center rounded-lg">
                                     <div>
-                                        <div className="mt-1 flex justify-center items-center text-2xl font-bold text-primary-500">
+                                        <div className="mt-1 flex justify-center items-center text-xl lg:text-2xl font-bold text-primary-500">
                                             {collection.name}
                                         </div>
 
-                                        <div className="mt-1 p-4 flex flex-col justify-center items-center text-base text-primary-500 text-center">
+                                        <div className="mt-1 p-4 flex flex-col justify-center items-center text-sm lg:text-base text-primary-500 text-center">
                                             {collection.description}
                                         </div>
                                         <div className="mt-2 sm:mt-3 flex justify-center items-center">
@@ -121,7 +105,7 @@ export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
                                                 {collection.category === 'listings' ? (
                                                     <Link
                                                         to={collection.href}
-                                                        className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
+                                                        className="lg:my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
                                                         {collection.btnText}
                                                     </Link>
                                                 ) : (
@@ -134,16 +118,11 @@ export default function ImageTiles({ onCategoryChange, scrollToTopOfHome }) {
                                                             });
                                                             scrollToTopOfHome();
                                                         }}
-                                                        className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
+                                                        className="lg:my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
                                                         {collection.btnText}
                                                     </button>
                                                 )}
                                             </div>
-                                            {/* <Link
-                                                to={collection.href}
-                                                className="my-4 rounded-md bg-dark-200 py-3 px-10 font-medium text-yellow-100 hover:bg-primary-500 hover:text-dark-100">
-                                                {collection.btnText}
-                                            </Link> */}
                                         </div>
                                     </div>
                                 </div>

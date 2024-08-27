@@ -3,7 +3,7 @@ import logoAvatar from '../assets/logo-rs-em.jpg';
 const navigation = {
     main: [
         { name: 'About', href: '/about' },
-        { name: 'Terms and Conditions', href: '/terms' },
+        { name: 'Terms & Conditions', href: '/terms' },
         { name: 'Privacy', href: '/privacy' },
         { name: 'Press', href: '#' },
         { name: 'Accessibility', href: '#' },

@@ -34,16 +34,18 @@ export default function About() {
                 </div>
                 {/* Lower Sections */}
                 <div className="mt-12">
-                    <div className="mt-32 grid grid-cols-12">
-                        <div className="col-start-3 col-span-3">
+                    <div className="mt-32 grid grid-cols-1 lg:grid-cols-12">
+                        <div className="lg:col-start-3 lg:col-span-3">
                             <img
-                                className="block mx-auto lg:mx-0 shadow-2xl w-full rounded-lg"
+                                className="hidden lg:block mx-auto w-1/2 lg:mx-0 shadow-2xl lg:w-full rounded-lg"
                                 alt="Affectionate young family interacting with each other on living room sofa."
                                 src={pic1}
                             />
                         </div>
-                        <div className="flex flex-col justify-center col-start-7 col-span-4 text-center lg:text-left px-10">
-                            <h2 className="text-2xl font-bold">Our Mission</h2>
+                        <div className="flex flex-col justify-center lg:col-start-7 lg:col-span-4 text-center lg:text-left px-10">
+                            <h2 className="text-2xl font-bold mt-0 mb-6 text-center lg:text-left">
+                                Our Mission
+                            </h2>
                             <p className="mt-10 text-lg">
                                 Our mission at Realty Savvy is to transform the real
                                 estate market by making it more accessible, transparent,
@@ -55,16 +57,18 @@ export default function About() {
                             </p>
                         </div>
                     </div>
-                    <div className="mt-32 grid grid-cols-12">
-                        <div className="col-start-3 col-span-3">
+                    <div className="mt-32 grid  grid-cols-1 lg:grid-cols-12">
+                        <div className="lg:col-start-3 lg:col-span-3">
                             <img
-                                className="block mx-auto lg:mx-0 shadow-2xl w-full rounded-lg"
+                                className="hidden lg:block mx-auto w-1/2 lg:mx-0 shadow-2xl lg:w-full rounded-lg"
                                 alt=""
                                 src={pic5}
                             />
                         </div>
-                        <div className="flex flex-col justify-center col-start-7 col-span-4 text-center lg:text-left px-10">
-                            <h2 className="text-2xl font-bold">Our Vision</h2>
+                        <div className="flex flex-col justify-center lg:col-start-7 lg:col-span-4 text-center lg:text-left px-10">
+                            <h2 className="text-2xl font-bold mt-0 mb-6 text-center lg:text-left">
+                                Our Vision
+                            </h2>
                             <p className="mt-10 text-lg">
                                 At Realty Savvy, we envision a world where the right
                                 property is just a click away. We are dedicated to
@@ -75,10 +79,10 @@ export default function About() {
                             </p>
                         </div>
                     </div>
-                    <div className="mt-32 grid grid-cols-12">
-                        <div className="col-start-3 col-span-3">
+                    <div className="mt-32 grid grid-cols-1 lg:grid-cols-12">
+                        <div className="lg:col-start-3 lg:col-span-3">
                             <img
-                                className="block mx-auto lg:mx-0 shadow-2xl w-full rounded-lg"
+                                className="hidden lg:block mx-auto w-1/2 lg:mx-0 shadow-2xl lg:w-full rounded-lg"
                                 alt="Affectionate young family interacting with each other on living room sofa."
                                 src={pic2}
                             />
@@ -97,10 +101,10 @@ export default function About() {
                             </p>
                         </div>
                     </div>
-                    <div className="mt-32 grid grid-cols-12">
-                        <div className="col-start-3 col-span-3 flex flex-col justify-end">
+                    <div className="mt-32 grid  grid-cols-1 lg:grid-cols-12">
+                        <div className="lg:col-start-3 lg:col-span-3">
                             <img
-                                className="block mx-auto lg:mx-0 shadow-2xl w-full rounded-lg"
+                                className="hidden lg:block mx-auto w-1/2 lg:mx-0 shadow-2xl lg:w-full rounded-lg"
                                 alt="Affectionate young family interacting with each other on living room sofa."
                                 src={pic4}
                             />

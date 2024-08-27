@@ -21,7 +21,7 @@ function Pagination({ page, totalPages, onPageChange }) {
     };
 
     return (
-        <nav className="flex items-center justify-between border-t px-4 sm:px-0">
+        <nav className="flex items-center justify-between border-t px-4 sm:px-0 ">
             <div className="flex w-0 flex-1 justify-end">
                 <a
                     href="#"
@@ -36,7 +36,7 @@ function Pagination({ page, totalPages, onPageChange }) {
             <div className="hidden md:flex">
                 {/* Dropdown for selecting page number */}
                 <select
-                    className="border-t-2 border-transparent px-2 pt-6 text-base font-medium text-dark-100 cursor-pointer"
+                    className="bg-transparent border-transparent mt-2 ml-3 px-2 pt-6 text-base font-medium text-dark-100 cursor-pointer focus:outline-none focus:border-none focus:ring-0"
                     value={page}
                     onChange={handleSelectChange}
                     aria-label="Select page">
@@ -47,7 +47,7 @@ function Pagination({ page, totalPages, onPageChange }) {
                     ))}
                 </select>
             </div>
-            <div className="flex w-0 flex-1 justify-start">
+            <div className="flex w-0 flex-1 justify-start ">
                 <a
                     href="#"
                     onClick={nextClickHandler}
