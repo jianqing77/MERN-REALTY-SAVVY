@@ -68,14 +68,19 @@ const __dirname = path.resolve();
 // =================================================================
 // ======================= Routes ==================================
 // =================================================================
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to Realty Savvy Server!' });
-});
+// app.get('/', (req, res) => {
+//     res.json({ message: 'Welcome to Realty Savvy Server!' });
+// });
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/listing', listingRouter);
 app.use('/api/apartments', apartmentRouter); // New route for listings from the public API
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 // =================================================================
 // ======================= Middlewares =============================
@@ -95,11 +100,6 @@ app.use((err, req, res, next) => {
         statusCode: statusCode,
         message: message,
     });
-});
-
-app.use(express.static(path.join(__dirname, '/client/dist')));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
 // connect to port
