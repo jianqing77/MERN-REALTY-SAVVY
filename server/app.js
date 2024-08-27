@@ -11,6 +11,8 @@ import apartmentRouter from './routes/apartment-route.js';
 import ErrorHandler from './utils/ErrorHandler.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import mongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
 
 // config .env
 dotenv.config();
@@ -36,6 +38,7 @@ const sessionConfig = {
     },
 };
 app.use(session(sessionConfig));
+app.use(helmet());
 
 app.use(
     cors({
@@ -81,6 +84,7 @@ app.use(express.static(path.join(__dirname, '/client/dist')));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
+app.use(mongoSanitize()); // prevent mongo injection
 
 // =================================================================
 // ======================= Middlewares =============================
