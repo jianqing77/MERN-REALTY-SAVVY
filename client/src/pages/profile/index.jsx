@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import General from './general.jsx';
+import General from './General.jsx';
 import Security from './Security.jsx';
 import Favorites from './Favorites.jsx';
 import Notifications from './Notifications.jsx';
