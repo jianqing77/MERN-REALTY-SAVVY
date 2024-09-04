@@ -46,12 +46,12 @@ function DropDownSingle({
         <div ref={dropdownRef} className="mt-1">
             <button
                 onClick={toggleDropdown}
-                className={`text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg ${labelClassName} px-5 py-2 text-center inline-flex items-center`}
+                className={`text-gray-800 bg-white outline-none border border-dark-100 focus:ring-2 focus:border-none focus:ring-primary-200 font-medium rounded-lg ${labelClassName} px-1 xl:px-5 py-2 text-center inline-flex items-center text-sm 2xl:text-base`}
                 type="button"
                 aria-haspopup="true"
                 aria-expanded={isOpen}>
                 {selectedOption.label}
-                <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 10 6">
+                <svg className="w-2.5 h-2.5 ml-3" fill="none" viewBox="0 0 10 6">
                     <path
                         stroke="currentColor"
                         strokeLinecap="round"

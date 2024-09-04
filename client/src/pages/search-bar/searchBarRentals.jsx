@@ -67,7 +67,7 @@ const SearchBarRentals = ({
                 buttonClassName="text-base"
             />
             <button
-                className="bg-dark-200 text-white text-base rounded-lg px-4 py-2"
+                className="bg-dark-200 text-white text-sm 2xl:text-base rounded-lg px-4 py-2"
                 onClick={onSearch}>
                 Search
             </button>
