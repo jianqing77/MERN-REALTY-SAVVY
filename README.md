@@ -5,10 +5,17 @@ Realty Savvy is a comprehensive real estate listing platform designed to enable 
 ## 🌟 Features
 
 -   **User-Friendly Interface**: React front-end with Tailwind CSS for a responsive and modern design.
+    ![home page](demo/ui.gif)
 -   **Advanced Search**: Multiple filters and search functionality to easily find listings.
+    ![search page](demo/search.gif)
+
 -   **Interactive Maps**: Integrated Google Maps to display property locations.
+    ![map page](demo/map.gif)
+
 -   **Secure User Authentication**: Utilizes Google OAuth for authentication and JWT for session management.
+    ![auth login page](demo/login.gif)
 -   **Real-Time Listings**: Integration with US Realtor API to fetch real-time property listings.
+    ![real-time listing page](demo/real-time-listing.gif)
 -   **Image Hosting**: Large property images are hosted using Firebase Cloud.
 
 ## 💻 Technology Stack
