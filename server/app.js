@@ -38,11 +38,11 @@ const sessionConfig = {
     },
 };
 app.use(session(sessionConfig));
-app.use(
-    helmet({
-        contentSecurityPolicy: false,
-    })
-);
+// app.use(
+//     helmet({
+//         contentSecurityPolicy: false,
+//     })
+// );
 app.use(
     cors({
         origin: [
