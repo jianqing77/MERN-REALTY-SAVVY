@@ -1,4 +1,4 @@
-# 🏡 Realty Savvy
+# 🏡 [Realty Savvy](https://realty-savvy-mern.onrender.com/)
 
 Realty Savvy is a comprehensive real estate listing platform designed to enable users to easily find and browse real estate listings with enhanced search capabilities. Built with a modern tech stack, the application offers a robust and secure environment for both browsing and managing real estate properties.
 
@@ -64,9 +64,7 @@ JWT_SECRET=your_jwt_secret
 
 ## Usage
 
-Once the application is running, you can access it locally or visit the deployed site for sample:
-
-[Realty Savvy](https://realty-savvy-mern.onrender.com/)
+Once the application is running, you can access it locally or visit the deployed site for sample: [Realty Savvy](https://realty-savvy-mern.onrender.com/)
 
 Navigate through the application to explore different properties and utilize the search and filter features to find properties that meet specific criteria.
 
