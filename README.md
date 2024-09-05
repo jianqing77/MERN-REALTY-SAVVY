@@ -20,12 +20,12 @@ Realty Savvy is a comprehensive real estate listing platform designed to enable 
 
 ## 💻 Technology Stack
 
--   **Frontend**: React, Tailwind CSS, Redux
+-   **Frontend**: React, Vite, Tailwind CSS, Redux
 -   **Backend**: Node.js, Express
 -   **APIs**: Google OAuth, [US Realtor API](https://rapidapi.com/DataCrawler/api/us-realtor), [Google Maps API](https://developers.google.com/maps)
--   **Database**: MongoDB Atlas
+-   **Database**: [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database), [Firebase Cloud](https://firebase.google.com/)
 -   **Security**: JWT, bcryptjs, helmet, Express-session, Cookie-parser
--   **Hosting**: [Firebase Cloud](https://firebase.google.com/)
+-   **Hosting**: [Render](https://render.com/)
 
 ## Prerequisites
 
